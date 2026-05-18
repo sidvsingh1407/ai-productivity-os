@@ -1,0 +1,13 @@
+.
+├── README.md
+├── backend
+│   ├── config.py
+│   ├── database.py
+│   ├── main.py
+│   └── requirements.txt
+├── docker-compose.yml
+├── file_audit.txt
+└── frontend
+    └── README.md
+
+3 directories, 8 files
