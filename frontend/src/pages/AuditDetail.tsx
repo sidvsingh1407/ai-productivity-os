@@ -1,0 +1,133 @@
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { apiClient } from '@/api/client';
+import { ScoreRadarChart } from '@/components/charts/ScoreRadarChart';
+import { DimensionBar } from '@/components/charts/DimensionBar';
+import { ComplianceAlert } from '@/components/audits/ComplianceAlert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FileDown, PlaySquare } from 'lucide-react';
+
+export default function AuditDetail() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [downloadJobId, setDownloadJobId] = useState<string | null>(null);
+
+  const { data: audit, isLoading, isError } = useQuery({
+    queryKey: ['audit', id],
+    queryFn: async () => {
+      const response = await apiClient.get(`/audits/${id}`);
+      return response.data;
+    },
+    enabled: !!id,
+  });
+
+  const generatePdfMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiClient.post(`/reports/export/${id}`);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setDownloadJobId(data.job_id);
+    },
+  });
+
+  const { data: jobStatus } = useQuery({
+    queryKey: ['reportStatus', downloadJobId],
+    queryFn: async () => {
+      const response = await apiClient.get(`/reports/status/${downloadJobId}`);
+      return response.data;
+    },
+    enabled: !!downloadJobId,
+    refetchInterval: (query) => (query.state.data?.status === 'completed' ? false : 3000),
+  });
+
+  if (isLoading) return <div>Loading audit details...</div>;
+  if (isError) return <div>Error loading audit details.</div>;
+  if (!audit) return <div>Audit not found.</div>;
+
+  const { scores = {}, company_name = "Company", rating = "N/A", compliance_risk_flag, compliance_risk_reasons } = audit;
+
+  const totalScore = Object.values(scores as Record<string, number>).reduce((acc, val) => acc + val, 0);
+
+  const radarData = [
+    { subject: 'Awareness', A: scores.awareness || 0, fullMark: 20 },
+    { subject: 'Adoption', A: scores.adoption || 0, fullMark: 20 },
+    { subject: 'Integration', A: scores.integration || 0, fullMark: 20 },
+    { subject: 'Governance', A: scores.governance || 0, fullMark: 20 },
+    { subject: 'ROI', A: scores.roi || 0, fullMark: 20 },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">{company_name} Audit</h1>
+          <p className="text-slate-500">ID: {id}</p>
+        </div>
+        <div className="flex space-x-3">
+          <Button variant="outline" onClick={() => generatePdfMutation.mutate()} disabled={generatePdfMutation.isPending || !!downloadJobId}>
+            <FileDown className="mr-2 h-4 w-4" />
+            {generatePdfMutation.isPending ? 'Generating...' : 'Download PDF'}
+          </Button>
+          <Button onClick={() => navigate(`/workflows/new?auditId=${id}`)}>
+            <PlaySquare className="mr-2 h-4 w-4" />
+            Run Workflow Diagnostic
+          </Button>
+        </div>
+      </div>
+
+      {jobStatus?.status === 'completed' && jobStatus?.download_url && (
+        <div className="bg-green-50 p-4 rounded-md border border-green-200">
+          <p className="text-green-800">
+            PDF Report is ready! <a href={jobStatus.download_url} className="font-bold underline" target="_blank" rel="noreferrer">Click here to download</a>
+          </p>
+        </div>
+      )}
+
+      {compliance_risk_flag && (
+        <ComplianceAlert reasons={compliance_risk_reasons || ['Governance issues detected.']} />
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="col-span-1">
+          <CardHeader>
+            <CardTitle>Total Score</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center py-6">
+            <div className="text-6xl font-bold text-slate-900 mb-4">{totalScore}</div>
+            <Badge variant={totalScore > 75 ? "success" : totalScore > 50 ? "warning" : "destructive"} className="text-lg py-1 px-4">
+              {rating}
+            </Badge>
+          </CardContent>
+        </Card>
+
+        <Card className="col-span-1 md:col-span-2">
+          <CardHeader>
+            <CardTitle>Score Breakdown</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <ScoreRadarChart data={radarData} />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Dimensions Details</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <DimensionBar label="Awareness" score={scores.awareness || 0} />
+          <DimensionBar label="Adoption" score={scores.adoption || 0} />
+          <DimensionBar label="Integration" score={scores.integration || 0} />
+          <DimensionBar label="Governance" score={scores.governance || 0} />
+          <DimensionBar label="ROI" score={scores.roi || 0} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
