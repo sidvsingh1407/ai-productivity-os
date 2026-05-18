@@ -1,0 +1,14 @@
+.
+./backend
+./backend/main.py
+./backend/.env.example
+./backend/.env
+./backend/database.py
+./backend/config.py
+./backend/requirements.txt
+./.gitignore
+./file_audit.txt
+./frontend
+./frontend/README.md
+./docker-compose.yml
+./README.md
