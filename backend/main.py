@@ -2,8 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from config import settings
+from integration.router import router as integration_router
 
 app = FastAPI(title="AI Productivity OS API")
+
+app.include_router(integration_router)
 
 # Configure CORS
 app.add_middleware(
