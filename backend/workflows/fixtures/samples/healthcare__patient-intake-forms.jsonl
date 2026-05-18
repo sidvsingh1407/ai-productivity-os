@@ -1,0 +1,4 @@
+{"split":"train","normalized_text":"healthcare patient intake form includes unstructured document fields, pii validation, insurance eligibility checks, compliance review, and approval before ehr writeback."}
+{"split":"train","normalized_text":"clinic operations team extracts patient demographics, consent status, referral notes, and risk flags from intake forms for routing to care coordinators."}
+{"split":"train","normalized_text":"patient intake workflow requires hipaa compliance validation, manual review of missing insurance fields, and audit trail capture before scheduling."}
+{"split":"train","normalized_text":"medical intake documents must be classified, summarized, and checked for phi completeness before downstream ehr update."}

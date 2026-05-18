@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from config import settings
+from backend.config import settings
+from backend.workflows.router import router as workflows_router
 
 app = FastAPI(title="AI Productivity OS API")
 
@@ -13,6 +14,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(workflows_router)
 
 @app.get("/")
 async def root():
