@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-accent-gold/30;
+  }
+}
+
+.text-balance {
+  text-wrap: balance;
+}
