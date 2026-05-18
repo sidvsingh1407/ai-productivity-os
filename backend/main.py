@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from config import settings
+from backend.config import settings
+from backend.audits.router import router as audit_router
 
 app = FastAPI(title="AI Productivity OS API")
 
@@ -17,3 +18,5 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"status": "ok", "version": "1.0.0"}
+
+app.include_router(audit_router, prefix="/audits", tags=["Audits"])
