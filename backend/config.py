@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     SUPABASE_URL: str
     SUPABASE_KEY: str
     SECRET_KEY: str
+    ALGORITHM: str = "HS256"
     REDIS_URL: str
     SENDGRID_API_KEY: str
     FRONTEND_URL: str

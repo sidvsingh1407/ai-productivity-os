@@ -2,12 +2,12 @@ import uuid
 import enum
 from datetime import datetime
 from typing import Optional, Any
-from sqlalchemy import String, Float, Boolean, DateTime, ForeignKey, Enum as SQLAlchemyEnum
+from sqlalchemy import String, Float, Boolean, DateTime, ForeignKey, func, Uuid, Enum as SQLAlchemyEnum
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database import Base
 
-class WorkflowStatusEnum(str, enum.Enum):
+class WorkflowStatus(str, enum.Enum):
     pending = "pending"
     running = "running"
     complete = "complete"
@@ -16,14 +16,13 @@ class WorkflowStatusEnum(str, enum.Enum):
 class Workflow(Base):
     __tablename__ = "workflows"
 
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    org_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id", ondelete="CASCADE"))
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
+id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    org_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False)
+    user_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     input_config: Mapped[Optional[dict[str, Any]]] = mapped_column(JSONB, nullable=True)
-    status: Mapped[WorkflowStatusEnum] = mapped_column(SQLAlchemyEnum(WorkflowStatusEnum))
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
+    status: Mapped[WorkflowStatus] = mapped_column(SQLAlchemyEnum(WorkflowStatus), default=WorkflowStatus.pending, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     # Relationships
     organization: Mapped["Organization"] = relationship("Organization", back_populates="workflows")
     user: Mapped["User"] = relationship("User", back_populates="workflows")
@@ -33,15 +32,15 @@ class Workflow(Base):
 class Blueprint(Base):
     __tablename__ = "blueprints"
 
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    workflow_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("workflows.id", ondelete="CASCADE"))
-    process_id: Mapped[str] = mapped_column(String)
-    automation_tier: Mapped[str] = mapped_column(String)
-    industry_variant: Mapped[str] = mapped_column(String)
+id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    workflow_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("workflows.id", ondelete="CASCADE"), nullable=False)
+    process_id: Mapped[str] = mapped_column(String, nullable=False)
+    automation_tier: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    industry_variant: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     blueprint_data: Mapped[Optional[dict[str, Any]]] = mapped_column(JSONB, nullable=True)
     confidence: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     merged: Mapped[bool] = mapped_column(Boolean, default=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     # Relationships
     workflow: Mapped["Workflow"] = relationship("Workflow", back_populates="blueprints")
@@ -49,12 +48,11 @@ class Blueprint(Base):
 class IntegrationResult(Base):
     __tablename__ = "integration_results"
 
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    audit_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audits.id", ondelete="CASCADE"))
-    workflow_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("workflows.id", ondelete="CASCADE"))
+id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    audit_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("audits.id", ondelete="CASCADE"), nullable=False)
+    workflow_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("workflows.id", ondelete="CASCADE"), nullable=False)
     recommendations: Mapped[Optional[dict[str, Any]]] = mapped_column(JSONB, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     # Relationships
     audit: Mapped["Audit"] = relationship("Audit", back_populates="integration_results")
     workflow: Mapped["Workflow"] = relationship("Workflow", back_populates="integration_results")
