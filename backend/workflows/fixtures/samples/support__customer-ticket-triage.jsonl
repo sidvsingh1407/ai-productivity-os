@@ -1,0 +1,4 @@
+{"split":"train","normalized_text":"customer support ticket contains crm case notes, product issue category, priority signal, routing queue, and escalation decision for manual review."}
+{"split":"train","normalized_text":"support agent reads incoming email, classifies refund request severity, routes the case to billing queue, and updates crm status manually."}
+{"split":"train","normalized_text":"ticket triage workflow assigns priority, detects compliance-sensitive customer data, and requests approval before sending escalation response."}
+{"split":"train","normalized_text":"customer service case requires classification by product area, sentiment, urgency, and routing to the correct specialist queue."}
