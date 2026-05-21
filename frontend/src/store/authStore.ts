@@ -5,6 +5,7 @@ export interface User {
   id: string;
   email: string;
   full_name: string;
+  is_superadmin?: boolean;
 }
 
 export interface Org {
@@ -15,6 +16,7 @@ export interface Org {
 export interface AuthState {
   user: User | null;
   org: Org | null;
+  organization?: Org | null;
   access_token: string | null;
   refresh_token: string | null;
   isAuthenticated: boolean;

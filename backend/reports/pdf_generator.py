@@ -455,3 +455,9 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# Alias for compatibility with older code expecting generate_report
+def generate_report(audit_data, scores, agent_findings, output_file):
+    audit_data['scores'] = scores
+    return generate_audit_pdf(audit_data, output_file)

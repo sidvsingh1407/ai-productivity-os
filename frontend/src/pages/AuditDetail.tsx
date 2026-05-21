@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { apiClient } from '@/api/client';
+import apiClient from '@/api/client';
 import { ScoreRadarChart } from '@/components/charts/ScoreRadarChart';
 import { DimensionBar } from '@/components/charts/DimensionBar';
 import { ComplianceAlert } from '@/components/audits/ComplianceAlert';
@@ -98,7 +98,7 @@ export default function AuditDetail() {
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center py-6">
             <div className="text-6xl font-bold text-slate-900 mb-4">{totalScore}</div>
-            <Badge variant={totalScore > 75 ? "success" : totalScore > 50 ? "warning" : "destructive"} className="text-lg py-1 px-4">
+            <Badge variant={totalScore > 75 ? "default" : totalScore > 50 ? "secondary" : "destructive"} className="text-lg py-1 px-4">
               {rating}
             </Badge>
           </CardContent>

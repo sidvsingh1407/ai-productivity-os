@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { apiClient } from '@/api/client';
+import apiClient from '@/api/client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -66,7 +66,7 @@ export default function WorkflowDetail() {
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Workflow Diagnostic</h1>
           <p className="text-slate-500">ID: {id}</p>
         </div>
-        <Badge variant={workflow.status === 'completed' ? 'success' : 'secondary'} className="text-sm px-3 py-1">
+        <Badge variant={workflow.status === 'completed' ? 'default' : 'secondary'} className="text-sm px-3 py-1">
           {workflow.status?.toUpperCase() || 'UNKNOWN'}
         </Badge>
       </div>
@@ -99,7 +99,7 @@ export default function WorkflowDetail() {
                         </div>
                       </div>
                       {(bp.confidence || 0) < 0.65 && (
-                        <Badge variant="warning" className="text-xs">
+                        <Badge variant="default" className="text-xs">
                           <AlertCircle className="w-3 h-3 mr-1" /> Manual Review Required
                         </Badge>
                       )}
