@@ -18,12 +18,9 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-import os
-import sys
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from database import Base
-from models import *
-from config import settings
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
+from models import Base
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -31,10 +28,7 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-configuration = config.get_section(config.config_ini_section, {})
-    configuration["sqlalchemy.url"] = settings.DATABASE_URL
-    connectable = async_engine_from_config(
-        configuration,
+from config import settings
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -72,10 +66,12 @@ async def run_async_migrations() -> None:
     and associate a connection with the context.
 
     """
-configuration = config.get_section(config.config_ini_section, {})
-    configuration["sqlalchemy.url"] = settings.DATABASE_URL
+
+    section = config.get_section(config.config_ini_section, {})
+    section["sqlalchemy.url"] = settings.DATABASE_URL
+
     connectable = async_engine_from_config(
-        configuration,
+        section,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
@@ -90,6 +86,7 @@ def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
 
     asyncio.run(run_async_migrations())
+
 
 if context.is_offline_mode():
     run_migrations_offline()

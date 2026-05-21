@@ -1,0 +1,3 @@
+{"split":"train","text":"A finance associate reads invoice PDFs, validates tax codes, matches ERP purchase order line items, and requests approval for discrepancy flags."}
+{"split":"train","text":"Invoice extraction requires audit review before SAP writeback when supplier amount or tax fields do not match."}
+{"split":"train","text":"Manual copy paste from approved invoices into ERP screens creates rekeying and reconciliation delays."}

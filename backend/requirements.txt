@@ -12,4 +12,3 @@ reportlab
 httpx
 python-multipart
 sendgrid
-pydantic[email]

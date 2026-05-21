@@ -1,0 +1,91 @@
+[
+  {
+    "id": "enterprise/invoice-reconciliation-documents",
+    "tags": ["license:apache-2.0", "text", "document", "finance", "invoice", "workflow", "viewer"],
+    "downloads": 50000,
+    "likes": 120,
+    "lastModified": "2026-04-01T00:00:00Z",
+    "cardData": {
+      "description": "Finance invoice PDF extraction, ERP reconciliation, tax review, approval workflow and audit discrepancy handling."
+    },
+    "siblings": [{"rfilename": "train.jsonl"}]
+  },
+  {
+    "id": "enterprise/hr-policy-service-tickets",
+    "tags": ["license:mit", "text", "hr", "employee", "policy", "ticket", "routing", "workflow", "json", "viewer"],
+    "downloads": 40000,
+    "likes": 100,
+    "lastModified": "2026-03-20T00:00:00Z",
+    "cardData": {
+      "description": "HR employee service tickets, benefits policy questions, structured JSON routing workflow, approval, and compliance review."
+    },
+    "siblings": [{"rfilename": "train.csv"}]
+  },
+  {
+    "id": "toy/movie-dialogue",
+    "tags": ["license:mit", "text", "dialogue"],
+    "downloads": 100000,
+    "likes": 500,
+    "lastModified": "2026-02-01T00:00:00Z",
+    "cardData": {"description": "Entertainment dialogue dataset."},
+    "siblings": [{"rfilename": "train.jsonl"}]
+  },
+  {
+    "id": "enterprise/legal-contract-risk",
+    "tags": ["text", "legal", "contract", "compliance", "review", "viewer"],
+    "downloads": 10000,
+    "likes": 75,
+    "lastModified": "2026-03-01T00:00:00Z",
+    "cardData": {
+      "description": "Legal contract clause extraction, compliance risk review, approval routing and audit workflow."
+    },
+    "siblings": [{"rfilename": "train.jsonl"}]
+  },
+  {
+    "id": "enterprise/hidden-procurement-data",
+    "tags": ["license:apache-2.0", "procurement", "vendor", "workflow"],
+    "downloads": 20000,
+    "likes": 40,
+    "lastModified": "2026-03-10T00:00:00Z",
+    "cardData": {
+      "description": "Vendor onboarding, procurement approval, compliance and supplier workflow."
+    },
+    "siblings": [{"rfilename": "README.md"}]
+  },
+  {
+    "id": "procurement/contract-review-requests",
+    "tags": ["license:apache-2.0", "text", "document", "procurement", "legal", "contract", "compliance", "review", "approval", "workflow", "json", "viewer"],
+    "downloads": 32000,
+    "likes": 88,
+    "lastModified": "2026-04-12T00:00:00Z",
+    "sample_inspectability": true,
+    "cardData": {
+      "description": "Procurement and legal contract review requests with clause extraction, policy compliance checks, approval routing, workflow status, and audit review."
+    },
+    "siblings": [{"rfilename": "train.jsonl"}]
+  },
+  {
+    "id": "support/customer-ticket-triage",
+    "tags": ["license:mit", "text", "customer support", "ticket", "crm", "routing", "priority", "classification", "workflow", "json", "api", "webhook", "database", "compliance", "risk", "approval", "viewer"],
+    "downloads": 61000,
+    "likes": 140,
+    "lastModified": "2026-04-15T00:00:00Z",
+    "sample_inspectability": true,
+    "cardData": {
+      "description": "Customer support ticket triage data for CRM case classification, priority routing, API workflow automation, webhook updates, database status sync, compliance risk review, escalation approval, and queue assignment."
+    },
+    "siblings": [{"rfilename": "train.jsonl"}]
+  },
+  {
+    "id": "healthcare/patient-intake-forms",
+    "tags": ["license:cc-by-4.0", "text", "document", "healthcare", "forms", "patient", "compliance", "pii", "approval", "workflow", "json", "viewer"],
+    "downloads": 28000,
+    "likes": 96,
+    "lastModified": "2026-04-18T00:00:00Z",
+    "sample_inspectability": true,
+    "cardData": {
+      "description": "Healthcare patient intake forms with document extraction, PII validation, compliance review, insurance routing, approval workflow, and audit flags."
+    },
+    "siblings": [{"rfilename": "train.jsonl"}]
+  }
+]

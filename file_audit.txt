@@ -1,0 +1,13 @@
+.
+|-- .gitignore
+|-- README.md
+|-- backend
+|   |-- .env
+|   |-- .env.example
+|   |-- config.py
+|   |-- database.py
+|   |-- main.py
+|   `-- requirements.txt
+|-- docker-compose.yml
+`-- frontend
+    `-- README.md
