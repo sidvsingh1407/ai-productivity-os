@@ -442,7 +442,10 @@ def main():
             }
         }
 
-        generate_report(audit_data, scores, agent_findings, output_file)
+        # Merge scores and findings for standard reporting
+        audit_data['scores'] = scores
+        audit_data['agent_findings'] = agent_findings
+        generate_report(audit_data, output_file)
         print(f"Report generated: {output_file}")
 
     except FileNotFoundError as e:
@@ -457,7 +460,6 @@ if __name__ == '__main__':
     main()
 
 
-# Alias for compatibility with older code expecting generate_report
-def generate_report(audit_data, scores, agent_findings, output_file):
-    audit_data['scores'] = scores
-    return generate_audit_pdf(audit_data, output_file)
+# Alias for compatibility with newer code expecting 2 arguments
+def generate_report(audit_data: dict, output_path: str) -> str:
+    return generate_audit_pdf(audit_data, output_path)
