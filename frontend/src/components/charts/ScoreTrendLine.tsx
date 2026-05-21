@@ -30,7 +30,7 @@ export function ScoreTrendLine({ data }: ScoreTrendLineProps) {
             tickLine={false}
             tick={{ fill: '#64748b', fontSize: 12 }}
             dy={10}
-            tickFormatter={(val) => {
+            tickFormatter={(val: number) => {
               const d = new Date(val);
               return `${d.getMonth() + 1}/${d.getDate()}`;
             }}
@@ -43,7 +43,7 @@ export function ScoreTrendLine({ data }: ScoreTrendLineProps) {
           />
           <Tooltip
             contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)' }}
-            labelFormatter={(label) => new Date(label).toLocaleDateString()}
+            labelFormatter={(label: any) => new Date(label as string).toLocaleDateString()}
           />
           <Line
             type="monotone"

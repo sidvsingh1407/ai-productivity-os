@@ -16,7 +16,7 @@ export interface Org {
 export interface AuthState {
   user: User | null;
   org: Org | null;
-  organization?: Org | null;
+  organization?: { id: string; name: string; slug: string; };
   access_token: string | null;
   refresh_token: string | null;
   isAuthenticated: boolean;

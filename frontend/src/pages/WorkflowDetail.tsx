@@ -99,7 +99,7 @@ export default function WorkflowDetail() {
                         </div>
                       </div>
                       {(bp.confidence || 0) < 0.65 && (
-                        <Badge variant="default" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           <AlertCircle className="w-3 h-3 mr-1" /> Manual Review Required
                         </Badge>
                       )}
