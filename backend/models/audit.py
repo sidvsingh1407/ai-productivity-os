@@ -1,13 +1,12 @@
 import uuid
-import enum
 from datetime import datetime
-from typing import Optional, Any
-from sqlalchemy import String, Integer, Boolean, DateTime, ForeignKey, Enum as SQLAlchemyEnum
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import String, Integer, Boolean, DateTime, ForeignKey, Enum, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from database import Base
+from sqlalchemy.dialects.postgresql import JSONB
+from backend.database import Base
+import enum
 
-class AuditStatusEnum(str, enum.Enum):
+class AuditStatus(str, enum.Enum):
     pending = "pending"
     running = "running"
     complete = "complete"
@@ -17,33 +16,27 @@ class Audit(Base):
     __tablename__ = "audits"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    org_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id", ondelete="CASCADE"))
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
-    form_response: Mapped[Optional[dict[str, Any]]] = mapped_column(JSONB, nullable=True)
-    scores: Mapped[Optional[dict[str, Any]]] = mapped_column(JSONB, nullable=True)
-    total_score: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    rating: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    compliance_risk_flag: Mapped[Optional[bool]] = mapped_column(Boolean, nullable=True)
-    compliance_risk_reasons: Mapped[Optional[dict[str, Any]]] = mapped_column(JSONB, nullable=True)
-    status: Mapped[AuditStatusEnum] = mapped_column(SQLAlchemyEnum(AuditStatusEnum))
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    org_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id"), nullable=False)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    form_response: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    scores: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    total_score: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    rating: Mapped[str | None] = mapped_column(String, nullable=True)
+    compliance_risk_flag: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    compliance_risk_reasons: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    status: Mapped[AuditStatus] = mapped_column(Enum(AuditStatus), default=AuditStatus.pending, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
-    # Relationships
-    organization: Mapped["Organization"] = relationship("Organization", back_populates="audits")
-    user: Mapped["User"] = relationship("User", back_populates="audits")
-    versions: Mapped[list["AuditVersion"]] = relationship("AuditVersion", back_populates="audit", cascade="all, delete-orphan")
-    reports: Mapped[list["Report"]] = relationship("Report", back_populates="audit", cascade="all, delete-orphan")
-    integration_results: Mapped[list["IntegrationResult"]] = relationship("IntegrationResult", back_populates="audit", cascade="all, delete-orphan")
+    versions = relationship("AuditVersion", back_populates="audit")
 
 class AuditVersion(Base):
     __tablename__ = "audit_versions"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    audit_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audits.id", ondelete="CASCADE"))
-    version_number: Mapped[int] = mapped_column(Integer)
-    scores_snapshot: Mapped[Optional[dict[str, Any]]] = mapped_column(JSONB, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    audit_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("audits.id"), nullable=False)
+    version_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    scores_snapshot: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    # Relationships
-    audit: Mapped["Audit"] = relationship("Audit", back_populates="versions")
+    audit = relationship("Audit", back_populates="versions")
