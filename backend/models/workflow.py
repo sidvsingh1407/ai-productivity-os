@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import String, Boolean, DateTime, ForeignKey, Enum, Float, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB
-from backend.database import Base
+from database import Base
 import enum
 
 class WorkflowStatus(str, enum.Enum):

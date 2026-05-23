@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import String, Integer, DateTime, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import JSONB
-from backend.database import Base
+from database import Base
 
 class BillingPlan(Base):
     __tablename__ = "billing_plans"

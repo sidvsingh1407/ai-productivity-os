@@ -3,8 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.database import get_db
-from backend.reports import service, schemas
+from database import get_db
+from reports import service, schemas
 # Using placeholder auth dependencies since they weren't explicitly provided but memory suggests their names
 # We'll mock them to prevent import errors
 

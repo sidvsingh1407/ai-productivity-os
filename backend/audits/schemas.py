@@ -2,7 +2,7 @@ from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, ConfigDict
 import uuid
 from datetime import datetime
-from backend.models.audit import AuditStatus
+from models.audit import AuditStatus
 
 class AuditCreate(BaseModel):
     form_response: Dict[str, Any]

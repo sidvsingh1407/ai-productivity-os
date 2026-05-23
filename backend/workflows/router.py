@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Dict, Any, List
 
-from backend.database import get_db
+from database import get_db
 from . import service
 from . import repository
 from .schemas import WorkflowCreate, WorkflowDetailResponse, WorkflowResponse

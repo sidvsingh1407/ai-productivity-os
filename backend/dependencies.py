@@ -5,10 +5,10 @@ from jose import JWTError, jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from backend.database import async_session_maker
-from backend.config import settings
-from backend.models.user import User
-from backend.models.organization import Organization, OrgMember
+from database import async_session_maker
+from config import settings
+from models.user import User
+from models.organization import Organization, OrgMember
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -50,3 +50,14 @@ async def get_current_org(current_user: User = Depends(get_current_user), db: As
         )
 
     return org
+
+def require_role(required_role: str):
+    async def role_checker(current_user: User = Depends(get_current_user)):
+        # Very basic role check for placeholder purposes
+        return current_user
+    return role_checker
+
+async def require_superadmin(current_user: User = Depends(get_current_user)):
+    if getattr(current_user, 'is_superadmin', False) != True:
+        raise HTTPException(status_code=403, detail="Superadmin access required")
+    return current_user

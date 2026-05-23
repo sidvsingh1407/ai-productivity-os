@@ -3,8 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from fastapi import HTTPException
 
-from backend.models.report import ExportJob, ExportJobStatus, ExportJobType, Report
-from backend.tasks.pdf_tasks import generate_pdf_task
+from models.report import ExportJob, ExportJobStatus, ExportJobType, Report
+from tasks.pdf_tasks import generate_pdf_task
 
 async def request_pdf_export(db: AsyncSession, audit_id: str, org_id: str, user_id: str) -> ExportJob:
     # 1. create export_job record (status: pending)

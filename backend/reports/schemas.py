@@ -3,7 +3,7 @@ from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel
 
-from backend.models.report import ExportJobStatus, ExportJobType
+from models.report import ExportJobStatus, ExportJobType
 
 class ExportJobResponse(BaseModel):
     id: UUID

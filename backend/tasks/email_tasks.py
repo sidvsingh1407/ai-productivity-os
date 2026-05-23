@@ -2,8 +2,8 @@ import os
 import logging
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from backend.tasks.celery_app import celery_app
-from backend.config import settings
+from tasks.celery_app import celery_app
+from config import settings
 
 logger = logging.getLogger(__name__)
 

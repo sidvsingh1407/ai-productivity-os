@@ -2,9 +2,9 @@ import uuid
 from typing import Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status
-from backend.audits import repository
-from backend.audits.scoring_engine import score_response
-from backend.audits.schemas import AuditResponse
+from audits import repository
+from audits.scoring_engine import score_response
+from audits.schemas import AuditResponse
 
 async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any]) -> AuditResponse:
     # 1. create audit record (status: running)

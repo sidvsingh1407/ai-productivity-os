@@ -5,8 +5,9 @@ from sqlalchemy.orm import DeclarativeBase
 from config import settings
 
 # Setup async engine
+database_url = settings.DATABASE_URL.replace('postgres://', 'postgresql://') if settings.DATABASE_URL else 'sqlite+aiosqlite:///./test.db'
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    database_url,
     echo=False,
 )
 

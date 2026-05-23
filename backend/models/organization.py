@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import String, DateTime, ForeignKey, Enum, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.event import listens_for
-from backend.database import Base
+from database import Base
 import enum
 
 class OrgRole(str, enum.Enum):

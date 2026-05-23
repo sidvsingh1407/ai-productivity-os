@@ -2,12 +2,12 @@ import asyncio
 import os
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.database import async_session_maker
-from backend.models.audit import Audit
-from backend.models.workflow import IntegrationResult
-from backend.models.report import ExportJob, Report, ExportJobStatus
-from backend.tasks.celery_app import celery_app
-from backend.reports.pdf_generator import generate_audit_pdf
+from database import async_session_maker
+from models.audit import Audit
+from models.workflow import IntegrationResult
+from models.report import ExportJob, Report, ExportJobStatus
+from tasks.celery_app import celery_app
+from reports.pdf_generator import generate_audit_pdf
 
 async def _generate_pdf_async(audit_id: str, org_id: str):
     async with async_session_maker() as session:

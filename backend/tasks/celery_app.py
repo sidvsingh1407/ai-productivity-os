@@ -1,6 +1,6 @@
 import os
 from celery import Celery
-from backend.config import settings
+from config import settings
 
 # To start worker: celery -A backend.tasks.celery_app worker --loglevel=info
 
@@ -21,6 +21,9 @@ celery_app.conf.update(
     task_acks_late=True,
     task_reject_on_worker_lost=True,
     broker_connection_retry_on_startup=True,
+    broker_connection_retry=False,
+    broker_pool_limit=None,
+    redis_max_connections=1,
     task_default_retry_delay=60,
     task_publish_retry=True,
 )

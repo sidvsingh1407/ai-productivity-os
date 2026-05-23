@@ -3,10 +3,10 @@ from typing import List
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.dependencies import get_db, get_current_user, get_current_org
-from backend.models.user import User
-from backend.models.organization import Organization
-from backend.audits import schemas, service, repository
+from dependencies import get_db, get_current_user, get_current_org
+from models.user import User
+from models.organization import Organization
+from audits import schemas, service, repository
 
 router = APIRouter()
 

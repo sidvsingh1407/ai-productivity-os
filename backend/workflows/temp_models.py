@@ -2,11 +2,12 @@
 from sqlalchemy import Column, String, Integer, DateTime, Boolean, ForeignKey, Float
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.sql import func
-from backend.database import Base
+from database import Base
 import uuid
 
 class Workflow(Base):
     __tablename__ = "workflows"
+    __table_args__ = {'extend_existing': True}
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     org_id = Column(String, nullable=False)
     user_id = Column(String, nullable=False)
@@ -16,6 +17,7 @@ class Workflow(Base):
 
 class Blueprint(Base):
     __tablename__ = "blueprints"
+    __table_args__ = {'extend_existing': True}
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     workflow_id = Column(String, ForeignKey("workflows.id"), nullable=False)
     process_id = Column(String, nullable=False)

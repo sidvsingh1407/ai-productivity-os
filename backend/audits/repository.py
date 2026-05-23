@@ -3,7 +3,7 @@ from typing import List, Optional, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from fastapi import HTTPException, status
-from backend.models.audit import Audit, AuditVersion, AuditStatus
+from models.audit import Audit, AuditVersion, AuditStatus
 
 async def create_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any]) -> Audit:
     db_audit = Audit(
