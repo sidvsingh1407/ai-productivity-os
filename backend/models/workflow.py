@@ -23,6 +23,8 @@ class Workflow(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
+    blueprints = relationship("Blueprint", back_populates="workflow", cascade="all, delete-orphan")
+
 class Blueprint(Base):
     __tablename__ = "blueprints"
 
