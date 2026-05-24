@@ -26,3 +26,6 @@ class Base(DeclarativeBase):
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
+git add .
+git commit -m "fix: complete deployment configuration - prompts 1-6"
+git push origin main
