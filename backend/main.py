@@ -14,20 +14,17 @@ from reports.router import router as reports_router
 
 app = FastAPI(title="AI Productivity OS API")
 
-# Dynamic CORS configuration based on environment
 allowed_origins = [
     "http://localhost:5173",
     "http://localhost:3000",
     settings.FRONTEND_URL,
 ]
 
-# In production, also allow Vercel preview deployments
 if settings.ENVIRONMENT == "production":
     allowed_origins.extend([
         "https://*.vercel.app",
     ])
 
-# Configure CORS with dynamic origins
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
@@ -36,7 +33,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Register all routers
 app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(orgs_router)
@@ -54,5 +50,4 @@ async def root():
 
 @app.get("/health")
 async def health():
-    """Health check endpoint for Railway/monitoring"""
     return {"status": "healthy", "environment": settings.ENVIRONMENT}
