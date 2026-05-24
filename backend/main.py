@@ -56,3 +56,6 @@ async def root():
 async def health():
     """Health check endpoint for Railway/monitoring"""
     return {"status": "healthy", "environment": settings.ENVIRONMENT}
+git add .
+git commit -m "fix: complete deployment configuration - prompts 1-6"
+git push origin main
