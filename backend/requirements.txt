@@ -12,3 +12,4 @@ reportlab
 httpx
 python-multipart
 sendgrid
+aiosqlite
