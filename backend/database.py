@@ -1,31 +1,33 @@
 from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase
-
 from config import settings
 
-# Setup async engine
-database_url = settings.DATABASE_URL.replace('postgres://', 'postgresql://') if settings.DATABASE_URL else 'sqlite+aiosqlite:///./test.db'
+database_url = settings.DATABASE_URL
+
+if database_url:
+    database_url = database_url.replace("postgres://", "postgresql://")
+    
+    if "postgresql://" in database_url and "+asyncpg" not in database_url:
+        database_url = database_url.replace("postgresql://", "postgresql+asyncpg://")
+
 engine = create_async_engine(
     database_url,
     echo=False,
+    pool_pre_ping=True,
+    pool_size=20,
+    max_overflow=0,
 )
 
-# Setup async session factory
 async_session_maker = async_sessionmaker(
     engine,
     class_=AsyncSession,
     expire_on_commit=False,
 )
 
-# Base declarative model class
 class Base(DeclarativeBase):
     pass
 
-# Dependency to yield database sessions
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
-git add .
-git commit -m "fix: complete deployment configuration - prompts 1-6"
-git push origin main
