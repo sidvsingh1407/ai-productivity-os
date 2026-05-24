@@ -23,11 +23,9 @@ allowed_origins = [
 
 # In production, also allow Vercel preview deployments
 if settings.ENVIRONMENT == "production":
-    allowed_origins.extend(
-        [
-            "https://*.vercel.app",
-        ]
-    )
+    allowed_origins.extend([
+        "https://*.vercel.app",
+    ])
 
 # Configure CORS with dynamic origins
 app.add_middleware(
@@ -50,11 +48,9 @@ app.include_router(analytics_router)
 app.include_router(billing_router)
 app.include_router(reports_router)
 
-
 @app.get("/")
 async def root():
     return {"status": "ok", "version": "1.0.0"}
-
 
 @app.get("/health")
 async def health():
