@@ -17,3 +17,6 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+git add .
+git commit -m "fix: complete deployment configuration - prompts 1-6"
+git push origin main
