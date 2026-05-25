@@ -22,7 +22,7 @@ allowed_origins = [
 
 if settings.ENVIRONMENT == "production":
     allowed_origins.extend([
-        "https://*.vercel.app",
+        "https://ai-productivity-os-six.vercel.app",
     ])
 
 app.add_middleware(
