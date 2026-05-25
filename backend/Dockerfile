@@ -10,4 +10,6 @@ COPY backend/ .
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["python", "-c", "import os; from uvicorn import run; run('main:app', host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))"]
+EXPOSE 8080
+
+CMD ["python", "-c", "import os; from uvicorn import run; run('main:app', host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))"]
