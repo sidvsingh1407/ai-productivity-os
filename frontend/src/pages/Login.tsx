@@ -1,32 +1,40 @@
 import { useState } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { authApi } from '@/api/auth';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { loginSchema, LoginFormData } from '@/lib/schemas';
 
 export function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const { setAuth, isAuthenticated } = useAuthStore();
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (dataForm: LoginFormData) => {
     setError('');
     setLoading(true);
 
     try {
-      const data = await authApi.login({ email, password });
+      const data = await authApi.login({ email: dataForm.email, password: dataForm.password });
       // Assuming backend returns { user, org, access_token, refresh_token }
       setAuth(data.user, data.org, data.access_token, data.refresh_token);
       navigate('/dashboard');
@@ -46,7 +54,7 @@ export function Login() {
             Enter your email below to sign in to your account
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             {error && <div className="text-sm font-medium text-destructive">{error}</div>}
             <div className="space-y-2">
@@ -55,20 +63,18 @@ export function Login() {
                 id="email"
                 type="email"
                 placeholder="m@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...register('email')}
               />
+              {errors.email && <span className="text-xs text-destructive">{errors.email.message}</span>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...register('password')}
               />
+              {errors.password && <span className="text-xs text-destructive">{errors.password.message}</span>}
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">

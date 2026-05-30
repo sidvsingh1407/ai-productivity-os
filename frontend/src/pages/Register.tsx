@@ -1,38 +1,44 @@
 import { useState } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { authApi } from '@/api/auth';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { registerSchema, RegisterFormData } from '@/lib/schemas';
 
 export function Register() {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [companyName, setCompanyName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const { setAuth, isAuthenticated } = useAuthStore();
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+  });
+
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (dataForm: RegisterFormData) => {
     setError('');
     setLoading(true);
 
     try {
       const data = await authApi.register({
-        full_name: fullName,
-        email,
-        password,
-        company_name: companyName
+        full_name: dataForm.fullName,
+        email: dataForm.email,
+        password: dataForm.password,
+        org_name: dataForm.companyName // Backend expects org_name, form uses companyName
       });
       // Assuming backend auto-logs in and returns tokens, or we redirect to login
       if (data.access_token) {
@@ -57,7 +63,7 @@ export function Register() {
             Enter your information below to create your account
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             {error && <div className="text-sm font-medium text-destructive">{error}</div>}
             <div className="space-y-2">
@@ -65,20 +71,18 @@ export function Register() {
               <Input
                 id="fullName"
                 placeholder="John Doe"
-                required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                {...register('fullName')}
               />
+              {errors.fullName && <span className="text-xs text-destructive">{errors.fullName.message}</span>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
               <Input
                 id="companyName"
                 placeholder="Acme Corp"
-                required
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
+                {...register('companyName')}
               />
+              {errors.companyName && <span className="text-xs text-destructive">{errors.companyName.message}</span>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -86,20 +90,18 @@ export function Register() {
                 id="email"
                 type="email"
                 placeholder="m@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...register('email')}
               />
+              {errors.email && <span className="text-xs text-destructive">{errors.email.message}</span>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...register('password')}
               />
+              {errors.password && <span className="text-xs text-destructive">{errors.password.message}</span>}
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
