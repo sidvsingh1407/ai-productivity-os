@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api from '@/lib/api';
+import { apiClient } from '@/api/client';
 import { useAuthStore } from '@/store/authStore';
 import { toast } from 'sonner';
 import { Mail, Trash2 } from 'lucide-react';
@@ -23,14 +23,14 @@ export default function OrgSettings() {
   const { data: members, isLoading } = useQuery<Member[]>({
     queryKey: ['org', 'members'],
     queryFn: async () => {
-      const { data } = await api.get('/org/members');
+      const { data } = await apiClient.get('/org/members');
       return data;
     },
   });
 
   const inviteMutation = useMutation({
     mutationFn: async (email: string) => {
-      await api.post('/org/invite', { email });
+      await apiClient.post('/org/invite', { email });
     },
     onSuccess: () => {
       toast.success('Invitation sent successfully');
@@ -44,7 +44,7 @@ export default function OrgSettings() {
 
   const removeMemberMutation = useMutation({
     mutationFn: async (memberId: string) => {
-      await api.delete(`/org/members/${memberId}`);
+      await apiClient.delete(`/org/members/${memberId}`);
     },
     onSuccess: () => {
       toast.success('Member removed successfully');

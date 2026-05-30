@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import api from '@/lib/api';
+import { apiClient } from '@/api/client';
 import { ScoreTrendLine } from '@/components/charts/ScoreTrendLine';
 import { Activity, BarChart2, ShieldCheck, Target } from 'lucide-react';
 
@@ -8,7 +8,7 @@ export default function Analytics() {
   const { data: volumeData, isLoading: isLoadingVolume } = useQuery({
     queryKey: ['analytics', 'volume'],
     queryFn: async () => {
-      const { data } = await api.get('/analytics/volume');
+      const { data } = await apiClient.get('/analytics/volume');
       return data; // { total_audits: 42, audits_this_month: 12 }
     },
   });
@@ -16,7 +16,7 @@ export default function Analytics() {
   const { data: complianceData, isLoading: isLoadingCompliance } = useQuery({
     queryKey: ['analytics', 'compliance'],
     queryFn: async () => {
-      const { data } = await api.get('/analytics/compliance');
+      const { data } = await apiClient.get('/analytics/compliance');
       return data; // { compliance_rate: 85.5 }
     },
   });
@@ -24,7 +24,7 @@ export default function Analytics() {
   const { data: scoresData, isLoading: isLoadingScores } = useQuery({
     queryKey: ['analytics', 'scores'],
     queryFn: async () => {
-      const { data } = await api.get('/analytics/scores?days=30');
+      const { data } = await apiClient.get('/analytics/scores?days=30');
       return data; // { avg_score: 76.4, trend: [{date: '2023-10-01', score: 75}, ...] }
     },
   });
@@ -32,7 +32,7 @@ export default function Analytics() {
   const { data: dimensionsData, isLoading: isLoadingDimensions } = useQuery({
     queryKey: ['analytics', 'dimensions'],
     queryFn: async () => {
-      const { data } = await api.get('/analytics/dimensions');
+      const { data } = await apiClient.get('/analytics/dimensions');
       return data; // { awareness: 80, adoption: 65, integration: 70, governance: 85, roi: 60 }
     },
   });
