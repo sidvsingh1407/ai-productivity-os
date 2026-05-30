@@ -73,17 +73,16 @@ async def general_exception_handler(request: Request, exc: Exception):
     )
 
 # MOUNT ALL ROUTERS
-# Using prefixes only for routers that don't already define them internally
-app.include_router(auth_router)                               # internal prefix: /auth
-app.include_router(admin_router, prefix="/admin")             # missing prefix
-app.include_router(audits_router, prefix="/audits")           # missing prefix
-app.include_router(analytics_router, prefix="/analytics")     # missing prefix
-app.include_router(workflows_router)                          # internal prefix: /workflows
-app.include_router(integration_router)                        # internal prefix: /integrations
-app.include_router(reports_router)                            # internal prefix: /reports
-app.include_router(users_router)                              # internal prefix: /users
-app.include_router(organizations_router)                      # internal prefix: /org
-app.include_router(billing_router, prefix="/billing")         # missing prefix
+app.include_router(auth_router)
+app.include_router(admin_router, prefix="/admin")
+app.include_router(audits_router, prefix="/audits")
+app.include_router(analytics_router, prefix="/analytics")
+app.include_router(workflows_router)
+app.include_router(integration_router)
+app.include_router(reports_router)
+app.include_router(users_router)
+app.include_router(organizations_router, prefix="/organizations")
+app.include_router(billing_router, prefix="/billing")
 
 @app.get("/")
 async def root():
