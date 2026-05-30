@@ -9,7 +9,7 @@ from models.organization import Organization
 from .schemas import IntegrationRequest, IntegrationResultResponse
 from .service import run_integration, get_integration
 
-router = APIRouter(prefix="/integration", tags=["integration"])
+router = APIRouter(prefix="/integrations", tags=["integration"])
 
 @router.post("/run", response_model=IntegrationResultResponse)
 async def create_integration(
