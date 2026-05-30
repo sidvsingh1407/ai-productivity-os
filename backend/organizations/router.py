@@ -10,7 +10,7 @@ from organizations.service import OrganizationService
 from models.user import User
 from models.organization import Organization
 
-router = APIRouter(prefix="/org", tags=["organizations"])
+router = APIRouter(tags=["organizations"])
 
 @router.get("/me", response_model=OrgResponse)
 async def get_my_org(current_org: Organization = Depends(get_current_org)):
