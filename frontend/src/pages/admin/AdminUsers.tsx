@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api from '@/lib/api';
+import { apiClient } from '@/api/client';
 import { toast } from 'sonner';
 import { Ban, CheckCircle2 } from 'lucide-react';
 
@@ -21,14 +21,14 @@ export default function AdminUsers() {
   const { data, isLoading } = useQuery({
     queryKey: ['admin', 'users', page],
     queryFn: async () => {
-      const { data } = await api.get(`/admin/users?page=${page}&limit=10`);
+      const { data } = await apiClient.get(`/admin/users?page=${page}&limit=10`);
       return data; // { items: [...], total: 50, page: 1, pages: 5 }
     },
   });
 
   const deactivateMutation = useMutation({
     mutationFn: async (userId: string) => {
-      await api.put(`/admin/users/${userId}/deactivate`);
+      await apiClient.put(`/admin/users/${userId}/deactivate`);
     },
     onSuccess: () => {
       toast.success('User deactivated successfully');

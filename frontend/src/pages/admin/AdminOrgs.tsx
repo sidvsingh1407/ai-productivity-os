@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from '@tanstack/react-query';
-import api from '@/lib/api';
+import { apiClient } from '@/api/client';
 
 interface Organization {
   id: string;
@@ -16,7 +16,7 @@ export default function AdminOrgs() {
   const { data, isLoading } = useQuery({
     queryKey: ['admin', 'orgs', page],
     queryFn: async () => {
-      const { data } = await api.get(`/admin/orgs?page=${page}&limit=10`);
+      const { data } = await apiClient.get(`/admin/orgs?page=${page}&limit=10`);
       return data; // { items: [...], total: 50, page: 1, pages: 5 }
     },
   });
