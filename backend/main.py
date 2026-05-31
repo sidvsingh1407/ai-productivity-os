@@ -23,18 +23,24 @@ app = FastAPI(title="AI Productivity OS", version="1.0.0")
 # ADD CORS MIDDLEWARE (CRITICAL)
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+CORS_ALLOW_ORIGINS = os.getenv("CORS_ALLOW_ORIGINS", "")
 
 allowed_origins = [
     "http://localhost:5173",
     "http://localhost:3000",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:3000",
+    "https://ai-productivity-os-six.vercel.app"
 ]
 
-if ENVIRONMENT == "production":
-    allowed_origins.append("https://ai-productivity-os-six.vercel.app")
-    if FRONTEND_URL not in allowed_origins:
-        allowed_origins.append(FRONTEND_URL)
+if FRONTEND_URL and FRONTEND_URL not in allowed_origins:
+    allowed_origins.append(FRONTEND_URL)
+
+if CORS_ALLOW_ORIGINS:
+    for origin in CORS_ALLOW_ORIGINS.split(","):
+        origin = origin.strip()
+        if origin and origin not in allowed_origins:
+            allowed_origins.append(origin)
 
 app.add_middleware(
     CORSMiddleware,
