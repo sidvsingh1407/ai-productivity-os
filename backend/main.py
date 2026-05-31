@@ -20,31 +20,55 @@ from billing.router import router as billing_router
 
 app = FastAPI(title="AI Productivity OS", version="1.0.0")
 
+from config import settings
+import re
+
 # ADD CORS MIDDLEWARE (CRITICAL)
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
-ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
-CORS_ALLOW_ORIGINS = os.getenv("CORS_ALLOW_ORIGINS", "")
+FRONTEND_URL = settings.FRONTEND_URL
 
-allowed_origins = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:3000",
-    "https://ai-productivity-os-six.vercel.app"
-]
+def build_allowed_origins() -> list[str]:
+    origins = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:3000",
+        "https://ai-productivity-os-six.vercel.app"
+    ]
+    if FRONTEND_URL and FRONTEND_URL not in origins:
+        origins.append(FRONTEND_URL)
 
-if FRONTEND_URL and FRONTEND_URL not in allowed_origins:
-    allowed_origins.append(FRONTEND_URL)
+    if settings.CORS_ALLOW_ORIGINS:
+        for origin in settings.CORS_ALLOW_ORIGINS.split(","):
+            origin = origin.strip()
+            if origin and origin not in origins:
+                origins.append(origin)
+    return origins
 
-if CORS_ALLOW_ORIGINS:
-    for origin in CORS_ALLOW_ORIGINS.split(","):
-        origin = origin.strip()
-        if origin and origin not in allowed_origins:
-            allowed_origins.append(origin)
+ALLOWED_ORIGINS = build_allowed_origins()
+
+def cors_error_headers(request: Request) -> dict[str, str]:
+    origin = request.headers.get("origin")
+    if not origin:
+        return {}
+
+    normalized_origin = origin.strip().rstrip("/")
+    origin_allowed = normalized_origin in ALLOWED_ORIGINS
+
+    if not origin_allowed and settings.CORS_ALLOW_ORIGIN_REGEX:
+        origin_allowed = re.fullmatch(settings.CORS_ALLOW_ORIGIN_REGEX, normalized_origin) is not None
+
+    if not origin_allowed:
+        return {}
+
+    return {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Credentials": "true",
+        "Vary": "Origin",
+    }
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -60,6 +84,7 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     return JSONResponse(
         status_code=exc.status_code,
         content={"detail": str(exc.detail), "status_code": exc.status_code},
+        headers=cors_error_headers(request)
     )
 
 @app.exception_handler(RequestValidationError)
@@ -68,14 +93,16 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(
         status_code=422,
         content={"detail": exc.errors(), "status_code": 422},
+        headers=cors_error_headers(request)
     )
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Unhandled Exception: {type(exc).__name__} - {str(exc)}")
+    logger.exception("Unhandled exception while processing request")
     return JSONResponse(
         status_code=500,
         content={"detail": "Internal server error", "status_code": 500},
+        headers=cors_error_headers(request)
     )
 
 # MOUNT ALL ROUTERS
