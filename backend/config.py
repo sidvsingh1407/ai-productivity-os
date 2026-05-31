@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
 
+    ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
+    CORS_ALLOW_ORIGINS: str = os.getenv("CORS_ALLOW_ORIGINS", "")
+    CORS_ALLOW_ORIGIN_REGEX: str = os.getenv("CORS_ALLOW_ORIGIN_REGEX", "")
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
 settings = Settings()

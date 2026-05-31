@@ -7,7 +7,6 @@ The repository is structured as a monorepo with `backend` and `frontend` directo
 
 **Root level files:**
 - `README.md`
-- `nixpacks.toml`, `railway.toml`, `railway.json`
 - `docker-compose.yml`
 - `file_audit.txt`
 
@@ -61,10 +60,8 @@ A React application built with Vite and TypeScript.
 *   **Output directory:** `dist`
 *   **Configuration:** `vercel.json` is configured to rewrite all routes to `/index.html`.
 
-**Backend on Railway**
+**Backend on Render**
 *   **Env vars needed:** `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_KEY`, `SECRET_KEY`, `REDIS_URL`, `SENDGRID_API_KEY`, `FRONTEND_URL`
-*   **Start command:** `cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT` (defined in `railway.toml` and `nixpacks.toml`)
-*   **Configuration:** Built using Nixpacks (Python 3.11).
 
 **Database on Supabase**
 *   **Migrations:** Must run Alembic migrations from the `backend/` directory (`alembic upgrade head`) to apply `3ff69d4ebaa6_initial_migration.py` and `5ed348e4f775_initial_models.py`.

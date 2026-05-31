@@ -24,7 +24,7 @@ async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
         full_name=user_data.full_name,
         org_name=user_data.org_name
     )
-    return {"message": "User registered successfully", "user_id": str(result["user"].id)}
+    return result
 
 @router.post("/login")
 async def login(login_data: LoginRequest, db: AsyncSession = Depends(get_db)):

@@ -1,5 +1,8 @@
+import logging
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.future import select
 
 from users.repository import UserRepository
 from organizations.service import OrganizationService
@@ -8,17 +11,34 @@ from auth.jwt_utils import create_access_token, create_refresh_token, decode_tok
 from models.user import User
 from models.organization import Organization, OrgMember, OrgRole
 
+logger = logging.getLogger(__name__)
+
 class AuthService:
     def __init__(self, session: AsyncSession):
+        self.session = session
         self.user_repository = UserRepository(session)
         self.org_service = OrganizationService(session)
 
-    async def register_user(self, email: str, password: str, full_name: str, org_name: str) -> dict:
-        existing_user = await self.user_repository.get_by_email(email)
-        if existing_user:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+    async def _generate_unique_org_slug(self, org_name: str) -> str:
+        base_slug = self.org_service._generate_slug(org_name) or "organization"
+        slug = base_slug
+        suffix = 2
 
+        while True:
+            result = await self.session.execute(
+                select(Organization.id).where(Organization.slug == slug)
+            )
+            if result.scalar_one_or_none() is None:
+                return slug
+            slug = f"{base_slug}-{suffix}"
+            suffix += 1
+
+    async def register_user(self, email: str, password: str, full_name: str, org_name: str) -> dict:
         try:
+            existing_user = await self.user_repository.get_by_email(email)
+            if existing_user:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+
             # Create user
             hashed_pwd = hash_password(password)
             new_user = User(email=email, hashed_password=hashed_pwd, full_name=full_name)
@@ -26,7 +46,7 @@ class AuthService:
             await self.user_repository.session.flush()
 
             # Create organization
-            slug = self.org_service._generate_slug(org_name)
+            slug = await self._generate_unique_org_slug(org_name)
             org = Organization(name=org_name, slug=slug)
             self.org_service.repository.session.add(org)
             await self.org_service.repository.session.flush()
@@ -41,13 +61,32 @@ class AuthService:
             await self.user_repository.session.refresh(new_user)
             await self.org_service.repository.session.refresh(org)
 
+            access_token = create_access_token(data={"sub": str(new_user.id)})
+            refresh_token = create_refresh_token(data={"sub": str(new_user.id)})
+
             return {
                 "user": new_user,
-                "organization": org
+                "org": org,
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "token_type": "bearer"
             }
-        except Exception as e:
+        except HTTPException:
+            raise
+        except IntegrityError:
             await self.user_repository.session.rollback()
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Registration failed")
+            logger.exception("Registration failed due to database integrity error")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email or organization already exists",
+            )
+        except Exception:
+            await self.user_repository.session.rollback()
+            logger.exception("Registration failed due to unexpected backend error")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Registration failed",
+            )
 
     async def login_user(self, email: str, password: str) -> dict:
         user = await self.user_repository.get_by_email(email)
