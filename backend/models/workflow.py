@@ -12,19 +12,6 @@ class WorkflowStatus(str, enum.Enum):
     complete = "complete"
     failed = "failed"
 
-class Workflow(Base):
-    __tablename__ = "workflows"
-
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    org_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id"), nullable=False)
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
-    input_config: Mapped[dict] = mapped_column(JSONB, nullable=False)
-    status: Mapped[WorkflowStatus] = mapped_column(Enum(WorkflowStatus), default=WorkflowStatus.pending, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
-    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
-
-    blueprints = relationship("Blueprint", back_populates="workflow", cascade="all, delete-orphan")
-
 class Blueprint(Base):
     __tablename__ = "blueprints"
 
@@ -37,6 +24,19 @@ class Blueprint(Base):
     confidence: Mapped[float] = mapped_column(Float, nullable=False)
     merged: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+class Workflow(Base):
+    __tablename__ = "workflows"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    org_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id"), nullable=False)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    input_config: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    status: Mapped[WorkflowStatus] = mapped_column(Enum(WorkflowStatus), default=WorkflowStatus.pending, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    blueprints = relationship(Blueprint, cascade="all, delete-orphan")
 
 class IntegrationResult(Base):
     __tablename__ = "integration_results"
