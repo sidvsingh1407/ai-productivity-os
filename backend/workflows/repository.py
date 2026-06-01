@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List, Dict, Any, Optional
 
-from .temp_models import Workflow, Blueprint
+from models.workflow import Workflow, Blueprint
 
 async def create_workflow(db: AsyncSession, org_id: str, user_id: str, input_config: Dict[str, Any]) -> Workflow:
     workflow = Workflow(
