@@ -4,6 +4,8 @@ import { AppShell } from './components/layout/AppShell';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
+import NewAudit from './pages/NewAudit';
+import AuditDetail from './pages/AuditDetail';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         }>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="audits/new" element={<NewAudit />} />
+          <Route path="audits/:id" element={<AuditDetail />} />
           {/* Add more private routes here */}
         </Route>
       </Routes>
