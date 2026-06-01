@@ -4,9 +4,11 @@ import { analyticsApi } from '@/api/analytics';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Activity, Play, ShieldAlert } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export function Dashboard() {
   const { user } = useAuthStore();
+  const navigate = useNavigate();
 
   const { data: stats, isLoading, isError } = useQuery({
     queryKey: ['dashboardStats'],
@@ -45,7 +47,7 @@ export function Dashboard() {
       </div>
 
       <div className="flex gap-4">
-        <Button className="gap-2" size="lg">
+        <Button className="gap-2" size="lg" onClick={() => navigate('/audits/new')}>
           <Play className="w-4 h-4" />
           Run AI Audit
         </Button>

@@ -8,8 +8,7 @@ Output: Prints score breakdown and sets compliance flags
 """
 
 import json
-import sys
-from typing import Dict, Any, Tuple, Optional
+from typing import Dict, Any, Tuple
 
 # Point mapping for responses (a=20, b=15, c=10, d=5, e=0)
 RESPONSE_POINTS = {
@@ -56,13 +55,10 @@ def calculate_dimension_score(responses: Dict[str, str], dimension: str) -> Tupl
     """
     questions = DIMENSION_QUESTIONS[dimension]
     points = []
-    missing = False
 
     for q in questions:
         response = responses.get(q)
-        if response is None or response.strip() == '':
-            missing = True
-        else:
+        if response is not None and response.strip() != '':
             points.append(response_to_points(response))
 
     # Handle missing data
@@ -193,7 +189,7 @@ def format_score_report(scores: Dict[str, Any], company_name: str = "") -> str:
     """Format scores as human-readable report."""
     lines = [
         "=" * 50,
-        f"AI MATURITY SCORE REPORT",
+        "AI MATURITY SCORE REPORT",
         f"Company: {company_name or 'Unknown'}",
         "=" * 50,
         "",
