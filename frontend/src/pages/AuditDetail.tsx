@@ -48,7 +48,7 @@ export default function AuditDetail() {
   if (isError) return <div>Error loading audit details.</div>;
   if (!audit) return <div>Audit not found.</div>;
 
-  const { scores = {}, company_name = "Company", rating = "N/A", compliance_risk_flag, compliance_risk_reasons } = audit;
+  const { scores = {}, company_name = "Company", rating = "N/A", compliance_risk_flag, compliance_risk_reasons, contradictions, missing_data_flags } = audit;
 
   const totalScore = Object.values(scores as Record<string, number>).reduce((acc, val) => acc + val, 0);
 
@@ -89,6 +89,36 @@ export default function AuditDetail() {
 
       {compliance_risk_flag && (
         <ComplianceAlert reasons={compliance_risk_reasons || ['Governance issues detected.']} />
+      )}
+
+      {(contradictions?.length > 0 || missing_data_flags?.length > 0) && (
+        <Card className="border-amber-200 bg-amber-50">
+          <CardHeader>
+            <CardTitle className="text-amber-800 text-lg">Assessment Findings</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {contradictions?.length > 0 && (
+              <div>
+                <h4 className="font-medium text-amber-900 mb-2">Contradictions Detected:</h4>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-amber-800">
+                  {contradictions.map((item: string, i: number) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {missing_data_flags?.length > 0 && (
+              <div>
+                <h4 className="font-medium text-amber-900 mb-2">Missing Data In Dimensions:</h4>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-amber-800">
+                  {missing_data_flags.map((item: string, i: number) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
