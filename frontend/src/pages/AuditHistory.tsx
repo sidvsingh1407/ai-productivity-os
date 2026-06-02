@@ -5,7 +5,7 @@ import apiClient from '@/api/client';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, AlertTriangle } from 'lucide-react';
+import { Eye, AlertTriangle, RotateCcw } from 'lucide-react';
 
 export default function AuditHistory() {
   const navigate = useNavigate();
@@ -73,9 +73,12 @@ export default function AuditHistory() {
                         <span className="text-green-600">No</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right flex justify-end space-x-2">
                       <Button variant="ghost" size="sm" onClick={() => navigate(`/audits/${audit.id}`)}>
                         <Eye className="mr-2 h-4 w-4" /> View
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => navigate(`/audits/new?sourceAuditId=${audit.id}`)}>
+                        <RotateCcw className="mr-2 h-4 w-4" /> Re-Run
                       </Button>
                     </TableCell>
                   </TableRow>

@@ -4,11 +4,12 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import apiClient from '@/api/client';
 import { ScoreRadarChart } from '@/components/charts/ScoreRadarChart';
 import { DimensionBar } from '@/components/charts/DimensionBar';
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { ComplianceAlert } from '@/components/audits/ComplianceAlert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileDown, PlaySquare } from 'lucide-react';
+import { FileDown, PlaySquare, RotateCcw } from 'lucide-react';
 
 export default function AuditDetail() {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,21 @@ export default function AuditDetail() {
     queryFn: async () => {
       const response = await apiClient.get(`/audits/${id}`);
       return response.data;
+    },
+    enabled: !!id,
+  });
+
+  const { data: previousAudit } = useQuery({
+    queryKey: ['previousAudit', id],
+    queryFn: async () => {
+      // Fetch latest 2 to find the one preceding this one
+      const response = await apiClient.get('/audits/?limit=10');
+      const audits = response.data?.items || [];
+      const currentIndex = audits.findIndex((a: any) => a.id === id);
+      if (currentIndex >= 0 && currentIndex < audits.length - 1) {
+        return audits[currentIndex + 1];
+      }
+      return null;
     },
     enabled: !!id,
   });
@@ -68,6 +84,10 @@ export default function AuditDetail() {
           <p className="text-slate-500">ID: {id}</p>
         </div>
         <div className="flex space-x-3">
+          <Button variant="outline" onClick={() => navigate(`/audits/new?sourceAuditId=${id}`)}>
+            <RotateCcw className="mr-2 h-4 w-4" />
+            Re-Run Audit
+          </Button>
           <Button variant="outline" onClick={() => generatePdfMutation.mutate()} disabled={generatePdfMutation.isPending || !!downloadJobId}>
             <FileDown className="mr-2 h-4 w-4" />
             {generatePdfMutation.isPending ? 'Generating...' : 'Download PDF'}
@@ -128,6 +148,15 @@ export default function AuditDetail() {
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center py-6">
             <div className="text-6xl font-bold text-slate-900 mb-4">{totalScore}</div>
+
+            {previousAudit && (
+              <div className={`flex items-center space-x-1 mb-4 text-lg font-medium ${totalScore >= (previousAudit.total_score || 0) ? 'text-green-600' : 'text-red-600'}`}>
+                {totalScore >= (previousAudit.total_score || 0) ? <ArrowUpRight className="h-5 w-5" /> : <ArrowDownRight className="h-5 w-5" />}
+                <span>{Math.abs(totalScore - (previousAudit.total_score || 0))} pts</span>
+                <span className="text-sm text-slate-500 ml-1 font-normal">(vs previous)</span>
+              </div>
+            )}
+
             <Badge variant={totalScore > 75 ? "default" : totalScore > 50 ? "secondary" : "destructive"} className="text-lg py-1 px-4">
               {rating}
             </Badge>
