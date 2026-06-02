@@ -445,7 +445,7 @@ def main():
         # Merge scores and findings for standard reporting
         audit_data['scores'] = scores
         audit_data['agent_findings'] = agent_findings
-        generate_report(audit_data, output_file)
+        generate_audit_pdf(audit_data, output_file)
         print(f"Report generated: {output_file}")
 
     except FileNotFoundError as e:
