@@ -1,0 +1,2360 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "TARKAX Workflow Ontology mapping cross-industry business processes based on APQC principles."
+  },
+  "workflows": [
+    {
+      "id": "WF-001",
+      "name": "Employee Onboarding",
+      "domain": "Human Resources",
+      "category": "Talent Management",
+      "purpose": "To integrate a new hire into the organization, providing necessary access, equipment, and knowledge to become productive.",
+      "frequency": 10,
+      "criticality": 8,
+      "diagnostic_value": 9,
+      "automation_potential": 9,
+      "typical_stages": [
+        "Offer Acceptance",
+        "Pre-boarding",
+        "Day 1 Orientation",
+        "Role-specific Training",
+        "30/60/90 Day Check-ins"
+      ],
+      "primary_stakeholders": [
+        "HR",
+        "Hiring Manager",
+        "IT",
+        "New Hire"
+      ],
+      "inputs": [
+        "Signed Offer Letter",
+        "New Hire Personal Information",
+        "Background Check Clearance"
+      ],
+      "outputs": [
+        "Active Employee Profile",
+        "Provisioned Hardware/Software Access",
+        "Completed I-9/Tax Forms",
+        "Trained Employee"
+      ],
+      "bottlenecks": [
+        "Delays in IT hardware provisioning",
+        "Manager unavailability for day 1 orientation",
+        "Slow background check processing"
+      ],
+      "governance_risks": [
+        "Failure to collect mandatory compliance documentation",
+        "Inconsistent training leading to knowledge gaps"
+      ],
+      "compliance_risks": [
+        "Late I-9 verification",
+        "Missing tax form submissions",
+        "Improper data handling of PII"
+      ],
+      "kpis": [
+        "Time to Productivity",
+        "Onboarding CSAT Score",
+        "Day-1 Readiness Percentage",
+        "First-Year Attrition Rate"
+      ],
+      "automation_opportunities": [
+        "Automated ticket creation for IT/Facilities",
+        "Self-service portal for new hire forms",
+        "Automated email sequences for training"
+      ],
+      "diagnostic_opportunities": [
+        "Tracking average days from offer to full system access",
+        "Identifying departments with the lowest onboarding CSAT"
+      ],
+      "rationale": {
+        "why_include": "High frequency, heavily cross-functional, profound impact on employee retention and productivity. Every company does this.",
+        "data_needed": "ATS state changes, HRIS entry logs, IT ticketing metrics (time to resolve onboarding tickets).",
+        "diagnostics_generated": "Cross-departmental handoff efficiency (HR -> IT -> Hiring Manager).",
+        "recommendations_produced": "Identify bottlenecks in IT provisioning, suggest parallelizing background checks with IT setup."
+      },
+      "health_dimensions": {
+        "bottleneck_risk": {
+          "description": "Risk of work accumulating or stalling. In Employee Onboarding, this often manifests as: Delays in IT hardware provisioning",
+          "scoring_template": {
+            "1-3": "Healthy flow, minimal queuing",
+            "4-6": "Occasional delays, manageable",
+            "7-8": "Frequent stalls impacting SLAs",
+            "9-10": "Severe blockage, chronic delays"
+          }
+        },
+        "handoff_risk": {
+          "description": "Risk of errors or delays when transferring responsibility between HR, Hiring Manager.",
+          "scoring_template": {
+            "1-3": "Seamless, automated handoffs",
+            "4-6": "Manual but documented handoffs",
+            "7-8": "Friction, frequent information loss",
+            "9-10": "Broken communication, siloed teams"
+          }
+        },
+        "governance_risk": {
+          "description": "Risk of control failure. e.g., Failure to collect mandatory compliance documentation",
+          "scoring_template": {
+            "1-3": "Strong controls, audited",
+            "4-6": "Controls exist but manual",
+            "7-8": "Weak controls, easily bypassed",
+            "9-10": "No oversight, rampant exceptions"
+          }
+        },
+        "visibility_risk": {
+          "description": "Lack of real-time tracking across the workflow stages.",
+          "scoring_template": {
+            "1-3": "Full dashboard visibility",
+            "4-6": "Reporting available but delayed",
+            "7-8": "Data exists but fragmented",
+            "9-10": "Black box, zero tracking"
+          }
+        },
+        "automation_opportunity": {
+          "description": "Potential to replace manual effort. e.g., Automated ticket creation for IT/Facilities",
+          "scoring_template": {
+            "1-3": "Fully optimized/automated",
+            "4-6": "Partial automation exists",
+            "7-8": "High manual effort on structured data",
+            "9-10": "Completely manual, high volume"
+          }
+        },
+        "compliance_risk": {
+          "description": "Regulatory or policy violation risk. e.g., Late I-9 verification",
+          "scoring_template": {
+            "1-3": "Automated compliance checks",
+            "4-6": "Periodic manual audits",
+            "7-8": "History of minor violations",
+            "9-10": "High risk of fines/penalties"
+          }
+        },
+        "knowledge_dependency_risk": {
+          "description": "Reliance on specific individuals' tacit knowledge rather than documented SOPs.",
+          "scoring_template": {
+            "1-3": "Fully documented SOPs",
+            "4-6": "Documentation exists but outdated",
+            "7-8": "Tribal knowledge prevalent",
+            "9-10": "Single point of failure (Key Person Risk)"
+          }
+        },
+        "throughput_risk": {
+          "description": "Inability to scale the process to handle increased volume.",
+          "scoring_template": {
+            "1-3": "Highly scalable",
+            "4-6": "Scalable with linear headcount addition",
+            "7-8": "Struggles with peak volumes",
+            "9-10": "Process breaks under current load"
+          }
+        }
+      }
+    },
+    {
+      "id": "WF-002",
+      "name": "Procure to Pay (Accounts Payable)",
+      "domain": "Finance",
+      "category": "Transactional Finance",
+      "purpose": "To manage the lifecycle of purchasing goods/services from suppliers, receiving them, and executing payment.",
+      "frequency": 10,
+      "criticality": 9,
+      "diagnostic_value": 10,
+      "automation_potential": 9,
+      "typical_stages": [
+        "Purchase Requisition",
+        "PO Generation",
+        "Vendor Fulfillment",
+        "Invoice Receipt",
+        "3-Way Matching",
+        "Payment Execution"
+      ],
+      "primary_stakeholders": [
+        "Procurement",
+        "Accounts Payable",
+        "Budget Owner",
+        "Vendor"
+      ],
+      "inputs": [
+        "Approved Purchase Requisition",
+        "Vendor Invoice",
+        "Receiving Report"
+      ],
+      "outputs": [
+        "Issued Purchase Order",
+        "Executed Payment",
+        "Updated General Ledger"
+      ],
+      "bottlenecks": [
+        "Manual invoice data entry",
+        "Waiting for manager approval on POs",
+        "Exceptions in 3-way matching"
+      ],
+      "governance_risks": [
+        "Maverick spend (purchasing outside approved channels)",
+        "Lack of segregation of duties"
+      ],
+      "compliance_risks": [
+        "Fraudulent payments",
+        "Missing tax documentation (W-9) for vendors"
+      ],
+      "kpis": [
+        "Cost per Invoice Processed",
+        "Invoice Processing Time",
+        "Percentage of Electronic Invoices",
+        "Early Payment Discount Capture Rate"
+      ],
+      "automation_opportunities": [
+        "OCR for invoice scanning",
+        "Automated 3-way matching",
+        "Automated approval routing based on amount thresholds"
+      ],
+      "diagnostic_opportunities": [
+        "Identifying vendors with high exception rates",
+        "Measuring cycle time from invoice receipt to payment"
+      ],
+      "rationale": {
+        "why_include": "Core financial process. Directly impacts cash flow and operational efficiency. Very data-rich.",
+        "data_needed": "ERP timestamps for PO creation, invoice receipt, match status, and payment execution.",
+        "diagnostics_generated": "Match exception rates, bottleneck identification in approval hierarchies.",
+        "recommendations_produced": "Lower approval thresholds for specific categories, implement OCR for top 10 vendors by volume."
+      },
+      "health_dimensions": {
+        "bottleneck_risk": {
+          "description": "Risk of work accumulating or stalling. In Procure to Pay (Accounts Payable), this often manifests as: Manual invoice data entry",
+          "scoring_template": {
+            "1-3": "Healthy flow, minimal queuing",
+            "4-6": "Occasional delays, manageable",
+            "7-8": "Frequent stalls impacting SLAs",
+            "9-10": "Severe blockage, chronic delays"
+          }
+        },
+        "handoff_risk": {
+          "description": "Risk of errors or delays when transferring responsibility between Procurement, Accounts Payable.",
+          "scoring_template": {
+            "1-3": "Seamless, automated handoffs",
+            "4-6": "Manual but documented handoffs",
+            "7-8": "Friction, frequent information loss",
+            "9-10": "Broken communication, siloed teams"
+          }
+        },
+        "governance_risk": {
+          "description": "Risk of control failure. e.g., Maverick spend (purchasing outside approved channels)",
+          "scoring_template": {
+            "1-3": "Strong controls, audited",
+            "4-6": "Controls exist but manual",
+            "7-8": "Weak controls, easily bypassed",
+            "9-10": "No oversight, rampant exceptions"
+          }
+        },
+        "visibility_risk": {
+          "description": "Lack of real-time tracking across the workflow stages.",
+          "scoring_template": {
+            "1-3": "Full dashboard visibility",
+            "4-6": "Reporting available but delayed",
+            "7-8": "Data exists but fragmented",
+            "9-10": "Black box, zero tracking"
+          }
+        },
+        "automation_opportunity": {
+          "description": "Potential to replace manual effort. e.g., OCR for invoice scanning",
+          "scoring_template": {
+            "1-3": "Fully optimized/automated",
+            "4-6": "Partial automation exists",
+            "7-8": "High manual effort on structured data",
+            "9-10": "Completely manual, high volume"
+          }
+        },
+        "compliance_risk": {
+          "description": "Regulatory or policy violation risk. e.g., Fraudulent payments",
+          "scoring_template": {
+            "1-3": "Automated compliance checks",
+            "4-6": "Periodic manual audits",
+            "7-8": "History of minor violations",
+            "9-10": "High risk of fines/penalties"
+          }
+        },
+        "knowledge_dependency_risk": {
+          "description": "Reliance on specific individuals' tacit knowledge rather than documented SOPs.",
+          "scoring_template": {
+            "1-3": "Fully documented SOPs",
+            "4-6": "Documentation exists but outdated",
+            "7-8": "Tribal knowledge prevalent",
+            "9-10": "Single point of failure (Key Person Risk)"
+          }
+        },
+        "throughput_risk": {
+          "description": "Inability to scale the process to handle increased volume.",
+          "scoring_template": {
+            "1-3": "Highly scalable",
+            "4-6": "Scalable with linear headcount addition",
+            "7-8": "Struggles with peak volumes",
+            "9-10": "Process breaks under current load"
+          }
+        }
+      }
+    },
+    {
+      "id": "WF-003",
+      "name": "Order to Cash (Accounts Receivable)",
+      "domain": "Finance",
+      "category": "Transactional Finance",
+      "purpose": "To process customer orders, deliver the product/service, and collect payment, ensuring revenue realization.",
+      "frequency": 9,
+      "criticality": 10,
+      "diagnostic_value": 10,
+      "automation_potential": 8,
+      "typical_stages": [
+        "Order Entry",
+        "Credit Verification",
+        "Fulfillment/Delivery",
+        "Invoicing",
+        "Payment Collection",
+        "Reconciliation"
+      ],
+      "primary_stakeholders": [
+        "Sales",
+        "Accounts Receivable",
+        "Logistics/Ops",
+        "Customer"
+      ],
+      "inputs": [
+        "Signed Customer Contract / Sales Order",
+        "Customer Credit Application",
+        "Proof of Delivery"
+      ],
+      "outputs": [
+        "Generated Invoice",
+        "Collected Payment",
+        "Cleared Accounts Receivable Balance"
+      ],
+      "bottlenecks": [
+        "Manual order entry errors",
+        "Delayed invoicing after delivery",
+        "Customer dispute resolution"
+      ],
+      "governance_risks": [
+        "Extending credit without proper authorization",
+        "Failing to aggressively pursue overdue accounts"
+      ],
+      "compliance_risks": [
+        "Revenue recognition errors",
+        "Improper tax calculation on invoices"
+      ],
+      "kpis": [
+        "Days Sales Outstanding (DSO)",
+        "Percentage of Past Due Invoices",
+        "Order Accuracy Rate",
+        "Billing Dispute Rate"
+      ],
+      "automation_opportunities": [
+        "Automated order intake via API",
+        "Automated dunning (payment reminder) emails",
+        "Auto-cash application"
+      ],
+      "diagnostic_opportunities": [
+        "Correlating sales reps with high invoice dispute rates",
+        "Identifying specific customer segments with high DSO"
+      ],
+      "rationale": {
+        "why_include": "Critical for cash flow. Universally applicable. Immediate ROI if optimized.",
+        "data_needed": "CRM won opportunities, ERP order fulfillment data, AR aging reports.",
+        "diagnostics_generated": "DSO drivers, root causes of billing disputes.",
+        "recommendations_produced": "Automate dunning notices for accounts 15 days past due, review credit policies for specific customer tiers."
+      },
+      "health_dimensions": {
+        "bottleneck_risk": {
+          "description": "Risk of work accumulating or stalling. In Order to Cash (Accounts Receivable), this often manifests as: Manual order entry errors",
+          "scoring_template": {
+            "1-3": "Healthy flow, minimal queuing",
+            "4-6": "Occasional delays, manageable",
+            "7-8": "Frequent stalls impacting SLAs",
+            "9-10": "Severe blockage, chronic delays"
+          }
+        },
+        "handoff_risk": {
+          "description": "Risk of errors or delays when transferring responsibility between Sales, Accounts Receivable.",
+          "scoring_template": {
+            "1-3": "Seamless, automated handoffs",
+            "4-6": "Manual but documented handoffs",
+            "7-8": "Friction, frequent information loss",
+            "9-10": "Broken communication, siloed teams"
+          }
+        },
+        "governance_risk": {
+          "description": "Risk of control failure. e.g., Extending credit without proper authorization",
+          "scoring_template": {
+            "1-3": "Strong controls, audited",
+            "4-6": "Controls exist but manual",
+            "7-8": "Weak controls, easily bypassed",
+            "9-10": "No oversight, rampant exceptions"
+          }
+        },
+        "visibility_risk": {
+          "description": "Lack of real-time tracking across the workflow stages.",
+          "scoring_template": {
+            "1-3": "Full dashboard visibility",
+            "4-6": "Reporting available but delayed",
+            "7-8": "Data exists but fragmented",
+            "9-10": "Black box, zero tracking"
+          }
+        },
+        "automation_opportunity": {
+          "description": "Potential to replace manual effort. e.g., Automated order intake via API",
+          "scoring_template": {
+            "1-3": "Fully optimized/automated",
+            "4-6": "Partial automation exists",
+            "7-8": "High manual effort on structured data",
+            "9-10": "Completely manual, high volume"
+          }
+        },
+        "compliance_risk": {
+          "description": "Regulatory or policy violation risk. e.g., Revenue recognition errors",
+          "scoring_template": {
+            "1-3": "Automated compliance checks",
+            "4-6": "Periodic manual audits",
+            "7-8": "History of minor violations",
+            "9-10": "High risk of fines/penalties"
+          }
+        },
+        "knowledge_dependency_risk": {
+          "description": "Reliance on specific individuals' tacit knowledge rather than documented SOPs.",
+          "scoring_template": {
+            "1-3": "Fully documented SOPs",
+            "4-6": "Documentation exists but outdated",
+            "7-8": "Tribal knowledge prevalent",
+            "9-10": "Single point of failure (Key Person Risk)"
+          }
+        },
+        "throughput_risk": {
+          "description": "Inability to scale the process to handle increased volume.",
+          "scoring_template": {
+            "1-3": "Highly scalable",
+            "4-6": "Scalable with linear headcount addition",
+            "7-8": "Struggles with peak volumes",
+            "9-10": "Process breaks under current load"
+          }
+        }
+      }
+    },
+    {
+      "id": "WF-004",
+      "name": "Customer Onboarding",
+      "domain": "Customer Success",
+      "category": "Customer Lifecycle",
+      "purpose": "To guide a new customer from sale to first value, ensuring adoption and product familiarity.",
+      "frequency": 9,
+      "criticality": 9,
+      "diagnostic_value": 9,
+      "automation_potential": 7,
+      "typical_stages": [
+        "Welcome & Handoff",
+        "Account Setup",
+        "Kickoff Call",
+        "Implementation/Configuration",
+        "Training",
+        "Go-Live/Value Realization"
+      ],
+      "primary_stakeholders": [
+        "Customer Success Manager",
+        "Sales",
+        "Implementation Specialist",
+        "Customer"
+      ],
+      "inputs": [
+        "Closed-Won Deal Data",
+        "Customer Requirements Document",
+        "Assigned Resources"
+      ],
+      "outputs": [
+        "Configured Platform/Service",
+        "Trained Customer Users",
+        "Sign-off on Value Realization (Go-Live)"
+      ],
+      "bottlenecks": [
+        "Customer delays in providing necessary data/access",
+        "Handoff friction between Sales and Customer Success",
+        "Resource constraints on implementation team"
+      ],
+      "governance_risks": [
+        "Scope creep beyond original contract",
+        "Inconsistent implementation quality"
+      ],
+      "compliance_risks": [
+        "Handling customer data inappropriately during setup",
+        "Failing to meet contracted SLA for deployment"
+      ],
+      "kpis": [
+        "Time to First Value (TTFV)",
+        "Customer Satisfaction (CSAT) at Go-Live",
+        "Onboarding Completion Rate",
+        "Time spent per implementation phase"
+      ],
+      "automation_opportunities": [
+        "Automated welcome emails and data collection forms",
+        "In-app guided tours replacing manual training",
+        "Automated milestone tracking"
+      ],
+      "diagnostic_opportunities": [
+        "Measuring the gap between sales close date and kickoff call",
+        "Identifying which implementation stages take the longest on average"
+      ],
+      "rationale": {
+        "why_include": "Directly correlates with customer churn and lifetime value. High variance in execution across organizations.",
+        "data_needed": "CRM deal close dates, project management milestone completions, customer login/activity data.",
+        "diagnostics_generated": "Time-to-value bottlenecks, sales-to-CS handoff friction.",
+        "recommendations_produced": "Standardize onboarding templates, enforce mandatory data collection pre-kickoff."
+      },
+      "health_dimensions": {
+        "bottleneck_risk": {
+          "description": "Risk of work accumulating or stalling. In Customer Onboarding, this often manifests as: Customer delays in providing necessary data/access",
+          "scoring_template": {
+            "1-3": "Healthy flow, minimal queuing",
+            "4-6": "Occasional delays, manageable",
+            "7-8": "Frequent stalls impacting SLAs",
+            "9-10": "Severe blockage, chronic delays"
+          }
+        },
+        "handoff_risk": {
+          "description": "Risk of errors or delays when transferring responsibility between Customer Success Manager, Sales.",
+          "scoring_template": {
+            "1-3": "Seamless, automated handoffs",
+            "4-6": "Manual but documented handoffs",
+            "7-8": "Friction, frequent information loss",
+            "9-10": "Broken communication, siloed teams"
+          }
+        },
+        "governance_risk": {
+          "description": "Risk of control failure. e.g., Scope creep beyond original contract",
+          "scoring_template": {
+            "1-3": "Strong controls, audited",
+            "4-6": "Controls exist but manual",
+            "7-8": "Weak controls, easily bypassed",
+            "9-10": "No oversight, rampant exceptions"
+          }
+        },
+        "visibility_risk": {
+          "description": "Lack of real-time tracking across the workflow stages.",
+          "scoring_template": {
+            "1-3": "Full dashboard visibility",
+            "4-6": "Reporting available but delayed",
+            "7-8": "Data exists but fragmented",
+            "9-10": "Black box, zero tracking"
+          }
+        },
+        "automation_opportunity": {
+          "description": "Potential to replace manual effort. e.g., Automated welcome emails and data collection forms",
+          "scoring_template": {
+            "1-3": "Fully optimized/automated",
+            "4-6": "Partial automation exists",
+            "7-8": "High manual effort on structured data",
+            "9-10": "Completely manual, high volume"
+          }
+        },
+        "compliance_risk": {
+          "description": "Regulatory or policy violation risk. e.g., Handling customer data inappropriately during setup",
+          "scoring_template": {
+            "1-3": "Automated compliance checks",
+            "4-6": "Periodic manual audits",
+            "7-8": "History of minor violations",
+            "9-10": "High risk of fines/penalties"
+          }
+        },
+        "knowledge_dependency_risk": {
+          "description": "Reliance on specific individuals' tacit knowledge rather than documented SOPs.",
+          "scoring_template": {
+            "1-3": "Fully documented SOPs",
+            "4-6": "Documentation exists but outdated",
+            "7-8": "Tribal knowledge prevalent",
+            "9-10": "Single point of failure (Key Person Risk)"
+          }
+        },
+        "throughput_risk": {
+          "description": "Inability to scale the process to handle increased volume.",
+          "scoring_template": {
+            "1-3": "Highly scalable",
+            "4-6": "Scalable with linear headcount addition",
+            "7-8": "Struggles with peak volumes",
+            "9-10": "Process breaks under current load"
+          }
+        }
+      }
+    },
+    {
+      "id": "WF-005",
+      "name": "Incident Management",
+      "domain": "IT Operations",
+      "category": "IT Service Management",
+      "purpose": "To restore normal service operation as quickly as possible and minimize adverse impact on business operations.",
+      "frequency": 10,
+      "criticality": 10,
+      "diagnostic_value": 9,
+      "automation_potential": 8,
+      "typical_stages": [
+        "Incident Detection",
+        "Logging & Categorization",
+        "Initial Diagnosis",
+        "Escalation",
+        "Resolution & Recovery",
+        "Closure"
+      ],
+      "primary_stakeholders": [
+        "IT Helpdesk",
+        "Engineering",
+        "Affected User"
+      ],
+      "inputs": [
+        "User Report/Ticket",
+        "System Alert/Log",
+        "SLA Definitions"
+      ],
+      "outputs": [
+        "Resolved Incident",
+        "Restored Service",
+        "Incident Report/RCA",
+        "Updated Knowledge Base"
+      ],
+      "bottlenecks": [
+        "Poor initial categorization leading to wrong assignment",
+        "Waiting on user response for more details",
+        "Lack of documented workarounds"
+      ],
+      "governance_risks": [
+        "Failing to escalate high-severity incidents appropriately",
+        "Closing tickets without actual user confirmation"
+      ],
+      "compliance_risks": [
+        "Breaching contractual SLAs",
+        "Failing to identify security incidents hidden as IT issues"
+      ],
+      "kpis": [
+        "Mean Time to Resolution (MTTR)",
+        "First Contact Resolution (FCR) Rate",
+        "SLA Breach Rate",
+        "Ticket Backlog Volume"
+      ],
+      "automation_opportunities": [
+        "AI-driven ticket categorization and routing",
+        "Self-service password resets",
+        "Automated status updates to users"
+      ],
+      "diagnostic_opportunities": [
+        "Identifying recurring incidents that should be Problem Management targets",
+        "Analyzing MTTR by support tier to find skill gaps"
+      ],
+      "rationale": {
+        "why_include": "High volume, data-heavy, critical for operational stability. Standardized process (ITIL).",
+        "data_needed": "ITSM ticketing data (creation, state changes, resolution times, category tags).",
+        "diagnostics_generated": "Escalation inefficiencies, root causes of SLA breaches.",
+        "recommendations_produced": "Implement self-service for top 3 recurring ticket types, adjust tier 1 routing rules."
+      },
+      "health_dimensions": {
+        "bottleneck_risk": {
+          "description": "Risk of work accumulating or stalling. In Incident Management, this often manifests as: Poor initial categorization leading to wrong assignment",
+          "scoring_template": {
+            "1-3": "Healthy flow, minimal queuing",
+            "4-6": "Occasional delays, manageable",
+            "7-8": "Frequent stalls impacting SLAs",
+            "9-10": "Severe blockage, chronic delays"
+          }
+        },
+        "handoff_risk": {
+          "description": "Risk of errors or delays when transferring responsibility between IT Helpdesk, Engineering.",
+          "scoring_template": {
+            "1-3": "Seamless, automated handoffs",
+            "4-6": "Manual but documented handoffs",
+            "7-8": "Friction, frequent information loss",
+            "9-10": "Broken communication, siloed teams"
+          }
+        },
+        "governance_risk": {
+          "description": "Risk of control failure. e.g., Failing to escalate high-severity incidents appropriately",
+          "scoring_template": {
+            "1-3": "Strong controls, audited",
+            "4-6": "Controls exist but manual",
+            "7-8": "Weak controls, easily bypassed",
+            "9-10": "No oversight, rampant exceptions"
+          }
+        },
+        "visibility_risk": {
+          "description": "Lack of real-time tracking across the workflow stages.",
+          "scoring_template": {
+            "1-3": "Full dashboard visibility",
+            "4-6": "Reporting available but delayed",
+            "7-8": "Data exists but fragmented",
+            "9-10": "Black box, zero tracking"
+          }
+        },
+        "automation_opportunity": {
+          "description": "Potential to replace manual effort. e.g., AI-driven ticket categorization and routing",
+          "scoring_template": {
+            "1-3": "Fully optimized/automated",
+            "4-6": "Partial automation exists",
+            "7-8": "High manual effort on structured data",
+            "9-10": "Completely manual, high volume"
+          }
+        },
+        "compliance_risk": {
+          "description": "Regulatory or policy violation risk. e.g., Breaching contractual SLAs",
+          "scoring_template": {
+            "1-3": "Automated compliance checks",
+            "4-6": "Periodic manual audits",
+            "7-8": "History of minor violations",
+            "9-10": "High risk of fines/penalties"
+          }
+        },
+        "knowledge_dependency_risk": {
+          "description": "Reliance on specific individuals' tacit knowledge rather than documented SOPs.",
+          "scoring_template": {
+            "1-3": "Fully documented SOPs",
+            "4-6": "Documentation exists but outdated",
+            "7-8": "Tribal knowledge prevalent",
+            "9-10": "Single point of failure (Key Person Risk)"
+          }
+        },
+        "throughput_risk": {
+          "description": "Inability to scale the process to handle increased volume.",
+          "scoring_template": {
+            "1-3": "Highly scalable",
+            "4-6": "Scalable with linear headcount addition",
+            "7-8": "Struggles with peak volumes",
+            "9-10": "Process breaks under current load"
+          }
+        }
+      }
+    },
+    {
+      "id": "WF-006",
+      "name": "Month-end Close (Record to Report)",
+      "domain": "Finance",
+      "category": "Accounting Operations",
+      "purpose": "To finalize accounting data for a specific period to produce accurate financial statements.",
+      "frequency": 10,
+      "criticality": 10,
+      "diagnostic_value": 9,
+      "automation_potential": 7,
+      "typical_stages": [
+        "Data Gathering",
+        "Account Reconciliation",
+        "Journal Entries",
+        "Review & Adjustments",
+        "Financial Statement Generation",
+        "Management Reporting"
+      ],
+      "primary_stakeholders": [
+        "Accounting",
+        "Controller",
+        "CFO"
+      ],
+      "inputs": [
+        "Trial Balance Data",
+        "Bank Statements",
+        "Sub-ledger Data (AP/AR)"
+      ],
+      "outputs": [
+        "Reconciled Accounts",
+        "Finalized Financial Statements (P&L, Balance Sheet)",
+        "Management Reporting Deck"
+      ],
+      "bottlenecks": [
+        "Waiting for straggling invoices or expense reports",
+        "Manual reconciliation of complex accounts",
+        "Identifying and fixing journal entry errors"
+      ],
+      "governance_risks": [
+        "Lack of independent review for manual journal entries",
+        "Inadequate documentation for estimates/accruals"
+      ],
+      "compliance_risks": [
+        "Material misstatements in financials",
+        "Non-compliance with GAAP/IFRS"
+      ],
+      "kpis": [
+        "Days to Close",
+        "Number of Post-Close Adjustments",
+        "Percentage of Automated Reconciliations",
+        "Cost of Finance Function"
+      ],
+      "automation_opportunities": [
+        "Automated bank reconciliations",
+        "Scheduled recurring journal entries",
+        "Automated data extraction from sub-ledgers"
+      ],
+      "diagnostic_opportunities": [
+        "Tracking which specific accounts take the longest to reconcile",
+        "Measuring the volume of late entries delaying the close"
+      ],
+      "rationale": {
+        "why_include": "High visibility to executives, highly structured, strict deadlines. Excellent target for process mining.",
+        "data_needed": "ERP module close timestamps, journal entry logs, reconciliation completion dates.",
+        "diagnostics_generated": "Sub-process bottlenecks (e.g., AP close vs. AR close), manual entry volume.",
+        "recommendations_produced": "Enforce strict cut-off dates for AP, automate specific bank reconciliations."
+      },
+      "health_dimensions": {
+        "bottleneck_risk": {
+          "description": "Risk of work accumulating or stalling. In Month-end Close (Record to Report), this often manifests as: Waiting for straggling invoices or expense reports",
+          "scoring_template": {
+            "1-3": "Healthy flow, minimal queuing",
+            "4-6": "Occasional delays, manageable",
+            "7-8": "Frequent stalls impacting SLAs",
+            "9-10": "Severe blockage, chronic delays"
+          }
+        },
+        "handoff_risk": {
+          "description": "Risk of errors or delays when transferring responsibility between Accounting, Controller.",
+          "scoring_template": {
+            "1-3": "Seamless, automated handoffs",
+            "4-6": "Manual but documented handoffs",
+            "7-8": "Friction, frequent information loss",
+            "9-10": "Broken communication, siloed teams"
+          }
+        },
+        "governance_risk": {
+          "description": "Risk of control failure. e.g., Lack of independent review for manual journal entries",
+          "scoring_template": {
+            "1-3": "Strong controls, audited",
+            "4-6": "Controls exist but manual",
+            "7-8": "Weak controls, easily bypassed",
+            "9-10": "No oversight, rampant exceptions"
+          }
+        },
+        "visibility_risk": {
+          "description": "Lack of real-time tracking across the workflow stages.",
+          "scoring_template": {
+            "1-3": "Full dashboard visibility",
+            "4-6": "Reporting available but delayed",
+            "7-8": "Data exists but fragmented",
+            "9-10": "Black box, zero tracking"
+          }
+        },
+        "automation_opportunity": {
+          "description": "Potential to replace manual effort. e.g., Automated bank reconciliations",
+          "scoring_template": {
+            "1-3": "Fully optimized/automated",
+            "4-6": "Partial automation exists",
+            "7-8": "High manual effort on structured data",
+            "9-10": "Completely manual, high volume"
+          }
+        },
+        "compliance_risk": {
+          "description": "Regulatory or policy violation risk. e.g., Material misstatements in financials",
+          "scoring_template": {
+            "1-3": "Automated compliance checks",
+            "4-6": "Periodic manual audits",
+            "7-8": "History of minor violations",
+            "9-10": "High risk of fines/penalties"
+          }
+        },
+        "knowledge_dependency_risk": {
+          "description": "Reliance on specific individuals' tacit knowledge rather than documented SOPs.",
+          "scoring_template": {
+            "1-3": "Fully documented SOPs",
+            "4-6": "Documentation exists but outdated",
+            "7-8": "Tribal knowledge prevalent",
+            "9-10": "Single point of failure (Key Person Risk)"
+          }
+        },
+        "throughput_risk": {
+          "description": "Inability to scale the process to handle increased volume.",
+          "scoring_template": {
+            "1-3": "Highly scalable",
+            "4-6": "Scalable with linear headcount addition",
+            "7-8": "Struggles with peak volumes",
+            "9-10": "Process breaks under current load"
+          }
+        }
+      }
+    },
+    {
+      "id": "WF-007",
+      "name": "Talent Acquisition / Recruitment",
+      "domain": "Human Resources",
+      "category": "Talent Management",
+      "purpose": "To identify, attract, evaluate, and hire suitable candidates for open organizational roles.",
+      "frequency": 9,
+      "criticality": 8,
+      "diagnostic_value": 8,
+      "automation_potential": 7,
+      "typical_stages": [
+        "Job Requisition",
+        "Sourcing",
+        "Screening",
+        "Interviewing",
+        "Offer Negotiation",
+        "Hiring"
+      ],
+      "primary_stakeholders": [
+        "Recruiter",
+        "Hiring Manager",
+        "Candidate",
+        "HR Leadership"
+      ],
+      "inputs": [
+        "Approved Headcount Request",
+        "Job Description",
+        "Market Compensation Data"
+      ],
+      "outputs": [
+        "Signed Offer Letter",
+        "Candidate Pipeline Data",
+        "Rejected Candidate Notifications"
+      ],
+      "bottlenecks": [
+        "Slow feedback from hiring managers after interviews",
+        "Sourcing niche skill sets",
+        "Lengthy background checks"
+      ],
+      "governance_risks": [
+        "Inconsistent interview processes leading to bias",
+        "Hiring without proper budget approval"
+      ],
+      "compliance_risks": [
+        "Discriminatory hiring practices",
+        "Data privacy violations (candidate data)"
+      ],
+      "kpis": [
+        "Time to Fill",
+        "Cost per Hire",
+        "Offer Acceptance Rate",
+        "Quality of Hire (retention at 1 year)"
+      ],
+      "automation_opportunities": [
+        "Automated interview scheduling",
+        "AI-assisted resume screening",
+        "Automated offer letter generation"
+      ],
+      "diagnostic_opportunities": [
+        "Identifying stages where candidates drop out",
+        "Measuring manager feedback time to highlight bottlenecks"
+      ],
+      "rationale": {
+        "why_include": "High strategic value, often decentralized and messy. Strong impact on organizational growth.",
+        "data_needed": "ATS stage duration data, source of hire, offer acceptance status.",
+        "diagnostics_generated": "Hiring manager responsiveness, sourcing channel effectiveness.",
+        "recommendations_produced": "Implement SLA for manager interview feedback, optimize sourcing spend based on conversion rates."
+      },
+      "health_dimensions": {
+        "bottleneck_risk": {
+          "description": "Risk of work accumulating or stalling. In Talent Acquisition / Recruitment, this often manifests as: Slow feedback from hiring managers after interviews",
+          "scoring_template": {
+            "1-3": "Healthy flow, minimal queuing",
+            "4-6": "Occasional delays, manageable",
+            "7-8": "Frequent stalls impacting SLAs",
+            "9-10": "Severe blockage, chronic delays"
+          }
+        },
+        "handoff_risk": {
+          "description": "Risk of errors or delays when transferring responsibility between Recruiter, Hiring Manager.",
+          "scoring_template": {
+            "1-3": "Seamless, automated handoffs",
+            "4-6": "Manual but documented handoffs",
+            "7-8": "Friction, frequent information loss",
+            "9-10": "Broken communication, siloed teams"
+          }
+        },
+        "governance_risk": {
+          "description": "Risk of control failure. e.g., Inconsistent interview processes leading to bias",
+          "scoring_template": {
+            "1-3": "Strong controls, audited",
+            "4-6": "Controls exist but manual",
+            "7-8": "Weak controls, easily bypassed",
+            "9-10": "No oversight, rampant exceptions"
+          }
+        },
+        "visibility_risk": {
+          "description": "Lack of real-time tracking across the workflow stages.",
+          "scoring_template": {
+            "1-3": "Full dashboard visibility",
+            "4-6": "Reporting available but delayed",
+            "7-8": "Data exists but fragmented",
+            "9-10": "Black box, zero tracking"
+          }
+        },
+        "automation_opportunity": {
+          "description": "Potential to replace manual effort. e.g., Automated interview scheduling",
+          "scoring_template": {
+            "1-3": "Fully optimized/automated",
+            "4-6": "Partial automation exists",
+            "7-8": "High manual effort on structured data",
+            "9-10": "Completely manual, high volume"
+          }
+        },
+        "compliance_risk": {
+          "description": "Regulatory or policy violation risk. e.g., Discriminatory hiring practices",
+          "scoring_template": {
+            "1-3": "Automated compliance checks",
+            "4-6": "Periodic manual audits",
+            "7-8": "History of minor violations",
+            "9-10": "High risk of fines/penalties"
+          }
+        },
+        "knowledge_dependency_risk": {
+          "description": "Reliance on specific individuals' tacit knowledge rather than documented SOPs.",
+          "scoring_template": {
+            "1-3": "Fully documented SOPs",
+            "4-6": "Documentation exists but outdated",
+            "7-8": "Tribal knowledge prevalent",
+            "9-10": "Single point of failure (Key Person Risk)"
+          }
+        },
+        "throughput_risk": {
+          "description": "Inability to scale the process to handle increased volume.",
+          "scoring_template": {
+            "1-3": "Highly scalable",
+            "4-6": "Scalable with linear headcount addition",
+            "7-8": "Struggles with peak volumes",
+            "9-10": "Process breaks under current load"
+          }
+        }
+      }
+    },
+    {
+      "id": "WF-008",
+      "name": "Vendor Selection & Onboarding",
+      "domain": "Procurement",
+      "category": "Sourcing & Vendor Management",
+      "purpose": "To evaluate potential suppliers, select the best fit, and establish them in company systems for transacting.",
+      "frequency": 8,
+      "criticality": 7,
+      "diagnostic_value": 8,
+      "automation_potential": 6,
+      "typical_stages": [
+        "Requirement Definition",
+        "RFP/RFQ Creation",
+        "Vendor Evaluation",
+        "Contract Negotiation",
+        "Vendor Setup in ERP",
+        "Risk/Compliance Review"
+      ],
+      "primary_stakeholders": [
+        "Procurement",
+        "Legal",
+        "Information Security",
+        "Business Unit Requester"
+      ],
+      "inputs": [
+        "Business Requirements",
+        "Vendor Proposals/Quotes",
+        "Security Questionnaires"
+      ],
+      "outputs": [
+        "Signed Vendor Contract",
+        "Approved Vendor in ERP",
+        "Risk Assessment Report"
+      ],
+      "bottlenecks": [
+        "Legal review of redlined contracts",
+        "Information security assessment delays",
+        "Unclear business requirements"
+      ],
+      "governance_risks": [
+        "Selecting vendors with conflicts of interest",
+        "Bypassing competitive bidding requirements"
+      ],
+      "compliance_risks": [
+        "Onboarding vendors with poor data security practices",
+        "Non-compliance with anti-bribery/corruption laws"
+      ],
+      "kpis": [
+        "Onboarding Cycle Time",
+        "Percentage of Spend Under Management",
+        "Vendor Risk Score Compliance",
+        "Contract Negotiation Duration"
+      ],
+      "automation_opportunities": [
+        "Automated risk scoring based on questionnaires",
+        "E-signature workflows",
+        "Self-service vendor portal for data entry"
+      ],
+      "diagnostic_opportunities": [
+        "Measuring time spent in Legal vs. Security review",
+        "Identifying departments that frequently bypass standard procurement"
+      ],
+      "rationale": {
+        "why_include": "High risk, highly cross-functional (Procurement, Legal, IT, Business). Major source of organizational friction.",
+        "data_needed": "Procurement system logs, contract management lifecycle timestamps, InfoSec review tracking.",
+        "diagnostics_generated": "Legal/Security bottleneck analysis, vendor compliance gaps.",
+        "recommendations_produced": "Standardize contract templates to reduce legal redlining, pre-approve vendors for specific categories."
+      },
+      "health_dimensions": {
+        "bottleneck_risk": {
+          "description": "Risk of work accumulating or stalling. In Vendor Selection & Onboarding, this often manifests as: Legal review of redlined contracts",
+          "scoring_template": {
+            "1-3": "Healthy flow, minimal queuing",
+            "4-6": "Occasional delays, manageable",
+            "7-8": "Frequent stalls impacting SLAs",
+            "9-10": "Severe blockage, chronic delays"
+          }
+        },
+        "handoff_risk": {
+          "description": "Risk of errors or delays when transferring responsibility between Procurement, Legal.",
+          "scoring_template": {
+            "1-3": "Seamless, automated handoffs",
+            "4-6": "Manual but documented handoffs",
+            "7-8": "Friction, frequent information loss",
+            "9-10": "Broken communication, siloed teams"
+          }
+        },
+        "governance_risk": {
+          "description": "Risk of control failure. e.g., Selecting vendors with conflicts of interest",
+          "scoring_template": {
+            "1-3": "Strong controls, audited",
+            "4-6": "Controls exist but manual",
+            "7-8": "Weak controls, easily bypassed",
+            "9-10": "No oversight, rampant exceptions"
+          }
+        },
+        "visibility_risk": {
+          "description": "Lack of real-time tracking across the workflow stages.",
+          "scoring_template": {
+            "1-3": "Full dashboard visibility",
+            "4-6": "Reporting available but delayed",
+            "7-8": "Data exists but fragmented",
+            "9-10": "Black box, zero tracking"
+          }
+        },
+        "automation_opportunity": {
+          "description": "Potential to replace manual effort. e.g., Automated risk scoring based on questionnaires",
+          "scoring_template": {
+            "1-3": "Fully optimized/automated",
+            "4-6": "Partial automation exists",
+            "7-8": "High manual effort on structured data",
+            "9-10": "Completely manual, high volume"
+          }
+        },
+        "compliance_risk": {
+          "description": "Regulatory or policy violation risk. e.g., Onboarding vendors with poor data security practices",
+          "scoring_template": {
+            "1-3": "Automated compliance checks",
+            "4-6": "Periodic manual audits",
+            "7-8": "History of minor violations",
+            "9-10": "High risk of fines/penalties"
+          }
+        },
+        "knowledge_dependency_risk": {
+          "description": "Reliance on specific individuals' tacit knowledge rather than documented SOPs.",
+          "scoring_template": {
+            "1-3": "Fully documented SOPs",
+            "4-6": "Documentation exists but outdated",
+            "7-8": "Tribal knowledge prevalent",
+            "9-10": "Single point of failure (Key Person Risk)"
+          }
+        },
+        "throughput_risk": {
+          "description": "Inability to scale the process to handle increased volume.",
+          "scoring_template": {
+            "1-3": "Highly scalable",
+            "4-6": "Scalable with linear headcount addition",
+            "7-8": "Struggles with peak volumes",
+            "9-10": "Process breaks under current load"
+          }
+        }
+      }
+    },
+    {
+      "id": "WF-009",
+      "name": "Sales Pipeline Management",
+      "domain": "Sales",
+      "category": "Sales Execution",
+      "purpose": "To track and advance sales opportunities from initial lead to closed-won/lost status.",
+      "frequency": 9,
+      "criticality": 10,
+      "diagnostic_value": 9,
+      "automation_potential": 6,
+      "typical_stages": [
+        "Lead Qualification",
+        "Discovery",
+        "Proposal/Pitch",
+        "Negotiation",
+        "Verbal Committment",
+        "Closed Won/Lost"
+      ],
+      "primary_stakeholders": [
+        "Account Executive",
+        "Sales Leadership",
+        "Sales Operations"
+      ],
+      "inputs": [
+        "Marketing Qualified Leads (MQLs)",
+        "Sales Playbooks",
+        "Pricing Sheets"
+      ],
+      "outputs": [
+        "Closed-Won Contracts",
+        "Accurate Sales Forecasts",
+        "Lost Deal Analysis"
+      ],
+      "bottlenecks": [
+        "Stalled deals in proposal/negotiation stage",
+        "Lack of access to decision-makers",
+        "Pricing approval delays"
+      ],
+      "governance_risks": [
+        "Offering unauthorized discounts",
+        "Promising unreleased features to win deals"
+      ],
+      "compliance_risks": [
+        "Misrepresenting product capabilities",
+        "Non-compliant contracting practices"
+      ],
+      "kpis": [
+        "Win Rate",
+        "Sales Cycle Length",
+        "Average Deal Size",
+        "Pipeline Velocity"
+      ],
+      "automation_opportunities": [
+        "Automated CRM data entry/activity logging",
+        "Automated proposal/quote generation (CPQ)",
+        "Email sequence automation"
+      ],
+      "diagnostic_opportunities": [
+        "Analyzing win/loss correlation with time spent in specific stages",
+        "Identifying reps with high discount rates"
+      ],
+      "rationale": {
+        "why_include": "Direct revenue impact. Highly measurable. Often suffers from poor data hygiene.",
+        "data_needed": "CRM opportunity history, activity logs (calls/emails), quote generation timestamps.",
+        "diagnostics_generated": "Stage-to-stage conversion drop-offs, sales cycle bloat.",
+        "recommendations_produced": "Implement stricter criteria for advancing deals to 'Proposal' stage, simplify pricing approvals."
+      },
+      "health_dimensions": {
+        "bottleneck_risk": {
+          "description": "Risk of work accumulating or stalling. In Sales Pipeline Management, this often manifests as: Stalled deals in proposal/negotiation stage",
+          "scoring_template": {
+            "1-3": "Healthy flow, minimal queuing",
+            "4-6": "Occasional delays, manageable",
+            "7-8": "Frequent stalls impacting SLAs",
+            "9-10": "Severe blockage, chronic delays"
+          }
+        },
+        "handoff_risk": {
+          "description": "Risk of errors or delays when transferring responsibility between Account Executive, Sales Leadership.",
+          "scoring_template": {
+            "1-3": "Seamless, automated handoffs",
+            "4-6": "Manual but documented handoffs",
+            "7-8": "Friction, frequent information loss",
+            "9-10": "Broken communication, siloed teams"
+          }
+        },
+        "governance_risk": {
+          "description": "Risk of control failure. e.g., Offering unauthorized discounts",
+          "scoring_template": {
+            "1-3": "Strong controls, audited",
+            "4-6": "Controls exist but manual",
+            "7-8": "Weak controls, easily bypassed",
+            "9-10": "No oversight, rampant exceptions"
+          }
+        },
+        "visibility_risk": {
+          "description": "Lack of real-time tracking across the workflow stages.",
+          "scoring_template": {
+            "1-3": "Full dashboard visibility",
+            "4-6": "Reporting available but delayed",
+            "7-8": "Data exists but fragmented",
+            "9-10": "Black box, zero tracking"
+          }
+        },
+        "automation_opportunity": {
+          "description": "Potential to replace manual effort. e.g., Automated CRM data entry/activity logging",
+          "scoring_template": {
+            "1-3": "Fully optimized/automated",
+            "4-6": "Partial automation exists",
+            "7-8": "High manual effort on structured data",
+            "9-10": "Completely manual, high volume"
+          }
+        },
+        "compliance_risk": {
+          "description": "Regulatory or policy violation risk. e.g., Misrepresenting product capabilities",
+          "scoring_template": {
+            "1-3": "Automated compliance checks",
+            "4-6": "Periodic manual audits",
+            "7-8": "History of minor violations",
+            "9-10": "High risk of fines/penalties"
+          }
+        },
+        "knowledge_dependency_risk": {
+          "description": "Reliance on specific individuals' tacit knowledge rather than documented SOPs.",
+          "scoring_template": {
+            "1-3": "Fully documented SOPs",
+            "4-6": "Documentation exists but outdated",
+            "7-8": "Tribal knowledge prevalent",
+            "9-10": "Single point of failure (Key Person Risk)"
+          }
+        },
+        "throughput_risk": {
+          "description": "Inability to scale the process to handle increased volume.",
+          "scoring_template": {
+            "1-3": "Highly scalable",
+            "4-6": "Scalable with linear headcount addition",
+            "7-8": "Struggles with peak volumes",
+            "9-10": "Process breaks under current load"
+          }
+        }
+      }
+    },
+    {
+      "id": "WF-010",
+      "name": "Change Management",
+      "domain": "IT Operations",
+      "category": "IT Service Management",
+      "purpose": "To control the lifecycle of all changes, enabling beneficial changes to be made with minimum disruption to IT services.",
+      "frequency": 9,
+      "criticality": 9,
+      "diagnostic_value": 8,
+      "automation_potential": 6,
+      "typical_stages": [
+        "Change Request (RFC)",
+        "Review & Assessment",
+        "CAB Approval",
+        "Implementation Planning",
+        "Deployment",
+        "Post-Implementation Review"
+      ],
+      "primary_stakeholders": [
+        "Change Manager",
+        "Engineering",
+        "QA",
+        "Business Stakeholders"
+      ],
+      "inputs": [
+        "Request for Change (RFC)",
+        "Impact/Risk Assessment",
+        "Implementation Plan"
+      ],
+      "outputs": [
+        "Approved/Rejected Change",
+        "Deployed Update",
+        "Post-Implementation Review (PIR)"
+      ],
+      "bottlenecks": [
+        "Awaiting Change Advisory Board (CAB) approval",
+        "Incomplete impact assessments delaying review",
+        "Resource conflicts during deployment windows"
+      ],
+      "governance_risks": [
+        "Unauthorized changes to production environments",
+        "Inadequate testing prior to deployment"
+      ],
+      "compliance_risks": [
+        "Audit failures due to missing change documentation",
+        "System downtime impacting regulatory reporting"
+      ],
+      "kpis": [
+        "Change Success Rate",
+        "Percentage of Urgent/Emergency Changes",
+        "Number of Incidents Caused by Changes",
+        "CAB Approval Cycle Time"
+      ],
+      "automation_opportunities": [
+        "Automated pre-approved standard changes",
+        "Integration between CI/CD tools and ITSM platform",
+        "Automated risk scoring for RFCs"
+      ],
+      "diagnostic_opportunities": [
+        "Correlating incidents with recent changes",
+        "Identifying teams with high emergency change volumes"
+      ],
+      "rationale": {
+        "why_include": "Critical for IT stability and security. Balances agility with risk. High diagnostic value for DevOps maturity.",
+        "data_needed": "ITSM change ticket data, CI/CD deployment logs, incident ticket linkage.",
+        "diagnostics_generated": "Emergency change abuse, change failure rates by system.",
+        "recommendations_produced": "Convert high-frequency, low-risk changes to 'Standard' (pre-approved) status, improve testing for specific modules."
+      },
+      "health_dimensions": {
+        "bottleneck_risk": {
+          "description": "Risk of work accumulating or stalling. In Change Management, this often manifests as: Awaiting Change Advisory Board (CAB) approval",
+          "scoring_template": {
+            "1-3": "Healthy flow, minimal queuing",
+            "4-6": "Occasional delays, manageable",
+            "7-8": "Frequent stalls impacting SLAs",
+            "9-10": "Severe blockage, chronic delays"
+          }
+        },
+        "handoff_risk": {
+          "description": "Risk of errors or delays when transferring responsibility between Change Manager, Engineering.",
+          "scoring_template": {
+            "1-3": "Seamless, automated handoffs",
+            "4-6": "Manual but documented handoffs",
+            "7-8": "Friction, frequent information loss",
+            "9-10": "Broken communication, siloed teams"
+          }
+        },
+        "governance_risk": {
+          "description": "Risk of control failure. e.g., Unauthorized changes to production environments",
+          "scoring_template": {
+            "1-3": "Strong controls, audited",
+            "4-6": "Controls exist but manual",
+            "7-8": "Weak controls, easily bypassed",
+            "9-10": "No oversight, rampant exceptions"
+          }
+        },
+        "visibility_risk": {
+          "description": "Lack of real-time tracking across the workflow stages.",
+          "scoring_template": {
+            "1-3": "Full dashboard visibility",
+            "4-6": "Reporting available but delayed",
+            "7-8": "Data exists but fragmented",
+            "9-10": "Black box, zero tracking"
+          }
+        },
+        "automation_opportunity": {
+          "description": "Potential to replace manual effort. e.g., Automated pre-approved standard changes",
+          "scoring_template": {
+            "1-3": "Fully optimized/automated",
+            "4-6": "Partial automation exists",
+            "7-8": "High manual effort on structured data",
+            "9-10": "Completely manual, high volume"
+          }
+        },
+        "compliance_risk": {
+          "description": "Regulatory or policy violation risk. e.g., Audit failures due to missing change documentation",
+          "scoring_template": {
+            "1-3": "Automated compliance checks",
+            "4-6": "Periodic manual audits",
+            "7-8": "History of minor violations",
+            "9-10": "High risk of fines/penalties"
+          }
+        },
+        "knowledge_dependency_risk": {
+          "description": "Reliance on specific individuals' tacit knowledge rather than documented SOPs.",
+          "scoring_template": {
+            "1-3": "Fully documented SOPs",
+            "4-6": "Documentation exists but outdated",
+            "7-8": "Tribal knowledge prevalent",
+            "9-10": "Single point of failure (Key Person Risk)"
+          }
+        },
+        "throughput_risk": {
+          "description": "Inability to scale the process to handle increased volume.",
+          "scoring_template": {
+            "1-3": "Highly scalable",
+            "4-6": "Scalable with linear headcount addition",
+            "7-8": "Struggles with peak volumes",
+            "9-10": "Process breaks under current load"
+          }
+        }
+      }
+    },
+    {
+      "id": "WF-011",
+      "name": "Strategic Planning & Execution",
+      "domain": "Strategy",
+      "category": "Enterprise Strategy",
+      "purpose": "To define the organization's direction and allocate resources to pursue this strategy.",
+      "frequency": 8,
+      "criticality": 9,
+      "diagnostic_value": 6,
+      "automation_potential": 2,
+      "typical_stages": [
+        "Environmental Scan",
+        "Strategy Formulation",
+        "Goal Setting",
+        "Resource Allocation",
+        "Execution Monitoring"
+      ],
+      "primary_stakeholders": [
+        "Executive Team",
+        "Board of Directors",
+        "Department Heads"
+      ]
+    },
+    {
+      "id": "WF-012",
+      "name": "Operating Plan Development",
+      "domain": "Strategy",
+      "category": "Enterprise Strategy",
+      "purpose": "To translate strategic goals into actionable annual operating plans.",
+      "frequency": 8,
+      "criticality": 9,
+      "diagnostic_value": 7,
+      "automation_potential": 3,
+      "typical_stages": [
+        "Goal Translation",
+        "Departmental Planning",
+        "Budget Alignment",
+        "Plan Finalization",
+        "Communication"
+      ],
+      "primary_stakeholders": [
+        "Executive Team",
+        "Finance",
+        "Department Heads"
+      ]
+    },
+    {
+      "id": "WF-013",
+      "name": "Budget Planning & Forecasting",
+      "domain": "Finance",
+      "category": "Financial Planning",
+      "purpose": "To estimate future revenue and expenses to allocate financial resources effectively.",
+      "frequency": 9,
+      "criticality": 10,
+      "diagnostic_value": 8,
+      "automation_potential": 5,
+      "typical_stages": [
+        "Assumptions Gathering",
+        "Draft Creation",
+        "Review & Iteration",
+        "Approval",
+        "Variance Analysis"
+      ],
+      "primary_stakeholders": [
+        "FP&A",
+        "Department Heads",
+        "Executive Team"
+      ]
+    },
+    {
+      "id": "WF-014",
+      "name": "Campaign Management",
+      "domain": "Marketing",
+      "category": "Demand Generation",
+      "purpose": "To plan, execute, track, and analyze marketing initiatives.",
+      "frequency": 9,
+      "criticality": 8,
+      "diagnostic_value": 8,
+      "automation_potential": 7,
+      "typical_stages": [
+        "Ideation",
+        "Asset Creation",
+        "Launch",
+        "Monitoring",
+        "Post-Campaign Analysis"
+      ],
+      "primary_stakeholders": [
+        "Marketing Team",
+        "Design",
+        "Sales"
+      ]
+    },
+    {
+      "id": "WF-015",
+      "name": "Lead Generation & Qualification",
+      "domain": "Marketing",
+      "category": "Demand Generation",
+      "purpose": "To identify and evaluate potential customers before handing them to sales.",
+      "frequency": 9,
+      "criticality": 9,
+      "diagnostic_value": 8,
+      "automation_potential": 8,
+      "typical_stages": [
+        "Traffic Generation",
+        "Lead Capture",
+        "Scoring/Qualification",
+        "Nurturing",
+        "Handoff to Sales"
+      ],
+      "primary_stakeholders": [
+        "Marketing",
+        "SDRs/BDRs"
+      ]
+    },
+    {
+      "id": "WF-016",
+      "name": "Brand Asset Management",
+      "domain": "Marketing",
+      "category": "Brand Management",
+      "purpose": "To organize, store, and distribute brand assets and ensure consistency.",
+      "frequency": 7,
+      "criticality": 6,
+      "diagnostic_value": 5,
+      "automation_potential": 6,
+      "typical_stages": [
+        "Asset Creation",
+        "Review/Approval",
+        "Tagging/Cataloging",
+        "Distribution",
+        "Archiving"
+      ],
+      "primary_stakeholders": [
+        "Design Team",
+        "Marketing",
+        "External Partners"
+      ]
+    },
+    {
+      "id": "WF-017",
+      "name": "Quote to Cash / Contract Negotiation",
+      "domain": "Sales",
+      "category": "Sales Execution",
+      "purpose": "To manage the process from issuing a sales quote to final contract signature.",
+      "frequency": 9,
+      "criticality": 9,
+      "diagnostic_value": 9,
+      "automation_potential": 7,
+      "typical_stages": [
+        "Quote Generation",
+        "Pricing Approval",
+        "Contract Drafting",
+        "Redlining/Negotiation",
+        "Signature"
+      ],
+      "primary_stakeholders": [
+        "Sales",
+        "Legal",
+        "Finance"
+      ]
+    },
+    {
+      "id": "WF-018",
+      "name": "Sales Forecasting",
+      "domain": "Sales",
+      "category": "Sales Planning",
+      "purpose": "To predict sales revenue over a specific period based on historical data and pipeline.",
+      "frequency": 9,
+      "criticality": 9,
+      "diagnostic_value": 8,
+      "automation_potential": 7,
+      "typical_stages": [
+        "Data Aggregation",
+        "Pipeline Review",
+        "Probability Adjustment",
+        "Forecast Submission",
+        "Variance Review"
+      ],
+      "primary_stakeholders": [
+        "Sales Leadership",
+        "Sales Operations",
+        "FP&A"
+      ]
+    },
+    {
+      "id": "WF-019",
+      "name": "Partner/Channel Onboarding",
+      "domain": "Sales",
+      "category": "Channel Management",
+      "purpose": "To integrate third-party resellers or partners into the company's ecosystem.",
+      "frequency": 6,
+      "criticality": 7,
+      "diagnostic_value": 7,
+      "automation_potential": 7,
+      "typical_stages": [
+        "Partner Identification",
+        "Agreement Signing",
+        "System Provisioning",
+        "Training/Enablement",
+        "First Joint Sale"
+      ],
+      "primary_stakeholders": [
+        "Channel Sales",
+        "Legal",
+        "Marketing"
+      ]
+    },
+    {
+      "id": "WF-020",
+      "name": "Issue Resolution / Ticketing",
+      "domain": "Customer Success",
+      "category": "Customer Support",
+      "purpose": "To address and resolve customer inquiries, bugs, and complaints.",
+      "frequency": 10,
+      "criticality": 8,
+      "diagnostic_value": 9,
+      "automation_potential": 8,
+      "typical_stages": [
+        "Ticket Creation",
+        "Triage/Assignment",
+        "Investigation",
+        "Resolution/Workaround",
+        "Customer Confirmation",
+        "Closure"
+      ],
+      "primary_stakeholders": [
+        "Support Agents",
+        "Engineering",
+        "Customer"
+      ]
+    },
+    {
+      "id": "WF-021",
+      "name": "Customer Renewal Management",
+      "domain": "Customer Success",
+      "category": "Customer Lifecycle",
+      "purpose": "To secure subscription renewals and minimize customer churn.",
+      "frequency": 8,
+      "criticality": 9,
+      "diagnostic_value": 8,
+      "automation_potential": 6,
+      "typical_stages": [
+        "Renewal Identification",
+        "Health Check Review",
+        "Proposal Generation",
+        "Negotiation",
+        "Contract Execution"
+      ],
+      "primary_stakeholders": [
+        "CSM",
+        "Account Management",
+        "Legal"
+      ]
+    },
+    {
+      "id": "WF-022",
+      "name": "Net Promoter Score (NPS) / Feedback",
+      "domain": "Customer Success",
+      "category": "Customer Feedback",
+      "purpose": "To systematically collect, analyze, and act upon customer feedback.",
+      "frequency": 8,
+      "criticality": 7,
+      "diagnostic_value": 8,
+      "automation_potential": 9,
+      "typical_stages": [
+        "Survey Design",
+        "Distribution",
+        "Data Collection",
+        "Analysis/Categorization",
+        "Follow-up Action"
+      ],
+      "primary_stakeholders": [
+        "Customer Success",
+        "Product Management",
+        "Marketing"
+      ]
+    },
+    {
+      "id": "WF-023",
+      "name": "Performance Review Cycle",
+      "domain": "Human Resources",
+      "category": "Talent Management",
+      "purpose": "To evaluate employee performance, provide feedback, and determine compensation adjustments.",
+      "frequency": 9,
+      "criticality": 8,
+      "diagnostic_value": 7,
+      "automation_potential": 6,
+      "typical_stages": [
+        "Goal Setting",
+        "Self-Evaluation",
+        "Manager Evaluation",
+        "Calibration Session",
+        "Delivery/Feedback"
+      ],
+      "primary_stakeholders": [
+        "HR",
+        "Managers",
+        "Employees"
+      ]
+    },
+    {
+      "id": "WF-024",
+      "name": "Payroll Processing",
+      "domain": "Human Resources",
+      "category": "Compensation & Benefits",
+      "purpose": "To calculate and distribute employee compensation accurately and on time.",
+      "frequency": 10,
+      "criticality": 10,
+      "diagnostic_value": 8,
+      "automation_potential": 9,
+      "typical_stages": [
+        "Time & Attendance Collection",
+        "Data Verification",
+        "Tax/Deduction Calculation",
+        "Payment Execution",
+        "Reporting"
+      ],
+      "primary_stakeholders": [
+        "Payroll Specialist",
+        "HR",
+        "Finance"
+      ]
+    },
+    {
+      "id": "WF-025",
+      "name": "Employee Offboarding",
+      "domain": "Human Resources",
+      "category": "Talent Management",
+      "purpose": "To securely and gracefully transition a departing employee out of the organization.",
+      "frequency": 9,
+      "criticality": 8,
+      "diagnostic_value": 9,
+      "automation_potential": 8,
+      "typical_stages": [
+        "Notice Processing",
+        "Knowledge Transfer",
+        "Asset Recovery",
+        "Access Revocation",
+        "Exit Interview"
+      ],
+      "primary_stakeholders": [
+        "HR",
+        "IT",
+        "Manager",
+        "Departing Employee"
+      ]
+    },
+    {
+      "id": "WF-026",
+      "name": "Time & Attendance Management",
+      "domain": "Human Resources",
+      "category": "Workforce Management",
+      "purpose": "To track employee working hours, leave, and absences.",
+      "frequency": 9,
+      "criticality": 7,
+      "diagnostic_value": 7,
+      "automation_potential": 9,
+      "typical_stages": [
+        "Time Logging",
+        "Leave Request",
+        "Manager Approval",
+        "Reconciliation",
+        "Integration to Payroll"
+      ],
+      "primary_stakeholders": [
+        "Employees",
+        "Managers",
+        "HR"
+      ]
+    },
+    {
+      "id": "WF-027",
+      "name": "Expense Management",
+      "domain": "Finance",
+      "category": "Transactional Finance",
+      "purpose": "To process and reimburse employee business expenses.",
+      "frequency": 9,
+      "criticality": 7,
+      "diagnostic_value": 8,
+      "automation_potential": 9,
+      "typical_stages": [
+        "Expense Submission",
+        "Receipt Verification",
+        "Manager Approval",
+        "Finance Audit",
+        "Reimbursement"
+      ],
+      "primary_stakeholders": [
+        "Employees",
+        "Managers",
+        "Finance"
+      ]
+    },
+    {
+      "id": "WF-028",
+      "name": "Tax Reporting & Compliance",
+      "domain": "Finance",
+      "category": "Tax & Treasury",
+      "purpose": "To calculate, file, and remit applicable taxes to regulatory authorities.",
+      "frequency": 8,
+      "criticality": 10,
+      "diagnostic_value": 7,
+      "automation_potential": 6,
+      "typical_stages": [
+        "Data Collection",
+        "Calculation",
+        "Filing Preparation",
+        "Review/Sign-off",
+        "Submission & Payment"
+      ],
+      "primary_stakeholders": [
+        "Tax Team",
+        "Finance",
+        "External Auditors"
+      ]
+    },
+    {
+      "id": "WF-029",
+      "name": "Purchase Requisition & Approval",
+      "domain": "Procurement",
+      "category": "Procurement Operations",
+      "purpose": "To formalize and approve internal requests for external goods/services.",
+      "frequency": 9,
+      "criticality": 8,
+      "diagnostic_value": 9,
+      "automation_potential": 9,
+      "typical_stages": [
+        "Need Identification",
+        "Requisition Creation",
+        "Budget Check",
+        "Management Approval",
+        "PO Generation"
+      ],
+      "primary_stakeholders": [
+        "Requester",
+        "Manager",
+        "Procurement",
+        "Finance"
+      ]
+    },
+    {
+      "id": "WF-030",
+      "name": "Supplier Performance Management",
+      "domain": "Procurement",
+      "category": "Sourcing & Vendor Management",
+      "purpose": "To measure, analyze, and manage the performance of critical suppliers.",
+      "frequency": 6,
+      "criticality": 7,
+      "diagnostic_value": 8,
+      "automation_potential": 6,
+      "typical_stages": [
+        "KPI Definition",
+        "Data Collection",
+        "Scorecard Creation",
+        "Supplier Review Meeting",
+        "Corrective Action Planning"
+      ],
+      "primary_stakeholders": [
+        "Procurement",
+        "Operations",
+        "Supplier"
+      ]
+    },
+    {
+      "id": "WF-031",
+      "name": "Problem Management",
+      "domain": "IT Operations",
+      "category": "IT Service Management",
+      "purpose": "To manage the lifecycle of all problems (root causes of incidents) to prevent recurrence.",
+      "frequency": 8,
+      "criticality": 8,
+      "diagnostic_value": 9,
+      "automation_potential": 5,
+      "typical_stages": [
+        "Problem Identification",
+        "Root Cause Analysis (RCA)",
+        "Workaround Creation",
+        "Known Error Logging",
+        "Permanent Solution Deployment"
+      ],
+      "primary_stakeholders": [
+        "IT Operations",
+        "Engineering",
+        "Problem Manager"
+      ]
+    },
+    {
+      "id": "WF-032",
+      "name": "Access Provisioning / IAM",
+      "domain": "IT Operations",
+      "category": "Security Operations",
+      "purpose": "To grant or revoke access to IT systems, applications, and data.",
+      "frequency": 10,
+      "criticality": 10,
+      "diagnostic_value": 9,
+      "automation_potential": 9,
+      "typical_stages": [
+        "Request Creation",
+        "Approval Workflow",
+        "Account Creation/Modification",
+        "Access Verification",
+        "Audit Logging"
+      ],
+      "primary_stakeholders": [
+        "IT/Security",
+        "Managers",
+        "Employees"
+      ]
+    },
+    {
+      "id": "WF-033",
+      "name": "Asset Management",
+      "domain": "IT Operations",
+      "category": "IT Service Management",
+      "purpose": "To manage the lifecycle and inventory of IT hardware and software assets.",
+      "frequency": 8,
+      "criticality": 7,
+      "diagnostic_value": 8,
+      "automation_potential": 7,
+      "typical_stages": [
+        "Procurement/Receipt",
+        "Tagging & Discovery",
+        "Assignment",
+        "Maintenance",
+        "Retirement/Disposal"
+      ],
+      "primary_stakeholders": [
+        "IT Operations",
+        "Finance"
+      ]
+    },
+    {
+      "id": "WF-034",
+      "name": "Software Release Management",
+      "domain": "IT Operations",
+      "category": "Application Management",
+      "purpose": "To plan, schedule, and control the build, test, and deployment of software releases.",
+      "frequency": 8,
+      "criticality": 9,
+      "diagnostic_value": 8,
+      "automation_potential": 8,
+      "typical_stages": [
+        "Code Commit",
+        "Automated Testing",
+        "Staging Deployment",
+        "UAT Sign-off",
+        "Production Deployment"
+      ],
+      "primary_stakeholders": [
+        "DevOps",
+        "Engineering",
+        "QA",
+        "Product Management"
+      ]
+    },
+    {
+      "id": "WF-035",
+      "name": "Enterprise Risk Assessment",
+      "domain": "Risk & Compliance",
+      "category": "Risk Management",
+      "purpose": "To identify, evaluate, and prioritize organizational risks.",
+      "frequency": 6,
+      "criticality": 9,
+      "diagnostic_value": 8,
+      "automation_potential": 4,
+      "typical_stages": [
+        "Risk Identification",
+        "Impact/Likelihood Analysis",
+        "Risk Scoring",
+        "Mitigation Planning",
+        "Monitoring"
+      ],
+      "primary_stakeholders": [
+        "Risk Management",
+        "Executive Team",
+        "Department Heads"
+      ]
+    },
+    {
+      "id": "WF-036",
+      "name": "Internal Audit Execution",
+      "domain": "Risk & Compliance",
+      "category": "Compliance Management",
+      "purpose": "To provide independent assurance that an organization's risk management, governance, and internal control processes are operating effectively.",
+      "frequency": 7,
+      "criticality": 8,
+      "diagnostic_value": 9,
+      "automation_potential": 5,
+      "typical_stages": [
+        "Audit Planning",
+        "Fieldwork/Testing",
+        "Draft Reporting",
+        "Management Response",
+        "Final Report Issuance"
+      ],
+      "primary_stakeholders": [
+        "Internal Audit",
+        "Audit Committee",
+        "Process Owners"
+      ]
+    },
+    {
+      "id": "WF-037",
+      "name": "Data Privacy/GDPR Compliance Review",
+      "domain": "Risk & Compliance",
+      "category": "Compliance Management",
+      "purpose": "To ensure organizational data handling practices comply with privacy regulations.",
+      "frequency": 7,
+      "criticality": 9,
+      "diagnostic_value": 8,
+      "automation_potential": 6,
+      "typical_stages": [
+        "Data Mapping",
+        "DPIA Execution",
+        "Consent Verification",
+        "Policy Update",
+        "Remediation"
+      ],
+      "primary_stakeholders": [
+        "Data Protection Officer (DPO)",
+        "Legal",
+        "IT"
+      ]
+    },
+    {
+      "id": "WF-038",
+      "name": "Incident Response / Breach Management",
+      "domain": "Risk & Compliance",
+      "category": "Security Operations",
+      "purpose": "To handle security breaches or cyberattacks effectively to limit damage and recovery time.",
+      "frequency": 5,
+      "criticality": 10,
+      "diagnostic_value": 9,
+      "automation_potential": 7,
+      "typical_stages": [
+        "Detection & Alerting",
+        "Containment",
+        "Eradication",
+        "Recovery",
+        "Post-Incident Analysis"
+      ],
+      "primary_stakeholders": [
+        "Security Operations Center (SOC)",
+        "Legal",
+        "PR",
+        "Executive Team"
+      ]
+    },
+    {
+      "id": "WF-039",
+      "name": "Product Roadmapping",
+      "domain": "Product Development",
+      "category": "Product Strategy",
+      "purpose": "To map out the vision and direction of the product offering over time.",
+      "frequency": 8,
+      "criticality": 9,
+      "diagnostic_value": 6,
+      "automation_potential": 3,
+      "typical_stages": [
+        "Market/User Research",
+        "Feature Ideation",
+        "Prioritization",
+        "Roadmap Drafting",
+        "Stakeholder Alignment"
+      ],
+      "primary_stakeholders": [
+        "Product Management",
+        "Engineering Lead",
+        "Executive Team"
+      ]
+    },
+    {
+      "id": "WF-040",
+      "name": "Requirements Gathering",
+      "domain": "Product Development",
+      "category": "Product Design",
+      "purpose": "To define the detailed specifications for new product features or systems.",
+      "frequency": 9,
+      "criticality": 8,
+      "diagnostic_value": 8,
+      "automation_potential": 4,
+      "typical_stages": [
+        "Stakeholder Interviews",
+        "User Story Creation",
+        "Technical Feasibility Review",
+        "Specification Documentation",
+        "Sign-off"
+      ],
+      "primary_stakeholders": [
+        "Product Managers",
+        "Business Analysts",
+        "Engineering"
+      ]
+    },
+    {
+      "id": "WF-041",
+      "name": "Sprint Planning & Execution",
+      "domain": "Product Development",
+      "category": "Agile Delivery",
+      "purpose": "To plan and deliver a set amount of work within a specific timebox (sprint).",
+      "frequency": 9,
+      "criticality": 8,
+      "diagnostic_value": 8,
+      "automation_potential": 7,
+      "typical_stages": [
+        "Backlog Grooming",
+        "Sprint Planning",
+        "Daily Standups",
+        "Sprint Review",
+        "Sprint Retrospective"
+      ],
+      "primary_stakeholders": [
+        "Scrum Master",
+        "Product Owner",
+        "Development Team"
+      ]
+    },
+    {
+      "id": "WF-042",
+      "name": "Quality Assurance / Testing",
+      "domain": "Product Development",
+      "category": "Quality Management",
+      "purpose": "To ensure software or physical products meet specified quality standards before release.",
+      "frequency": 9,
+      "criticality": 9,
+      "diagnostic_value": 9,
+      "automation_potential": 9,
+      "typical_stages": [
+        "Test Planning",
+        "Test Case Creation",
+        "Test Execution",
+        "Bug Reporting",
+        "Verification/Sign-off"
+      ],
+      "primary_stakeholders": [
+        "QA Engineers",
+        "Developers",
+        "Product Managers"
+      ]
+    },
+    {
+      "id": "WF-043",
+      "name": "Project Initiation & Scoping",
+      "domain": "Project Management",
+      "category": "Project Portfolio Management",
+      "purpose": "To formally start a new project, defining its objectives, scope, and initial constraints.",
+      "frequency": 8,
+      "criticality": 8,
+      "diagnostic_value": 7,
+      "automation_potential": 4,
+      "typical_stages": [
+        "Business Case Development",
+        "Charter Creation",
+        "Stakeholder Identification",
+        "Initial Budgeting",
+        "Kick-off"
+      ],
+      "primary_stakeholders": [
+        "Project Manager",
+        "Sponsor",
+        "Key Stakeholders"
+      ]
+    },
+    {
+      "id": "WF-044",
+      "name": "Resource Allocation & Capacity Planning",
+      "domain": "Project Management",
+      "category": "Resource Management",
+      "purpose": "To ensure the right resources are available at the right time for project execution.",
+      "frequency": 7,
+      "criticality": 8,
+      "diagnostic_value": 9,
+      "automation_potential": 6,
+      "typical_stages": [
+        "Demand Forecasting",
+        "Capacity Assessment",
+        "Resource Assignment",
+        "Conflict Resolution",
+        "Utilization Tracking"
+      ],
+      "primary_stakeholders": [
+        "Resource Managers",
+        "Project Managers",
+        "Department Heads"
+      ]
+    },
+    {
+      "id": "WF-045",
+      "name": "Project Status Reporting",
+      "domain": "Project Management",
+      "category": "Project Portfolio Management",
+      "purpose": "To communicate project progress, risks, and health to stakeholders.",
+      "frequency": 9,
+      "criticality": 7,
+      "diagnostic_value": 8,
+      "automation_potential": 8,
+      "typical_stages": [
+        "Data Collection",
+        "Status Drafting",
+        "Risk/Issue Highlighting",
+        "Review",
+        "Distribution"
+      ],
+      "primary_stakeholders": [
+        "Project Managers",
+        "PMO",
+        "Executive Sponsors"
+      ]
+    },
+    {
+      "id": "WF-046",
+      "name": "Knowledge Base Article Creation",
+      "domain": "Knowledge Management",
+      "category": "Content Management",
+      "purpose": "To capture and codify institutional knowledge for self-service consumption.",
+      "frequency": 8,
+      "criticality": 6,
+      "diagnostic_value": 6,
+      "automation_potential": 7,
+      "typical_stages": [
+        "Topic Identification",
+        "Drafting",
+        "Technical Review",
+        "Formatting",
+        "Publishing"
+      ],
+      "primary_stakeholders": [
+        "Subject Matter Experts",
+        "Technical Writers",
+        "Support Teams"
+      ]
+    },
+    {
+      "id": "WF-047",
+      "name": "Standard Operating Procedure (SOP) Development",
+      "domain": "Knowledge Management",
+      "category": "Content Management",
+      "purpose": "To document step-by-step instructions for routine operations.",
+      "frequency": 7,
+      "criticality": 7,
+      "diagnostic_value": 8,
+      "automation_potential": 5,
+      "typical_stages": [
+        "Process Mapping",
+        "Drafting SOP",
+        "Review & Testing",
+        "Approval",
+        "Distribution & Training"
+      ],
+      "primary_stakeholders": [
+        "Operations Managers",
+        "Compliance",
+        "Employees"
+      ]
+    },
+    {
+      "id": "WF-048",
+      "name": "Document Control & Archiving",
+      "domain": "Knowledge Management",
+      "category": "Content Management",
+      "purpose": "To manage the lifecycle of corporate documents ensuring version control and retention compliance.",
+      "frequency": 8,
+      "criticality": 7,
+      "diagnostic_value": 7,
+      "automation_potential": 8,
+      "typical_stages": [
+        "Document Creation",
+        "Version Control",
+        "Access Management",
+        "Retention Policy Application",
+        "Archiving/Destruction"
+      ],
+      "primary_stakeholders": [
+        "Records Management",
+        "Legal",
+        "All Staff"
+      ]
+    },
+    {
+      "id": "WF-049",
+      "name": "Inventory Management",
+      "domain": "Supply Chain",
+      "category": "Supply Chain Operations",
+      "purpose": "To track and manage physical goods to optimize stock levels and fulfill demand.",
+      "frequency": 7,
+      "criticality": 9,
+      "diagnostic_value": 9,
+      "automation_potential": 8,
+      "typical_stages": [
+        "Receiving",
+        "Warehousing/Storage",
+        "Stock Auditing",
+        "Picking",
+        "Replenishment Ordering"
+      ],
+      "primary_stakeholders": [
+        "Warehouse Staff",
+        "Supply Chain Managers",
+        "Procurement"
+      ]
+    },
+    {
+      "id": "WF-050",
+      "name": "Order Fulfillment",
+      "domain": "Supply Chain",
+      "category": "Supply Chain Operations",
+      "purpose": "To process and deliver customer orders accurately and efficiently.",
+      "frequency": 7,
+      "criticality": 10,
+      "diagnostic_value": 9,
+      "automation_potential": 8,
+      "typical_stages": [
+        "Order Receipt",
+        "Picking & Packing",
+        "Shipping",
+        "Tracking Updates",
+        "Delivery Confirmation"
+      ],
+      "primary_stakeholders": [
+        "Logistics",
+        "Warehouse",
+        "Customer Support"
+      ]
+    }
+  ]
+}
