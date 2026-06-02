@@ -32,14 +32,14 @@ export default function WorkflowDetail() {
 
   const integrationMutation = useMutation({
     mutationFn: async (auditId: string) => {
-      const response = await apiClient.post('/integration/run', {
+      const response = await apiClient.post('/integrations/run', {
         audit_id: auditId,
         workflow_id: id,
       });
       return response.data;
     },
     onSuccess: (data) => {
-      navigate(`/integration/${data.id}`);
+      navigate(`/integrations/${data.id}`);
     },
   });
 

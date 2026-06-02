@@ -13,7 +13,7 @@ export default function IntegrationResults() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['integration', id],
     queryFn: async () => {
-      const response = await apiClient.get(`/integration/${id}`);
+      const response = await apiClient.get(`/integrations/${id}`);
       return response.data;
     },
     enabled: !!id,
