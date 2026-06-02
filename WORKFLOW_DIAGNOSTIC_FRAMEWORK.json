@@ -1,0 +1,960 @@
+{
+  "framework_metadata": {
+    "title": "TARKAX Workflow Diagnostic Framework",
+    "version": "1.0.0",
+    "description": "A reusable, workflow-agnostic diagnostic framework to evaluate operational workflows across any business function.",
+    "status": "active"
+  },
+  "dimensions": [
+    {
+      "id": "bottlenecks",
+      "name": "Bottlenecks",
+      "definition": "The degree to which work items accumulate at specific stages due to capacity constraints, approval requirements, or resource starvation.",
+      "why_it_matters": "Bottlenecks dictate the maximum throughput of the entire system. Optimizing non-bottleneck steps yields zero systemic improvement.",
+      "signals": [
+        "High queue times",
+        "Resource utilization approaching 100% at specific nodes",
+        "Frequent escalations to expedite work"
+      ],
+      "metrics": [
+        "Queue Wait Time",
+        "WIP (Work In Progress) to Completion Ratio",
+        "Approval Turnaround Time"
+      ],
+      "example_indicators": [
+        "Approvals pending for > 48 hours",
+        "Single individual responsible for 80% of step execution"
+      ],
+      "failure_patterns": [
+        "The 'Hero' Anti-Pattern (one person does everything)",
+        "Batch Processing Delays (waiting for end of week/month)"
+      ],
+      "questions": [
+        {
+          "id": "bot_01",
+          "text": "What percentage of workflow steps require human approval before proceeding?"
+        },
+        {
+          "id": "bot_02",
+          "text": "How often do tasks sit idle waiting for a specific resource or role to become available?"
+        },
+        {
+          "id": "bot_03",
+          "text": "Is there a single step where work consistently accumulates faster than it can be processed?"
+        },
+        {
+          "id": "bot_04",
+          "text": "How frequently are SLA (Service Level Agreement) deadlines missed due to wait times at a specific stage?"
+        },
+        {
+          "id": "bot_05",
+          "text": "When the volume of work increases by 20%, does the processing time increase exponentially rather than linearly?"
+        },
+        {
+          "id": "bot_06",
+          "text": "How often are 'expedite' or 'rush' requests used to bypass standard queues?"
+        },
+        {
+          "id": "bot_07",
+          "text": "Are there specific individuals whose absence (e.g., vacation, illness) brings the workflow to a halt?"
+        },
+        {
+          "id": "bot_08",
+          "text": "What is the ratio of active processing time to idle wait time for a typical work item?"
+        },
+        {
+          "id": "bot_09",
+          "text": "How often does batching (e.g., waiting for end-of-day processing) cause downstream delays?"
+        },
+        {
+          "id": "bot_10",
+          "text": "Are queues visible to all participants, or are bottlenecks only discovered after deadlines pass?"
+        }
+      ],
+      "recommendation_logic": {
+        "root_causes": [
+          "Single point of failure",
+          "Overly strict authorization policies",
+          "Resource under-allocation"
+        ],
+        "remediation_suggestions": [
+          "Implement parallel processing where sequential steps are not strictly required",
+          "Introduce auto-approval thresholds for low-risk items",
+          "Cross-train staff to alleviate single-resource dependency"
+        ]
+      }
+    },
+    {
+      "id": "governance",
+      "name": "Governance",
+      "definition": "The structural oversight, policy adherence, and standardized operational procedures that regulate how the workflow is executed.",
+      "why_it_matters": "Without governance, workflows degrade into ad-hoc processes, increasing operational risk, inconsistency, and audit failures.",
+      "signals": [
+        "Inconsistent outputs",
+        "Lack of clear ownership",
+        "Frequent policy violations"
+      ],
+      "metrics": [
+        "Standard Operating Procedure (SOP) Adherence Rate",
+        "Audit Finding Frequency",
+        "Policy Exception Rate"
+      ],
+      "example_indicators": [
+        "No documented SOPs exist",
+        "Decisions are made via untracked Slack/Teams messages"
+      ],
+      "failure_patterns": [
+        "Shadow IT/Processes",
+        "Orphaned Workflows (no clear owner)"
+      ],
+      "questions": [
+        {
+          "id": "gov_01",
+          "text": "Is there a clearly documented, up-to-date Standard Operating Procedure (SOP) for this workflow?"
+        },
+        {
+          "id": "gov_02",
+          "text": "Is there a designated single point of accountability (owner) for the end-to-end workflow?"
+        },
+        {
+          "id": "gov_03",
+          "text": "How frequently are exceptions to standard policy requested and granted?"
+        },
+        {
+          "id": "gov_04",
+          "text": "Are all workflow modifications or updates formally reviewed and approved before implementation?"
+        },
+        {
+          "id": "gov_05",
+          "text": "How often are steps executed differently depending on which individual is assigned?"
+        },
+        {
+          "id": "gov_06",
+          "text": "Is there a defined escalation matrix for when edge cases or disputes occur?"
+        },
+        {
+          "id": "gov_07",
+          "text": "Are historical records of workflow execution maintained and easily accessible for audit purposes?"
+        },
+        {
+          "id": "gov_08",
+          "text": "Do participants receive formal training and certification before executing critical workflow steps?"
+        },
+        {
+          "id": "gov_09",
+          "text": "Are the operational limits and authority thresholds explicitly defined for all roles?"
+        },
+        {
+          "id": "gov_10",
+          "text": "How often is the workflow periodically reviewed for alignment with current business objectives?"
+        }
+      ],
+      "recommendation_logic": {
+        "root_causes": [
+          "Lack of documentation",
+          "Unclear role definitions",
+          "Decentralized decision-making"
+        ],
+        "remediation_suggestions": [
+          "Establish a formal RACI matrix",
+          "Digitize and version-control SOPs",
+          "Implement enforced decision gates with audit logging"
+        ]
+      }
+    },
+    {
+      "id": "automation",
+      "name": "Automation",
+      "definition": "The extent to which programmatic systems execute workflow steps without human intervention.",
+      "why_it_matters": "Automation drives scalability, reduces human error, and lowers per-transaction operational costs.",
+      "signals": [
+        "High volume of manual data entry",
+        "Copy-pasting between systems",
+        "Repetitive deterministic tasks"
+      ],
+      "metrics": [
+        "Percentage of Automated Steps",
+        "Manual Intervention Rate",
+        "Straight-Through Processing (STP) Rate"
+      ],
+      "example_indicators": [
+        "Staff spend >2 hours daily manually syncing data",
+        "Triggers are manual rather than event-driven"
+      ],
+      "failure_patterns": [
+        "Swivel-Chair Integration (human as the API)",
+        "Brittle Scripts (unmaintained macros)"
+      ],
+      "questions": [
+        {
+          "id": "aut_01",
+          "text": "What percentage of the workflow's data entry involves manual typing or copy-pasting between systems?"
+        },
+        {
+          "id": "aut_02",
+          "text": "Are workflow triggers event-driven (e.g., system alert) or manual (e.g., someone sending an email)?"
+        },
+        {
+          "id": "aut_03",
+          "text": "How often do humans perform deterministic tasks that follow rigid IF/THEN rules without requiring judgment?"
+        },
+        {
+          "id": "aut_04",
+          "text": "Is data automatically validated upon entry, or does it require manual review for correctness?"
+        },
+        {
+          "id": "aut_05",
+          "text": "What is the Straight-Through Processing (STP) rate where a task completes with zero human touch?"
+        },
+        {
+          "id": "aut_06",
+          "text": "Are status updates and notifications generated automatically by the system?"
+        },
+        {
+          "id": "aut_07",
+          "text": "How reliant is the workflow on unmanaged local macros or personal spreadsheets?"
+        },
+        {
+          "id": "aut_08",
+          "text": "Do systems autonomously retrieve necessary enrichment data, or must humans search for it?"
+        },
+        {
+          "id": "aut_09",
+          "text": "How frequently do automated steps fail, requiring manual fallback procedures?"
+        },
+        {
+          "id": "aut_10",
+          "text": "Are documents (e.g., invoices, reports) automatically generated from structured data?"
+        }
+      ],
+      "recommendation_logic": {
+        "root_causes": [
+          "Legacy systems lacking APIs",
+          "Under-investment in tooling",
+          "Process not standardized enough to automate"
+        ],
+        "remediation_suggestions": [
+          "Deploy RPA for legacy UI interactions",
+          "Implement API-driven data synchronization",
+          "Standardize unstructured inputs into structured web forms"
+        ]
+      }
+    },
+    {
+      "id": "visibility",
+      "name": "Visibility",
+      "definition": "The degree of transparency into the real-time status, historical performance, and operational state of the workflow.",
+      "why_it_matters": "Without visibility, management operates blindly, making it impossible to proactively address issues or optimize performance.",
+      "signals": [
+        "Inability to locate work items",
+        "Manual status reporting",
+        "Surprise failures"
+      ],
+      "metrics": [
+        "Time to Retrieve Status",
+        "Dashboard Coverage Ratio",
+        "Data Latency"
+      ],
+      "example_indicators": [
+        "Status meetings are required just to know where things stand",
+        "Tracking relies on a static Excel file updated weekly"
+      ],
+      "failure_patterns": [
+        "Black Box Operations",
+        "Stale Data Reporting"
+      ],
+      "questions": [
+        {
+          "id": "vis_01",
+          "text": "Can stakeholders view the real-time status of any active item without asking a human?"
+        },
+        {
+          "id": "vis_02",
+          "text": "Are key performance metrics (KPIs) available via a live, automated dashboard?"
+        },
+        {
+          "id": "vis_03",
+          "text": "How much time is spent weekly manually compiling status reports for management?"
+        },
+        {
+          "id": "vis_04",
+          "text": "Is there a clear, auditable trail showing exactly who did what, and when?"
+        },
+        {
+          "id": "vis_05",
+          "text": "When an item is delayed, are automatic alerts triggered, or is it only noticed reactively?"
+        },
+        {
+          "id": "vis_06",
+          "text": "Are performance trends (e.g., throughput over the last 30 days) easily accessible?"
+        },
+        {
+          "id": "vis_07",
+          "text": "Can you immediately identify where an item is stuck and who is responsible for the next step?"
+        },
+        {
+          "id": "vis_08",
+          "text": "Is the underlying data source for reporting a single source of truth (SSOT)?"
+        },
+        {
+          "id": "vis_09",
+          "text": "How often do different teams report conflicting numbers regarding the same workflow?"
+        },
+        {
+          "id": "vis_10",
+          "text": "Are workflow participants aware of their own performance metrics relative to targets?"
+        }
+      ],
+      "recommendation_logic": {
+        "root_causes": [
+          "Siloed systems",
+          "Lack of central tracking database",
+          "Manual reporting culture"
+        ],
+        "remediation_suggestions": [
+          "Implement a unified operational dashboard",
+          "Enforce state-change logging in the core system of record",
+          "Replace status meetings with automated alert subscriptions"
+        ]
+      }
+    },
+    {
+      "id": "handoff_quality",
+      "name": "Handoff Quality",
+      "definition": "The reliability, completeness, and clarity of information transferred between distinct steps, systems, or teams.",
+      "why_it_matters": "Friction at system and human boundaries causes rework, delays, and context loss, severely degrading workflow efficiency.",
+      "signals": [
+        "High rework rates",
+        "Missing context at handoff",
+        "Ping-ponging of tasks back and forth"
+      ],
+      "metrics": [
+        "Rework / Rejection Rate",
+        "Information Completeness Score",
+        "Handoff Delay Time"
+      ],
+      "example_indicators": [
+        "Tasks are frequently returned because 'missing information'",
+        "Downstream teams have to manually verify upstream data"
+      ],
+      "failure_patterns": [
+        "Garbage In, Garbage Out (GIGO)",
+        "The 'Over-the-Wall' Toss"
+      ],
+      "questions": [
+        {
+          "id": "han_01",
+          "text": "How frequently are tasks rejected or sent back upstream due to missing or incorrect information?"
+        },
+        {
+          "id": "han_02",
+          "text": "Is there a strict validation gate ensuring all required data is present before a handoff occurs?"
+        },
+        {
+          "id": "han_03",
+          "text": "When work is handed off, is the full context transferred, or do assignees have to ask for clarification?"
+        },
+        {
+          "id": "han_04",
+          "text": "Are handoffs standardized via structured forms/APIs, or are they unstructured (e.g., email text)?"
+        },
+        {
+          "id": "han_05",
+          "text": "How often do downstream systems/teams need to manually reformat data received from upstream?"
+        },
+        {
+          "id": "han_06",
+          "text": "Is it clear exactly when responsibility shifts from one party to another?"
+        },
+        {
+          "id": "han_07",
+          "text": "Do cross-functional teams share a common vocabulary for the data being transferred?"
+        },
+        {
+          "id": "han_08",
+          "text": "How much time elapses between a task being 'completed' by team A and 'started' by team B?"
+        },
+        {
+          "id": "han_09",
+          "text": "Are handoff failures automatically logged and tracked for root cause analysis?"
+        },
+        {
+          "id": "han_10",
+          "text": "Is there a Service Level Agreement (SLA) governing the quality and speed of handoffs?"
+        }
+      ],
+      "recommendation_logic": {
+        "root_causes": [
+          "Lack of required field validation",
+          "Misaligned team incentives",
+          "Incompatible data formats"
+        ],
+        "remediation_suggestions": [
+          "Implement strict entry/exit criteria for workflow stages",
+          "Use structured intake forms with mandatory fields",
+          "Standardize data schemas across boundaries"
+        ]
+      }
+    },
+    {
+      "id": "knowledge_dependency",
+      "name": "Knowledge Dependency",
+      "definition": "The reliance on tacit, undocumented human knowledge or specialized expertise to execute workflow steps.",
+      "why_it_matters": "High knowledge dependency creates massive operational risk, limiting scale and making the workflow vulnerable to employee turnover.",
+      "signals": [
+        "Only one person knows how to do it",
+        "Long onboarding times",
+        "Tribal knowledge overrides documentation"
+      ],
+      "metrics": [
+        "Time to Competency (for new hires)",
+        "Bus Factor",
+        "Documentation Coverage"
+      ],
+      "example_indicators": [
+        "'Ask Sarah, she's the only one who knows how this works'",
+        "New hires take 6 months to become productive"
+      ],
+      "failure_patterns": [
+        "Key Person Risk",
+        "Undocumented Edge Cases"
+      ],
+      "questions": [
+        {
+          "id": "kno_01",
+          "text": "How long does it take for a new team member to become fully productive in this workflow?"
+        },
+        {
+          "id": "kno_02",
+          "text": "Are the decision-making rules explicitly documented, or do they rely on 'gut feeling' and experience?"
+        },
+        {
+          "id": "kno_03",
+          "text": "If the primary operator were to leave unexpectedly, could the workflow continue without severe disruption?"
+        },
+        {
+          "id": "kno_04",
+          "text": "How often do undocumented 'workarounds' need to be used to successfully complete tasks?"
+        },
+        {
+          "id": "kno_05",
+          "text": "Is the documentation detailed enough that an adjacent team member could execute the steps accurately?"
+        },
+        {
+          "id": "kno_06",
+          "text": "How frequently is tacit 'tribal knowledge' required to resolve edge cases?"
+        },
+        {
+          "id": "kno_07",
+          "text": "Are training materials systematically updated when the process changes?"
+        },
+        {
+          "id": "kno_08",
+          "text": "Is knowledge centralized in a searchable base, or dispersed across personal notes and emails?"
+        },
+        {
+          "id": "kno_09",
+          "text": "Do complex steps feature contextual guidance (e.g., tooltips, inline help) directly in the tools used?"
+        },
+        {
+          "id": "kno_10",
+          "text": "What is the 'Bus Factor' (number of people who must be incapacitated to halt the workflow)?"
+        }
+      ],
+      "recommendation_logic": {
+        "root_causes": [
+          "Complex legacy processes",
+          "Lack of documentation culture",
+          "High turnover environments"
+        ],
+        "remediation_suggestions": [
+          "Extract tacit knowledge into decision matrices",
+          "Implement inline contextual help in applications",
+          "Force job rotations to build cross-training"
+        ]
+      }
+    },
+    {
+      "id": "compliance",
+      "name": "Compliance",
+      "definition": "The ability of the workflow to consistently adhere to internal policies, external regulations, and security standards.",
+      "why_it_matters": "Non-compliance results in regulatory fines, legal liability, reputational damage, and loss of business operating licenses.",
+      "signals": [
+        "Skipped security checks",
+        "Unapproved access",
+        "Failed audits"
+      ],
+      "metrics": [
+        "Control Failure Rate",
+        "Audit finding severity",
+        "Data Exposure Incidents"
+      ],
+      "example_indicators": [
+        "Sensitive data sent via unsecured email",
+        "Steps mandating dual-authorization are bypassed"
+      ],
+      "failure_patterns": [
+        "Security as an Afterthought",
+        "Rubber-Stamping Approvals"
+      ],
+      "questions": [
+        {
+          "id": "com_01",
+          "text": "Does the workflow natively enforce mandatory regulatory or security checks without human intervention?"
+        },
+        {
+          "id": "com_02",
+          "text": "Is all sensitive data (PII, PHI, financial) handled in accordance with strict security standards?"
+        },
+        {
+          "id": "com_03",
+          "text": "Are complete, immutable audit logs generated for all critical actions and data state changes?"
+        },
+        {
+          "id": "com_04",
+          "text": "How often do operators bypass compliance steps to meet deadlines or throughput goals?"
+        },
+        {
+          "id": "com_05",
+          "text": "Is access to the workflow tools strictly governed by the Principle of Least Privilege?"
+        },
+        {
+          "id": "com_06",
+          "text": "Are compliance requirements updated automatically when external regulations change?"
+        },
+        {
+          "id": "com_07",
+          "text": "Has the workflow ever failed an internal or external compliance audit?"
+        },
+        {
+          "id": "com_08",
+          "text": "Are approvals cryptographically or systematically verified to prevent 'rubber-stamping'?"
+        },
+        {
+          "id": "com_09",
+          "text": "Is data retention and deletion handled according to predefined compliance schedules?"
+        },
+        {
+          "id": "com_10",
+          "text": "Do compliance controls introduce significant friction, or are they seamlessly integrated?"
+        }
+      ],
+      "recommendation_logic": {
+        "root_causes": [
+          "Controls disconnected from actual work",
+          "Lack of automated enforcement",
+          "Poorly defined regulatory requirements"
+        ],
+        "remediation_suggestions": [
+          "Shift compliance controls 'left' (earlier in the process)",
+          "Implement immutable audit trails",
+          "Automate data masking and access controls"
+        ]
+      }
+    },
+    {
+      "id": "throughput",
+      "name": "Throughput",
+      "definition": "The volume of work successfully completed by the workflow over a specific period, relative to its maximum capacity.",
+      "why_it_matters": "Throughput measures the actual productivity and economic output of the workflow. Low throughput indicates high friction or inefficiency.",
+      "signals": [
+        "Backlogs growing faster than completion",
+        "High cycle times",
+        "Low output per FTE"
+      ],
+      "metrics": [
+        "Cycle Time",
+        "Items Completed per Hour/Day",
+        "Capacity Utilization Rate"
+      ],
+      "example_indicators": [
+        "It takes 14 days to process a request that requires 2 hours of actual work",
+        "The queue is permanently growing"
+      ],
+      "failure_patterns": [
+        "Starved Resources",
+        "Excessive Context Switching"
+      ],
+      "questions": [
+        {
+          "id": "thr_01",
+          "text": "What is the average Cycle Time from the initiation of a request to its final completion?"
+        },
+        {
+          "id": "thr_02",
+          "text": "Is the current output volume sufficient to meet business demands without accruing a backlog?"
+        },
+        {
+          "id": "thr_03",
+          "text": "How stable is the throughput day-over-day (is it consistent, or highly volatile)?"
+        },
+        {
+          "id": "thr_04",
+          "text": "Does the system experience frequent periods of 'starvation' where resources have no work to do?"
+        },
+        {
+          "id": "thr_05",
+          "text": "How much does context switching (handling multiple different types of tasks) degrade overall output?"
+        },
+        {
+          "id": "thr_06",
+          "text": "Is the throughput constrained by system performance (e.g., slow software loading times)?"
+        },
+        {
+          "id": "thr_07",
+          "text": "Can throughput be predictably scaled by adding resources linearly?"
+        },
+        {
+          "id": "thr_08",
+          "text": "What percentage of work requires rework, effectively reducing net successful throughput?"
+        },
+        {
+          "id": "thr_09",
+          "text": "Are there specific periods (e.g., end of month) where throughput dramatically drops due to congestion?"
+        },
+        {
+          "id": "thr_10",
+          "text": "How does the actual throughput compare to the theoretical maximum capacity of the workflow?"
+        }
+      ],
+      "recommendation_logic": {
+        "root_causes": [
+          "Unmanaged backlogs",
+          "High rework rates",
+          "System latency"
+        ],
+        "remediation_suggestions": [
+          "Implement WIP limits to focus on completion",
+          "Optimize database/system response times",
+          "Standardize task batching to reduce context switching"
+        ]
+      }
+    },
+    {
+      "id": "tool_sprawl",
+      "name": "Tool Sprawl / Integration Friction",
+      "definition": "The degree to which a workflow requires context switching across multiple disconnected applications, leading to operational fragmentation.",
+      "why_it_matters": "Excessive tooling increases licensing costs, cognitive load, data duplication, and the probability of systemic errors.",
+      "signals": [
+        "Multiple open tabs to do one job",
+        "Data inconsistencies between systems",
+        "User fatigue"
+      ],
+      "metrics": [
+        "Applications Touched per Workflow",
+        "API Error Rate",
+        "Time Spent Context Switching"
+      ],
+      "example_indicators": [
+        "Operators must log into 5 different portals to complete one customer request",
+        "Data is manually synced between a CRM and an ERP"
+      ],
+      "failure_patterns": [
+        "Frankenstein Architecture",
+        "SaaS Fatigue"
+      ],
+      "questions": [
+        {
+          "id": "tsp_01",
+          "text": "How many distinct software applications must a user interact with to complete this workflow?"
+        },
+        {
+          "id": "tsp_02",
+          "text": "How often must users manually transfer data from one system to another?"
+        },
+        {
+          "id": "tsp_03",
+          "text": "Is there a single source of truth for the data, or are there conflicting records across systems?"
+        },
+        {
+          "id": "tsp_04",
+          "text": "How frequently do API integrations between these tools fail or silently drop data?"
+        },
+        {
+          "id": "tsp_05",
+          "text": "Does navigating between different tool interfaces cause significant cognitive load or delays?"
+        },
+        {
+          "id": "tsp_06",
+          "text": "Are users creating shadow IT solutions (e.g., personal databases) to bypass cumbersome tools?"
+        },
+        {
+          "id": "tsp_07",
+          "text": "How often is data out of sync across the different platforms used in the workflow?"
+        },
+        {
+          "id": "tsp_08",
+          "text": "Is the tooling architecture intentionally designed, or did it evolve ad-hoc over time?"
+        },
+        {
+          "id": "tsp_09",
+          "text": "Do users require multiple different credentials to access necessary systems?"
+        },
+        {
+          "id": "tsp_10",
+          "text": "How difficult is it to onboard a new user to all the necessary tools for this workflow?"
+        }
+      ],
+      "recommendation_logic": {
+        "root_causes": [
+          "Lack of central enterprise architecture",
+          "Siloed purchasing decisions",
+          "Inadequate APIs"
+        ],
+        "remediation_suggestions": [
+          "Consolidate overlapping SaaS tools",
+          "Implement an Enterprise Service Bus or iPaaS (e.g., Zapier/MuleSoft) for API sync",
+          "Build unified frontend interfaces masking complex backends"
+        ]
+      }
+    },
+    {
+      "id": "resilience",
+      "name": "Resilience / Exception Handling",
+      "definition": "The capacity of the workflow to gracefully detect, manage, and recover from errors, edge cases, and systemic failures.",
+      "why_it_matters": "Fragile workflows crash completely when encountering unexpected inputs, causing massive disruptions and requiring expensive manual triage.",
+      "signals": [
+        "Unmanaged exceptions",
+        "System crashes requiring IT support",
+        "Lost data during outages"
+      ],
+      "metrics": [
+        "Mean Time to Recovery (MTTR)",
+        "Exception Rate",
+        "Automated Recovery Success Rate"
+      ],
+      "example_indicators": [
+        "A single malformed email attachment stops the entire processing pipeline",
+        "No clear protocol exists when the primary database is down"
+      ],
+      "failure_patterns": [
+        "Happy Path Only Design",
+        "Silent Failures"
+      ],
+      "questions": [
+        {
+          "id": "res_01",
+          "text": "When an unexpected input or error occurs, does the workflow fail gracefully or crash entirely?"
+        },
+        {
+          "id": "res_02",
+          "text": "Is there a dedicated, standardized process for managing and resolving exceptions?"
+        },
+        {
+          "id": "res_03",
+          "text": "Are errors systematically logged and routed to the appropriate team for rapid triage?"
+        },
+        {
+          "id": "res_04",
+          "text": "Can the workflow automatically retry transient failures (e.g., temporary network timeouts)?"
+        },
+        {
+          "id": "res_05",
+          "text": "How long does it typically take to identify and resolve a system-level failure affecting the workflow?"
+        },
+        {
+          "id": "res_06",
+          "text": "If a downstream system goes offline, is data safely queued or permanently lost?"
+        },
+        {
+          "id": "res_07",
+          "text": "Are 'unhappy paths' (edge cases) explicitly designed and tested, or largely ignored?"
+        },
+        {
+          "id": "res_08",
+          "text": "Does the system provide clear, actionable error messages to users rather than technical stack traces?"
+        },
+        {
+          "id": "res_09",
+          "text": "Is there a fallback manual procedure available when critical systems are unavailable?"
+        },
+        {
+          "id": "res_10",
+          "text": "How frequently do the same types of exceptions recur without underlying root cause resolution?"
+        }
+      ],
+      "recommendation_logic": {
+        "root_causes": [
+          "Lack of error boundaries",
+          "Optimistic assumptions about data quality",
+          "Inadequate monitoring"
+        ],
+        "remediation_suggestions": [
+          "Implement Dead Letter Queues (DLQs) for failed transactions",
+          "Design explicit fallback routing for edge cases",
+          "Enhance telemetry and alerting for failure states"
+        ]
+      }
+    }
+  ],
+  "scoring_system": {
+    "models": {
+      "dimension_score": {
+        "range": "0-100",
+        "description": "Calculated by mapping question responses (A-E) to numeric values, summing, and normalizing."
+      },
+      "workflow_health_score": {
+        "range": "0-100",
+        "description": "The weighted average of all dimension scores. Represents the overall operational health of the workflow."
+      },
+      "confidence_score": {
+        "range": "0-100",
+        "description": "Reflects the completeness and reliability of the data used to calculate the scores (e.g., lower if many questions were skipped or answered 'Unknown')."
+      }
+    },
+    "answer_scale_mapping": {
+      "A": {
+        "value": 100,
+        "description": "Optimized / Always"
+      },
+      "B": {
+        "value": 75,
+        "description": "Healthy / Mostly"
+      },
+      "C": {
+        "value": 50,
+        "description": "Developing / Sometimes"
+      },
+      "D": {
+        "value": 25,
+        "description": "Weak / Rarely"
+      },
+      "E": {
+        "value": 0,
+        "description": "Critical / Never"
+      }
+    },
+    "risk_classification": [
+      {
+        "min": 81,
+        "max": 100,
+        "label": "Optimized",
+        "status": "Healthy"
+      },
+      {
+        "min": 61,
+        "max": 80,
+        "label": "Healthy",
+        "status": "Healthy"
+      },
+      {
+        "min": 41,
+        "max": 60,
+        "label": "Developing",
+        "status": "Watch"
+      },
+      {
+        "min": 21,
+        "max": 40,
+        "label": "Weak",
+        "status": "Risk"
+      },
+      {
+        "min": 0,
+        "max": 20,
+        "label": "Critical",
+        "status": "Critical"
+      }
+    ],
+    "weighting_model": {
+      "approach": "Default equal weighting (10% per dimension), adjustable dynamically based on industry or specific workflow criticality (e.g., Compliance heavily weighted in Finance)."
+    }
+  },
+  "report_structure": {
+    "sections": [
+      "Executive Summary",
+      "Workflow Health Score",
+      "Dimension Scores",
+      "Bottleneck Analysis",
+      "Governance Analysis",
+      "Risk Analysis",
+      "Recommendations",
+      "Priority Actions",
+      "Maturity Assessment"
+    ]
+  },
+  "apqc_mapping": {
+    "description": "The framework maps universally across standard APQC categories because it evaluates the structural meta-properties of work (how it flows, fails, and is governed) rather than the domain-specific content.",
+    "examples": {
+      "HR": "Onboarding workflow: Bottlenecks (waiting for IT provisioning), Handoff Quality (HR to Manager).",
+      "Finance": "Procure-to-Pay: Compliance (approval thresholds), Automation (invoice ingestion).",
+      "Sales": "Quote-to-Cash: Visibility (deal stage tracking), Tool Sprawl (CRM vs CPQ friction).",
+      "Marketing": "Campaign Launch: Governance (brand approval), Throughput (assets delivered).",
+      "IT": "Incident Management: Resilience (MTTR), Knowledge Dependency (relying on L3 engineers)."
+    }
+  },
+  "future_ai_extensions": [
+    {
+      "module": "Recommendation Engine",
+      "inputs": [
+        "Dimension Scores",
+        "Failure Patterns"
+      ],
+      "outputs": [
+        "Actionable Remediation Steps",
+        "ROI Estimates"
+      ],
+      "integration_point": "Post-diagnostic scoring phase."
+    },
+    {
+      "module": "Benchmarking Engine",
+      "inputs": [
+        "Workflow Health Score",
+        "Industry Tag",
+        "APQC Category"
+      ],
+      "outputs": [
+        "Percentile Ranking",
+        "Peer Comparisons"
+      ],
+      "integration_point": "Data warehouse analytics layer."
+    },
+    {
+      "module": "TimesFM Forecasting",
+      "inputs": [
+        "Historical Throughput Data",
+        "Queue Wait Times"
+      ],
+      "outputs": [
+        "Predicted SLA Violations",
+        "Capacity Shortfall Alerts"
+      ],
+      "integration_point": "Real-time workflow monitoring feeds."
+    },
+    {
+      "module": "Simulation Engine",
+      "inputs": [
+        "Process Graph",
+        "Bottleneck Metrics"
+      ],
+      "outputs": [
+        "What-If Scenario Analysis (e.g., Impact of adding 2 FTEs)"
+      ],
+      "integration_point": "Digital Twin modeling environment."
+    },
+    {
+      "module": "MiroFish Diagram Extraction",
+      "inputs": [
+        "Unstructured BPMN Diagrams",
+        "Visio Files"
+      ],
+      "outputs": [
+        "Structured JSON Process Ontology",
+        "Initial Diagnostic Pre-fill"
+      ],
+      "integration_point": "Ingestion and onboarding pipeline."
+    }
+  ],
+  "pm_review": {
+    "q1": "Is this framework scalable to hundreds of workflows?",
+    "a1": "Yes. It uses a deterministic, rule-based json schema that allows programmatic execution via APIs or LLM pipelines across massive workflow datasets.",
+    "q2": "Does it remain workflow-agnostic?",
+    "a2": "Yes. By analyzing meta-properties (throughput, friction, visibility) rather than domain specifics (e.g., tax codes), it applies equally to IT and Finance.",
+    "q3": "Does it align with APQC process structures?",
+    "a3": "Yes. It acts as an evaluation layer that sits on top of standard APQC Process Classification Frameworks, assessing the 'health' of the processes mapped within APQC.",
+    "q4": "What are the biggest weaknesses?",
+    "a4": "Subjectivity in survey responses (if humans answer the questions manually) and the assumption that all dimensions carry equal weight by default (which varies by industry).",
+    "q5": "What should be improved before implementation?",
+    "a5": "Establish exact API schemas for how diagnostic data is ingested (e.g., connecting to Zapier/Jira logs automatically rather than relying purely on question-and-answer)."
+  }
+}
