@@ -6,13 +6,13 @@ from audits import repository
 from audits.scoring_engine import score_response
 from audits.schemas import AuditResponse
 
-async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any]) -> AuditResponse:
+async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Dict[str, Any] = None) -> AuditResponse:
     # 1. create audit record (status: running)
-    audit = await repository.create_audit(db, org_id, user_id, form_response)
+    audit = await repository.create_audit(db, org_id, user_id, form_response, evidence_response)
 
     try:
         # 2. call scoring_engine.score_response(form_response)
-        scores_dict = score_response(form_response)
+        scores_dict = score_response(form_response, evidence_response)
 
         # 3. save scores to audit record (status: complete)
         audit = await repository.save_audit_scores(db, audit.id, scores_dict)
@@ -25,12 +25,16 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
             id=audit.id,
             org_id=audit.org_id,
             user_id=audit.user_id,
+            form_response=audit.form_response,
+            evidence_response=audit.evidence_response,
             scores=audit.scores,
             total_score=audit.total_score,
+            evidence_quality_score=audit.evidence_quality_score,
+            confidence_index=audit.confidence_index,
             rating=audit.rating,
             compliance_risk_flag=audit.compliance_risk_flag,
             compliance_risk_reasons=audit.compliance_risk_reasons,
-            contradictions=scores_dict.get('contradictions', []),
+            contradictions=audit.contradictions,
             missing_data_flags=scores_dict.get('missing_data_flags', []),
             status=audit.status,
             created_at=audit.created_at

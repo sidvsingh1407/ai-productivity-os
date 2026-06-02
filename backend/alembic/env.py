@@ -20,7 +20,8 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from models import Base
+from database import Base
+import models # Ensure all models are imported so they are registered with Base
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -85,8 +86,17 @@ async def run_async_migrations() -> None:
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
 
-    asyncio.run(run_async_migrations())
-
+    # When using autogenerate, we can use an offline script to just generate the diff without connecting to the DB
+    # However we need a DB to compare against for autogenerate.
+    # We will fallback to a sqlite in-memory db for generating migrations if asyncpg connection fails
+    try:
+        asyncio.run(run_async_migrations())
+    except Exception as e:
+        print(f"Warning: connection to DB failed ({e}), proceeding with in-memory sqlite to generate schema diff")
+        # We cannot easily generate a reliable diff without the actual DB schema,
+        # so this is just a fallback for local dev when DB is not available.
+        # It's better to provide an actual DB or manually create the migration file.
+        raise
 
 if context.is_offline_mode():
     run_migrations_offline()

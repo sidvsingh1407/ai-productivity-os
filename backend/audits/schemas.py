@@ -6,14 +6,18 @@ from models.audit import AuditStatus
 
 class AuditCreate(BaseModel):
     form_response: Dict[str, Any]
+    evidence_response: Optional[Dict[str, Any]] = None
 
 class AuditResponse(BaseModel):
     id: uuid.UUID
     org_id: uuid.UUID
     user_id: uuid.UUID
     form_response: Optional[Dict[str, Any]] = None
+    evidence_response: Optional[Dict[str, Any]] = None
     scores: Optional[Dict[str, Any]] = None
     total_score: Optional[int] = None
+    evidence_quality_score: Optional[int] = None
+    confidence_index: Optional[int] = None
     rating: Optional[str] = None
     compliance_risk_flag: Optional[bool] = None
     compliance_risk_reasons: Optional[List[str]] = None

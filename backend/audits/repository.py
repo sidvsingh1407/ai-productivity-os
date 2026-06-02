@@ -5,11 +5,12 @@ from sqlalchemy.future import select
 from fastapi import HTTPException, status
 from models.audit import Audit, AuditVersion, AuditStatus
 
-async def create_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any]) -> Audit:
+async def create_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Optional[Dict[str, Any]] = None) -> Audit:
     db_audit = Audit(
         org_id=org_id,
         user_id=user_id,
         form_response=form_response,
+        evidence_response=evidence_response,
         status=AuditStatus.running
     )
     db.add(db_audit)
@@ -50,6 +51,9 @@ async def save_audit_scores(db: AsyncSession, audit_id: uuid.UUID, scores_dict: 
     db_audit.scores = scores_dict.get('dimensions', {})
     db_audit.total_score = scores_dict.get('total_score')
     db_audit.rating = scores_dict.get('rating')
+    db_audit.evidence_quality_score = scores_dict.get('evidence_quality_score')
+    db_audit.confidence_index = scores_dict.get('confidence_index')
+    db_audit.contradictions = scores_dict.get('contradictions', [])
     db_audit.compliance_risk_flag = scores_dict.get('compliance_risk_flag')
     db_audit.compliance_risk_reasons = scores_dict.get('compliance_risk_reasons')
     db_audit.status = AuditStatus.complete

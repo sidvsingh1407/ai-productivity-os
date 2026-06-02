@@ -22,7 +22,8 @@ async def create_and_run_audit(
         db=db,
         org_id=current_org.id,
         user_id=current_user.id,
-        form_response=audit_in.form_response
+        form_response=audit_in.form_response,
+        evidence_response=audit_in.evidence_response
     )
 
 @router.get("/", response_model=schemas.AuditListResponse)
