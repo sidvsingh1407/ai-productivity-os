@@ -93,7 +93,9 @@ def check_compliance_risk(responses: Dict[str, str]) -> Tuple[bool, list]:
     return len(risk_reasons) > 0, risk_reasons
 
 
-def detect_contradictions(responses: Dict[str, str]) -> list:
+import re
+
+def detect_contradictions(responses: Dict[str, str], evidence_response: Dict[str, Any] = None) -> list:
     """
     Detect contradictory responses that need manual review.
 
@@ -101,26 +103,93 @@ def detect_contradictions(responses: Dict[str, str]) -> list:
         List of contradiction descriptions
     """
     contradictions = []
+    if evidence_response is None:
+        evidence_response = {}
 
-    # Contradiction 1: High adoption but low frequency
-    adoption_rate = responses.get('q2_1', 'e')
-    frequency = responses.get('q2_3', 'e')
+    # Rule 1: Governance Claim Without Evidence
+    gov_claim = responses.get('q4_1', 'e').lower()
+    gov_evidence = evidence_response.get('q4_1', {})
+    if gov_claim in ['a', 'b'] and not gov_evidence.get('evidence_url'):
+        contradictions.append("Governance policy claimed but no supporting evidence provided.")
 
-    if adoption_rate in ['a', 'b'] and frequency in ['d', 'e']:
-        contradictions.append(
-            f"High adoption ({adoption_rate}) contradicts low frequency ({frequency})"
-        )
+    # Rule 2: High AI Adoption Without Evidence
+    adopt_claim = responses.get('q2_1', 'e').lower()
+    adopt_evidence = evidence_response.get('q2_1', {})
+    if adopt_claim in ['a', 'b'] and not adopt_evidence.get('evidence_url'):
+        contradictions.append("High AI adoption claimed but no supporting evidence provided.")
 
-    # Contradiction 2: Deep integration but no tools
-    integration = responses.get('q3_1', 'e')
-    tool_count = responses.get('q2_2', 'e')
+    # Rule 3: High Integration Without Evidence
+    int_claim = responses.get('q3_1', 'e').lower()
+    int_evidence = evidence_response.get('q3_1', {})
+    if int_claim in ['a', 'b'] and not int_evidence.get('evidence_url'):
+        contradictions.append("High workflow integration claimed but no supporting evidence provided.")
 
-    if integration == 'a' and tool_count in ['d', 'e']:
-        contradictions.append(
-            f"Deep integration ({integration}) contradicts low tool count ({tool_count})"
-        )
+    # Rule 4: Workflow Standardization Contradiction
+    std_claim = responses.get('q3_2', 'e').lower()
+    std_evidence = evidence_response.get('q3_2', {})
+    std_context = (std_evidence.get('evidence_context') or "").lower()
+    if std_claim in ['a', 'b'] and any(word in std_context for word in ['manual', 'spreadsheet', 'excel', 'workaround']):
+        contradictions.append("Standardized workflow claimed but manual workarounds referenced.")
+
+    # Rule 5: ROI Contradiction
+    roi_claim = responses.get('q5_1', 'e').lower()
+    roi_evidence = evidence_response.get('q5_1', {})
+    roi_context = roi_evidence.get('evidence_context') or ""
+    if roi_claim in ['a', 'b'] and len(roi_context) < 30:
+        contradictions.append("Strong ROI claimed without sufficient supporting explanation.")
 
     return contradictions
+
+
+def calculate_evidence_quality_score(evidence_response: Dict[str, Any]) -> int:
+    """
+    Calculate the Evidence Quality Score (EQS) from 20 to 100.
+    Calculates average across all provided evidence objects.
+    """
+    if not evidence_response:
+        return 20
+
+    scores = []
+    for key, ev in evidence_response.items():
+        url = ev.get('evidence_url') or ""
+        context = ev.get('evidence_context') or ""
+
+        # Split URLs by comma, newline, or semicolon
+        url_list = []
+        if url:
+            raw_urls = re.split(r'[,\n;]', url)
+            url_list = [u.strip() for u in raw_urls if u.strip()]
+
+        has_url = len(url_list) > 0
+        multiple_urls = len(url_list) >= 2
+        ctx_len = len(context)
+
+        if multiple_urls and ctx_len >= 51:
+            scores.append(100) # L5
+        elif has_url and ctx_len >= 51:
+            scores.append(80) # L4
+        elif has_url and 1 <= ctx_len <= 50:
+            scores.append(60) # L3
+        elif not has_url and 1 <= ctx_len <= 50:
+            scores.append(40) # L2
+        else:
+            scores.append(20) # L1
+
+    if not scores:
+        return 20
+
+    return round(sum(scores) / len(scores))
+
+
+def calculate_confidence_index(eqs: int, missing_evidence_count: int, contradiction_count: int) -> int:
+    """
+    Calculate the Confidence Index based on EQS, missing evidence, and contradictions.
+    """
+    missing_penalty = missing_evidence_count * 5
+    contradiction_penalty = contradiction_count * 10
+
+    confidence = eqs - missing_penalty - contradiction_penalty
+    return max(0, min(100, confidence))
 
 
 def get_score_rating(total_score: int) -> str:
@@ -137,19 +206,25 @@ def get_score_rating(total_score: int) -> str:
         return "AI Nascent"
 
 
-def score_response(responses: Dict[str, str]) -> Dict[str, Any]:
+def score_response(responses: Dict[str, str], evidence_response: Dict[str, Any] = None) -> Dict[str, Any]:
     """
     Calculate all scores from form responses.
 
     Args:
         responses: Dictionary of question_id -> response
+        evidence_response: Optional dictionary of question_id -> evidence dict
 
     Returns:
         Dictionary with all scores, flags, and metadata
     """
+    if evidence_response is None:
+        evidence_response = {}
+
     result = {
         'dimensions': {},
         'total_score': 0,
+        'evidence_quality_score': None,
+        'confidence_index': None,
         'rating': '',
         'compliance_risk_flag': False,
         'compliance_risk_reasons': [],
@@ -174,7 +249,25 @@ def score_response(responses: Dict[str, str]) -> Dict[str, Any]:
     result['compliance_risk_reasons'] = risk_reasons
 
     # Detect contradictions
-    result['contradictions'] = detect_contradictions(responses)
+    contradictions = detect_contradictions(responses, evidence_response)
+    result['contradictions'] = contradictions
+
+    # Calculate EQS and Confidence
+    # First, calculate missing evidence count
+    # Evidence should be provided for every question that was answered
+    answered_questions = [k for k, v in responses.items() if v.strip() != '']
+    missing_evidence_count = 0
+    for q_id in answered_questions:
+        ev = evidence_response.get(q_id, {})
+        # If no url and no context, we consider it missing evidence object for the penalty
+        if not ev.get('evidence_url') and not ev.get('evidence_context'):
+            missing_evidence_count += 1
+
+    eqs = calculate_evidence_quality_score(evidence_response)
+    confidence = calculate_confidence_index(eqs, missing_evidence_count, len(contradictions))
+
+    result['evidence_quality_score'] = eqs
+    result['confidence_index'] = confidence
 
     return result
 

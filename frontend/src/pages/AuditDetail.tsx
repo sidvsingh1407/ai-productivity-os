@@ -64,9 +64,38 @@ export default function AuditDetail() {
   if (isError) return <div>Error loading audit details.</div>;
   if (!audit) return <div>Audit not found.</div>;
 
-  const { scores = {}, company_name = "Company", rating = "N/A", compliance_risk_flag, compliance_risk_reasons, contradictions, missing_data_flags } = audit;
+  const {
+    scores = {},
+    company_name = "Company",
+    rating = "N/A",
+    compliance_risk_flag,
+    compliance_risk_reasons,
+    contradictions,
+    missing_data_flags,
+    evidence_quality_score,
+    confidence_index
+  } = audit;
 
   const totalScore = Object.values(scores as Record<string, number>).reduce((acc, val) => acc + val, 0);
+
+  const getConfidenceLevel = (score: number | null | undefined) => {
+    if (score === null || score === undefined) return null;
+    if (score < 40) return { label: 'Low Confidence', color: 'text-red-700', bg: 'bg-red-50', border: 'border-red-200' };
+    if (score < 70) return { label: 'Medium Confidence', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200' };
+    return { label: 'High Confidence', color: 'text-green-700', bg: 'bg-green-50', border: 'border-green-200' };
+  };
+
+  const getEQSLevel = (score: number | null | undefined) => {
+    if (score === null || score === undefined) return null;
+    if (score <= 20) return 'L1';
+    if (score <= 40) return 'L2';
+    if (score <= 60) return 'L3';
+    if (score <= 80) return 'L4';
+    return 'L5';
+  };
+
+  const confidence = getConfidenceLevel(confidence_index);
+  const eqsLevel = getEQSLevel(evidence_quality_score);
 
   const radarData = [
     { subject: 'Awareness', A: scores.awareness || 0, fullMark: 20 },
@@ -111,7 +140,59 @@ export default function AuditDetail() {
         <ComplianceAlert reasons={compliance_risk_reasons || ['Governance issues detected.']} />
       )}
 
-      {(contradictions?.length > 0 || missing_data_flags?.length > 0) && (
+      {confidence && (
+        <Card className={`${confidence.border} ${confidence.bg}`}>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="col-span-1 border-r border-slate-200/50">
+                <p className={`text-sm font-semibold uppercase tracking-wider mb-1 ${confidence.color}`}>Confidence Index</p>
+                <div className="flex items-baseline space-x-2">
+                  <span className={`text-4xl font-bold ${confidence.color}`}>{confidence_index}%</span>
+                </div>
+                <p className={`text-sm mt-1 font-medium ${confidence.color}`}>{confidence.label}</p>
+              </div>
+              <div className="col-span-1 border-r border-slate-200/50 pl-4">
+                <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Evidence Quality</p>
+                <div className="flex items-baseline space-x-2">
+                  <span className="text-3xl font-bold text-slate-800">{eqsLevel}</span>
+                  <span className="text-sm text-slate-500">Score: {evidence_quality_score}</span>
+                </div>
+              </div>
+              <div className="col-span-1 pl-4">
+                <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Contradictions</p>
+                <div className="flex items-baseline space-x-2">
+                  <span className={`text-3xl font-bold ${contradictions?.length > 0 ? 'text-red-600' : 'text-slate-800'}`}>{contradictions?.length || 0}</span>
+                  <span className="text-sm text-slate-500">Detected</span>
+                </div>
+              </div>
+            </div>
+
+            {contradictions?.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-slate-200/50">
+                <h4 className={`font-medium mb-2 ${confidence.color}`}>Detected Contradictions:</h4>
+                <ul className={`list-disc pl-5 space-y-1 text-sm ${confidence.color}`}>
+                  {contradictions.map((item: string, i: number) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {missing_data_flags?.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-slate-200/50">
+                <h4 className={`font-medium mb-2 ${confidence.color}`}>Missing Data In Dimensions:</h4>
+                <ul className={`list-disc pl-5 space-y-1 text-sm ${confidence.color}`}>
+                  {missing_data_flags.map((item: string, i: number) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {(!confidence && (contradictions?.length > 0 || missing_data_flags?.length > 0)) && (
         <Card className="border-amber-200 bg-amber-50">
           <CardHeader>
             <CardTitle className="text-amber-800 text-lg">Assessment Findings</CardTitle>

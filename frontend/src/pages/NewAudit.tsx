@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import apiClient from '@/api/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 // Sections mapping to q1_1 through q5_3
 const SECTIONS = [
@@ -73,6 +75,7 @@ export default function NewAudit() {
 
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, string>>({});
+  const [evidence, setEvidence] = useState<Record<string, { evidence_url: string; evidence_context: string }>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoadingSource, setIsLoadingSource] = useState(!!sourceAuditId);
@@ -105,6 +108,16 @@ export default function NewAudit() {
     setResponses((prev) => ({ ...prev, [questionId]: value }));
   };
 
+  const handleEvidenceChange = (questionId: string, field: 'evidence_url' | 'evidence_context', value: string) => {
+    setEvidence((prev) => ({
+      ...prev,
+      [questionId]: {
+        ...prev[questionId],
+        [field]: value,
+      },
+    }));
+  };
+
   const handleNext = () => {
     if (isSectionComplete && !isLastSection) {
       setCurrentSectionIndex((prev) => prev + 1);
@@ -123,7 +136,19 @@ export default function NewAudit() {
     setIsSubmitting(true);
     setError(null);
     try {
-      const payload = { form_response: responses };
+      // Filter out empty evidence objects
+      const filteredEvidence: Record<string, { evidence_url: string; evidence_context: string }> = {};
+      Object.keys(evidence).forEach(key => {
+        const ev = evidence[key];
+        if (ev && (ev.evidence_url || ev.evidence_context)) {
+          filteredEvidence[key] = {
+            evidence_url: ev.evidence_url || "",
+            evidence_context: ev.evidence_context || ""
+          };
+        }
+      });
+
+      const payload = { form_response: responses, evidence_response: filteredEvidence };
       const response = await apiClient.post('/audits/', payload);
       navigate(`/audits/${response.data.id}`);
     } catch (err: any) {
@@ -190,6 +215,29 @@ export default function NewAudit() {
                     <span className="text-sm">{opt.label}</span>
                   </label>
                 ))}
+              </div>
+              <div className="mt-4 p-4 bg-slate-50 rounded-md border border-slate-100">
+                <p className="text-sm font-medium mb-3 text-slate-700">Supporting Evidence (Optional)</p>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs text-slate-500 block mb-1">Evidence URL(s) (comma separated)</label>
+                    <Input
+                      placeholder="https://..."
+                      value={evidence[q.id]?.evidence_url || ''}
+                      onChange={(e) => handleEvidenceChange(q.id, 'evidence_url', e.target.value)}
+                      className="text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-slate-500 block mb-1">Evidence Context & Explanation</label>
+                    <Textarea
+                      placeholder="Briefly explain the evidence..."
+                      value={evidence[q.id]?.evidence_context || ''}
+                      onChange={(e) => handleEvidenceChange(q.id, 'evidence_context', e.target.value)}
+                      className="text-sm min-h-[80px]"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           ))}
