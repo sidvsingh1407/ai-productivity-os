@@ -6,6 +6,9 @@ import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
 import NewAudit from './pages/NewAudit';
 import AuditDetail from './pages/AuditDetail';
+import NewWorkflow from './pages/NewWorkflow';
+import WorkflowDetail from './pages/WorkflowDetail';
+import IntegrationResults from './pages/IntegrationResults';
 
 function App() {
   return (
@@ -24,7 +27,9 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="audits/new" element={<NewAudit />} />
           <Route path="audits/:id" element={<AuditDetail />} />
-          {/* Add more private routes here */}
+          <Route path="workflows/new" element={<NewWorkflow />} />
+          <Route path="workflows/:id" element={<WorkflowDetail />} />
+          <Route path="integrations/:id" element={<IntegrationResults />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -88,7 +88,7 @@ export function Dashboard() {
           <Play className="w-4 h-4" />
           Run AI Audit
         </Button>
-        <Button variant="outline" className="gap-2" size="lg">
+        <Button variant="outline" className="gap-2" size="lg" onClick={() => navigate('/workflows/new')}>
           <Activity className="w-4 h-4" />
           Run Workflow Diagnostic
         </Button>
