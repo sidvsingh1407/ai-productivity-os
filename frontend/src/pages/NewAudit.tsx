@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import apiClient from '@/api/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -68,10 +68,32 @@ const OPTIONS = [
 
 export default function NewAudit() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const sourceAuditId = searchParams.get('sourceAuditId');
+
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoadingSource, setIsLoadingSource] = useState(!!sourceAuditId);
+
+  useEffect(() => {
+    async function fetchSourceAudit() {
+      if (sourceAuditId) {
+        try {
+          const res = await apiClient.get(`/audits/${sourceAuditId}`);
+          if (res.data && res.data.form_response) {
+            setResponses(res.data.form_response);
+          }
+        } catch (err) {
+          console.error('Failed to load source audit', err);
+        } finally {
+          setIsLoadingSource(false);
+        }
+      }
+    }
+    fetchSourceAudit();
+  }, [sourceAuditId]);
 
   const currentSection = SECTIONS[currentSectionIndex];
   const isLastSection = currentSectionIndex === SECTIONS.length - 1;
@@ -110,6 +132,10 @@ export default function NewAudit() {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoadingSource) {
+    return <div className="max-w-2xl mx-auto py-8 text-center text-slate-500">Loading previous audit data...</div>;
+  }
 
   return (
     <div className="max-w-2xl mx-auto py-8">

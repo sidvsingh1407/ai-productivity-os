@@ -11,6 +11,7 @@ class AuditResponse(BaseModel):
     id: uuid.UUID
     org_id: uuid.UUID
     user_id: uuid.UUID
+    form_response: Optional[Dict[str, Any]] = None
     scores: Optional[Dict[str, Any]] = None
     total_score: Optional[int] = None
     rating: Optional[str] = None
