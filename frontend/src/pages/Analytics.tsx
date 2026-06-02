@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@/api/client';
+import apiClient  from '@/api/client';
 import { ScoreTrendLine } from '@/components/charts/ScoreTrendLine';
 import { Activity, BarChart2, ShieldCheck, Target } from 'lucide-react';
 
