@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Analytics } from "@vercel/analytics/react";
+import { RouteTracker } from './components/analytics/RouteTracker';
 import { PrivateRoute } from './components/PrivateRoute';
 import { AppShell } from './components/layout/AppShell';
 import { MarketingLayout } from './components/layout/MarketingLayout';
@@ -22,9 +24,11 @@ import IntegrationResults from './pages/IntegrationResults';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public Marketing Routes */}
+    <>
+      <BrowserRouter>
+        <RouteTracker />
+        <Routes>
+          {/* Public Marketing Routes */}
         <Route element={<MarketingLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/ai-audit" element={<AiAuditPage />} />
@@ -58,8 +62,10 @@ function App() {
         <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
         <Route path="/audits/*" element={<Navigate to={`/app/audits/${window.location.pathname.split('/').pop()}`} replace />} />
         <Route path="/workflows/*" element={<Navigate to={`/app/workflows/${window.location.pathname.split('/').pop()}`} replace />} />
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+      <Analytics />
+    </>
   );
 }
 
