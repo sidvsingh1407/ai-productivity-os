@@ -3,33 +3,33 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export default function AiAuditPage() {
   return (
-    <div className="bg-background">
+    <div className="bg-bg-primary">
       {/* Header */}
-      <section className="pt-24 pb-16 bg-gray-50 border-b border-gray-100">
+      <section className="pt-[120px] pb-[80px] bg-bg-secondary border-b border-border-light animate-fade-up">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="inline-block px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full mb-6 uppercase tracking-wider">
+          <div className="inline-block px-3 py-1 bg-bg-primary border border-border-light text-text-secondary text-label rounded-full mb-space-md">
             Flagship Module
           </div>
-          <h1 className="text-4xl md:text-5xl font-light text-foreground tracking-tight max-w-3xl mb-6">
+          <h1 className="text-h1 text-text-primary max-w-3xl mb-space-sm">
             AI Audit
           </h1>
-          <p className="text-xl text-gray-600 font-light max-w-2xl leading-relaxed">
+          <p className="text-h3 font-normal text-text-secondary max-w-2xl">
             Establish a quantitative baseline for organizational AI readiness.
           </p>
         </div>
       </section>
 
       {/* Problem */}
-      <section className="py-20 bg-background border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-12">
+      <section className="py-[80px] bg-bg-primary border-b border-border-light">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-space-xl">
           <div className="col-span-1">
-            <h2 className="text-2xl font-light text-foreground tracking-tight">The Problem</h2>
+            <h2 className="text-h2 text-text-primary">The Problem</h2>
           </div>
           <div className="col-span-2">
-            <p className="text-lg text-gray-600 font-light leading-relaxed mb-6">
+            <p className="text-body text-text-secondary mb-space-sm">
               Organizations frequently deploy AI tools without assessing underlying structural readiness. This leads to fragmented adoption, unmanaged risk, and an inability to measure return on investment.
             </p>
-            <p className="text-lg text-gray-600 font-light leading-relaxed">
+            <p className="text-body text-text-secondary">
               The AI Audit evaluates the organization's actual capacity to integrate and govern artificial intelligence, moving beyond surface-level tool counts to structural truths.
             </p>
           </div>
@@ -37,12 +37,12 @@ export default function AiAuditPage() {
       </section>
 
       {/* What It Measures & Dimensions */}
-      <section className="py-20 bg-gray-50 border-b border-gray-100">
+      <section className="py-[80px] bg-bg-secondary border-b border-border-light">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h2 className="text-3xl font-light text-foreground tracking-tight mb-12 text-center">
+          <h2 className="text-h2 text-text-primary mb-space-xl text-center">
             Assessment Dimensions
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
             {[
               {
                 title: "Awareness",
@@ -65,9 +65,9 @@ export default function AiAuditPage() {
                 desc: "Is there a mechanism to measure the operational value being created?"
               }
             ].map((dim, i) => (
-              <div key={i} className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                <h3 className="text-xl font-medium text-foreground mb-4">{dim.title}</h3>
-                <p className="text-gray-600 font-light">{dim.desc}</p>
+              <div key={i} className="bg-bg-primary p-space-md rounded-lg border border-border-light shadow-subtle hover:shadow-card transition-shadow duration-300">
+                <h3 className="text-h3 text-text-primary mb-space-xs">{dim.title}</h3>
+                <p className="text-body text-text-secondary">{dim.desc}</p>
               </div>
             ))}
           </div>
@@ -75,49 +75,49 @@ export default function AiAuditPage() {
       </section>
 
       {/* Sample Outputs */}
-      <section className="py-20 bg-background border-b border-gray-100">
+      <section className="py-[80px] bg-bg-primary border-b border-border-light">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-space-xl items-center">
             <div>
-              <h2 className="text-3xl font-light text-foreground tracking-tight mb-6">
+              <h2 className="text-h2 text-text-primary mb-space-md">
                 Sample Outputs
               </h2>
-              <ul className="space-y-6">
+              <ul className="space-y-space-md">
                 <li className="flex items-start gap-4">
-                  <CheckCircle2 className="w-6 h-6 text-gray-400 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-6 h-6 text-text-secondary shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-medium text-foreground">Maturity Assessment</h4>
-                    <p className="text-gray-600 font-light mt-1">Quantitative scoring across all five dimensions to establish a clear baseline.</p>
+                    <h4 className="text-body font-medium text-text-primary">Maturity Assessment</h4>
+                    <p className="text-body text-text-secondary mt-1">Quantitative scoring across all five dimensions to establish a clear baseline.</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
-                  <CheckCircle2 className="w-6 h-6 text-gray-400 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-6 h-6 text-text-secondary shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-medium text-foreground">Governance Insights</h4>
-                    <p className="text-gray-600 font-light mt-1">Identification of critical blind spots in policy, data access, and compliance.</p>
+                    <h4 className="text-body font-medium text-text-primary">Governance Insights</h4>
+                    <p className="text-body text-text-secondary mt-1">Identification of critical blind spots in policy, data access, and compliance.</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
-                  <CheckCircle2 className="w-6 h-6 text-gray-400 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-6 h-6 text-text-secondary shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-medium text-foreground">Actionable Recommendations</h4>
-                    <p className="text-gray-600 font-light mt-1">Prioritized interventions designed to mitigate risk and improve integration capability.</p>
+                    <h4 className="text-body font-medium text-text-primary">Actionable Recommendations</h4>
+                    <p className="text-body text-text-secondary mt-1">Prioritized interventions designed to mitigate risk and improve integration capability.</p>
                   </div>
                 </li>
               </ul>
             </div>
-            <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 h-full flex flex-col justify-center">
+            <div className="bg-bg-secondary p-space-lg rounded-lg border border-border-light h-full flex flex-col justify-center shadow-subtle">
                <div className="space-y-4">
-                 <div className="flex justify-between items-center text-sm mb-1">
-                   <span className="font-medium text-foreground">Governance Maturity</span>
-                   <span className="text-gray-500">L2 - Reactive</span>
+                 <div className="flex justify-between items-center text-body mb-1">
+                   <span className="font-medium text-text-primary">Governance Maturity</span>
+                   <span className="text-data text-text-secondary">L2 - Reactive</span>
                  </div>
-                 <div className="w-full bg-gray-200 rounded-full h-2">
-                   <div className="bg-foreground h-2 rounded-full" style={{ width: '40%' }}></div>
+                 <div className="w-full bg-border-light rounded-full h-2">
+                   <div className="bg-accent-blue h-2 rounded-full" style={{ width: '40%' }}></div>
                  </div>
-                 <div className="mt-6 pt-6 border-t border-gray-200">
-                    <p className="text-sm font-medium text-foreground mb-2">Key Finding:</p>
-                    <p className="text-sm text-gray-600 font-light">Shadow IT adoption has outpaced policy creation. Data governance frameworks must be updated before further integration.</p>
+                 <div className="mt-space-md pt-space-md border-t border-border-strong">
+                    <p className="text-label text-text-primary mb-space-xs">Key Finding:</p>
+                    <p className="text-body text-text-secondary">Shadow IT adoption has outpaced policy creation. Data governance frameworks must be updated before further integration.</p>
                  </div>
                </div>
             </div>
@@ -126,17 +126,17 @@ export default function AiAuditPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 bg-foreground text-background text-center">
+      <section className="py-[120px] bg-bg-dark text-text-inverse text-center">
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
-          <h2 className="text-3xl font-light tracking-tight mb-8">
+          <h2 className="text-h2 tracking-tight mb-space-lg">
             Baseline your organization's readiness.
           </h2>
           <Link
             to="/contact?interest=AI+Audit"
-            className="inline-flex items-center justify-center px-8 py-4 bg-background text-foreground font-medium rounded-lg hover:bg-gray-100 transition-all gap-2"
+            className="inline-flex items-center justify-center px-8 py-4 bg-accent-blue text-text-inverse text-body font-medium rounded-md shadow-sm hover:bg-accent-blue/90 transition-colors gap-2"
           >
             Request a Demo
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </section>
