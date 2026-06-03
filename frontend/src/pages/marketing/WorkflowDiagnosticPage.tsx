@@ -1,9 +1,54 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
+import { SeoHead } from '../../components/geo/SeoHead';
+import { DefinitionBlock } from '../../components/geo/DefinitionBlock';
+import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
 
 export default function WorkflowDiagnosticPage() {
+  const faqItems = [
+    {
+      question: "What is Workflow Diagnostics?",
+      answer: "Workflow Diagnostics is the practice of evaluating operational processes to identify structural weaknesses, hidden friction, and execution gaps. It relies on qualitative inputs and behavioral insights rather than pure system logs to uncover the human realities of how work actually gets done."
+    },
+    {
+      question: "How is Workflow Diagnostics different from process mapping?",
+      answer: "Process mapping documents the theoretical way a task should be completed. Workflow Diagnostics evaluates the actual operational reality, identifying workarounds, shadow IT, and hidden bottlenecks that process maps fail to capture."
+    },
+    {
+      question: "Who should use Workflow Diagnostics?",
+      answer: "Operations leaders, COOs, and external consultants use Workflow Diagnostics to audit complex environments, optimize processes before automation, and identify root causes of operational friction."
+    }
+  ];
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tarkax.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Workflow Diagnostic",
+        "item": "https://tarkax.com/workflow-diagnostic"
+      }
+    ]
+  };
+
+  const faqSchema = generateFAQSchema(faqItems);
+
   return (
     <div className="bg-bg-primary animate-fade-up">
+      <SeoHead
+        title="Workflow Diagnostic | TarkaX"
+        description="Evaluate workflow health and identify operational weaknesses systematically with TarkaX Workflow Diagnostic."
+        canonical="https://tarkax.com/workflow-diagnostic"
+        schema={[breadcrumbSchema, faqSchema]}
+      />
       {/* Header */}
       <section className="pt-[120px] pb-[80px] bg-bg-secondary border-b border-border-light">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -13,7 +58,15 @@ export default function WorkflowDiagnosticPage() {
           <h1 className="text-h1 text-text-primary max-w-3xl mb-space-sm">
             Workflow Diagnostic
           </h1>
-          <p className="text-h3 font-normal text-text-secondary max-w-2xl">
+
+          <div className="mt-8 max-w-3xl w-full">
+            <DefinitionBlock
+              question="What is a Workflow Diagnostic?"
+              answer="A Workflow Diagnostic is an analytical evaluation of operational processes designed to uncover hidden friction, structural bottlenecks, and behavioral workarounds that impede execution."
+            />
+          </div>
+
+          <p className="mt-space-md text-h3 font-normal text-text-secondary max-w-2xl">
             Evaluate workflow health and identify operational weaknesses systematically.
           </p>
         </div>
@@ -42,23 +95,33 @@ export default function WorkflowDiagnosticPage() {
           <h2 className="text-h2 text-text-primary mb-space-xl text-center">
             Evaluation Areas
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-space-lg max-w-4xl mx-auto">
-             <div className="bg-bg-primary p-space-md rounded-lg border border-border-light shadow-subtle">
-                <h3 className="text-h3 text-text-primary mb-space-xs">Process Consistency</h3>
-                <p className="text-body text-text-secondary">Assess the variance in how workflows are executed across different teams and identify areas lacking standardization.</p>
-             </div>
-             <div className="bg-bg-primary p-space-md rounded-lg border border-border-light shadow-subtle">
-                <h3 className="text-h3 text-text-primary mb-space-xs">Tool Utilization</h3>
-                <p className="text-body text-text-secondary">Evaluate if existing systems are being used as intended or if workarounds have become the primary method of execution.</p>
-             </div>
-             <div className="bg-bg-primary p-space-md rounded-lg border border-border-light shadow-subtle">
-                <h3 className="text-h3 text-text-primary mb-space-xs">Information Handoffs</h3>
-                <p className="text-body text-text-secondary">Identify points where data or responsibility transfers between units, which are common failure points.</p>
-             </div>
-             <div className="bg-bg-primary p-space-md rounded-lg border border-border-light shadow-subtle">
-                <h3 className="text-h3 text-text-primary mb-space-xs">Structural Bottlenecks</h3>
-                <p className="text-body text-text-secondary">Review the workflow to locate dependencies that consistently delay execution or require manual intervention.</p>
-             </div>
+          <div className="overflow-x-auto max-w-5xl mx-auto">
+            <table className="w-full text-left border-collapse border border-border-light bg-bg-primary rounded-lg shadow-sm">
+              <thead>
+                <tr className="bg-bg-secondary border-b border-border-light">
+                  <th className="py-4 px-6 text-label text-text-secondary font-medium w-1/3">Evaluation Area</th>
+                  <th className="py-4 px-6 text-label text-text-secondary font-medium">Diagnostic Objective</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border-light text-body text-text-primary">
+                <tr>
+                  <td className="py-4 px-6 font-medium">Process Consistency</td>
+                  <td className="py-4 px-6 text-text-secondary">Assess the variance in how workflows are executed across different teams and identify areas lacking standardization.</td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium">Tool Utilization</td>
+                  <td className="py-4 px-6 text-text-secondary">Evaluate if existing systems are being used as intended or if workarounds have become the primary method of execution.</td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium">Information Handoffs</td>
+                  <td className="py-4 px-6 text-text-secondary">Identify points where data or responsibility transfers between units, which are common failure points.</td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium">Structural Bottlenecks</td>
+                  <td className="py-4 px-6 text-text-secondary">Review the workflow to locate dependencies that consistently delay execution or require manual intervention.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -92,8 +155,23 @@ export default function WorkflowDiagnosticPage() {
                <p className="text-body text-text-secondary">Highlights that workflow completion is entirely dependent on the undocumented institutional knowledge of a single role.</p>
              </div>
           </div>
+
+          <div className="mt-space-xl border-t border-border-light pt-space-lg">
+            <h3 className="text-h3 text-text-primary mb-space-sm">Explore Related Products</h3>
+            <div className="flex gap-4">
+              <Link to="/ai-audit" className="text-accent-blue font-medium hover:underline flex items-center gap-1">
+                AI Audit <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link to="/forecasting" className="text-accent-blue font-medium hover:underline flex items-center gap-1">
+                Forecasting Framework <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
+
+      {/* FAQ */}
+      <FAQSection faqItems={faqItems} />
 
       {/* CTA */}
       <section className="py-[120px] bg-bg-dark text-text-inverse text-center">

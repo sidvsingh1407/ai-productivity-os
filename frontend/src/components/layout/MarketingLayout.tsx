@@ -33,6 +33,10 @@ export function MarketingLayout() {
               <Link to="/about" className="text-body text-text-secondary hover:text-accent-blue font-medium transition-colors">
                 About
               </Link>
+              <Link to="#" className="text-body font-medium text-text-secondary hover:text-accent-blue transition-colors flex items-center gap-2">
+                Methodology
+                <span className="text-[10px] bg-bg-secondary border border-border-light text-text-secondary px-1.5 py-0.5 rounded uppercase tracking-wider font-mono">Coming Soon</span>
+              </Link>
               <Link to="/blog" className="text-body text-text-secondary hover:text-accent-blue font-medium transition-colors">
                 Blog
               </Link>
@@ -71,6 +75,10 @@ export function MarketingLayout() {
               <Link to="/workflow-diagnostic" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Workflow Diagnostic</Link>
               <Link to="/forecasting" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Forecasting</Link>
               <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">About</Link>
+              <Link to="#" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md flex items-center justify-between">
+                Methodology
+                <span className="text-[10px] bg-bg-secondary border border-border-light text-text-secondary px-1.5 py-0.5 rounded uppercase tracking-wider font-mono">Coming Soon</span>
+              </Link>
               <Link to="/blog" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Blog</Link>
               <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Sign In</Link>
               <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="block mt-4 px-3 py-3 bg-accent-blue text-text-inverse text-center text-body font-medium rounded-md shadow-sm">Request a Demo</Link>
@@ -111,6 +119,12 @@ export function MarketingLayout() {
               <h4 className="text-body font-medium text-text-inverse mb-4">Company</h4>
               <ul className="space-y-3">
                 <li><Link to="/about" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">About</Link></li>
+                <li>
+                  <Link to="#" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors inline-flex items-center gap-2">
+                    Methodology
+                    <span className="text-[10px] bg-text-inverse/10 text-text-inverse/70 px-1.5 py-0.5 rounded uppercase tracking-wider font-mono">Coming Soon</span>
+                  </Link>
+                </li>
                 <li><Link to="/blog" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Research & Insights</Link></li>
                 <li><Link to="/contact" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Contact</Link></li>
               </ul>

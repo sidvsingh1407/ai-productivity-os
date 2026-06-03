@@ -1,8 +1,52 @@
 import { Link } from 'react-router-dom';
+import { SeoHead } from '../../components/geo/SeoHead';
 
 export default function BlogPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tarkax.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "https://tarkax.com/blog"
+      }
+    ]
+  };
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Research & Insights on Operational Execution",
+    "author": {
+      "@type": "Organization",
+      "name": "TarkaX"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "TarkaX",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://tarkax.com/logo.png"
+      }
+    }
+  };
+
   return (
     <div className="bg-bg-primary">
+      <SeoHead
+        title="Research & Insights | TarkaX"
+        description="Observations on operational execution, failure intelligence, and organizational diagnostics from TarkaX."
+        canonical="https://tarkax.com/blog"
+        schema={[breadcrumbSchema, articleSchema]}
+      />
       {/* Header */}
       <section className="pt-[120px] pb-[80px] bg-bg-secondary border-b border-border-light animate-fade-up">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -28,48 +72,52 @@ export default function BlogPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
                {/* Featured */}
-               <div className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
-                  <div className="h-48 bg-bg-secondary border-b border-border-light flex items-center justify-center">
-                     <span className="text-text-secondary font-medium tracking-widest text-label uppercase">Research Report</span>
+               <Link to="#" className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
+                  <div className="h-48 bg-bg-secondary border-b border-border-light flex items-center justify-center p-6 text-center">
+                     <span className="text-text-primary font-medium tracking-wide text-h3">The AI Initiative Was Approved. Adoption Never Happened.</span>
                   </div>
                   <div className="p-space-md flex-grow flex flex-col bg-bg-primary">
                      <div className="text-label text-text-secondary mb-space-xs">Failure Intelligence</div>
                      <h3 className="text-h3 text-text-primary mb-space-sm">
-                        The AI Program Was Approved. Adoption Never Happened.
+                        The AI Initiative Was Approved. Adoption Never Happened.
                      </h3>
                      <p className="text-body text-text-secondary line-clamp-3 mb-space-md">
                         Investigating the gap between executive mandate and operational reality. Why top-down AI initiatives stall without structural workflow integration.
                      </p>
                      <div className="mt-auto text-body font-medium text-accent-blue">Read Analysis →</div>
                   </div>
-               </div>
+               </Link>
 
                {/* Supporting */}
                <div className="flex flex-col gap-space-lg">
-                 <div className="flex gap-space-sm cursor-pointer group">
-                    <div className="w-32 h-24 bg-bg-secondary border border-border-light rounded-md shrink-0 shadow-subtle"></div>
+                 <Link to="#" className="flex gap-space-sm cursor-pointer group">
+                    <div className="w-32 h-24 bg-bg-secondary border border-border-light rounded-md shrink-0 shadow-subtle flex items-center justify-center text-center p-2">
+                      <span className="text-text-secondary text-[10px] uppercase font-mono">Article</span>
+                    </div>
                     <div>
-                       <div className="text-label text-text-secondary mb-space-xs">Case Study</div>
+                       <div className="text-label text-text-secondary mb-space-xs">Governance</div>
                        <h4 className="text-body font-medium text-text-primary mb-space-xs group-hover:text-accent-blue transition-colors">
-                          Governance Blind Spots in Shadow AI Deployment
+                          The Governance Gap Nobody Owned
                        </h4>
                        <p className="text-body text-text-secondary line-clamp-2">
-                          When employees bypass formal procurement to use unvetted models, the resulting risk surface is often unmapped.
+                          When policies are written but never integrated into the actual workflow, compliance becomes theater. How to spot unowned governance gaps.
                        </p>
                     </div>
-                 </div>
-                 <div className="flex gap-space-sm cursor-pointer group">
-                    <div className="w-32 h-24 bg-bg-secondary border border-border-light rounded-md shrink-0 shadow-subtle"></div>
+                 </Link>
+                 <Link to="#" className="flex gap-space-sm cursor-pointer group">
+                    <div className="w-32 h-24 bg-bg-secondary border border-border-light rounded-md shrink-0 shadow-subtle flex items-center justify-center text-center p-2">
+                      <span className="text-text-secondary text-[10px] uppercase font-mono">Article</span>
+                    </div>
                     <div>
                        <div className="text-label text-text-secondary mb-space-xs">Adoption Risk</div>
                        <h4 className="text-body font-medium text-text-primary mb-space-xs group-hover:text-accent-blue transition-colors">
-                          The False Proxy of License Activation Rates
+                          When AI Readiness Scores Hide Operational Risk
                        </h4>
                        <p className="text-body text-text-secondary line-clamp-2">
-                          Why counting logged-in users fails to measure true operational integration and value creation.
+                          Why traditional sentiment-based assessments fail to measure true operational readiness and often create a false sense of security.
                        </p>
                     </div>
-                 </div>
+                 </Link>
                </div>
             </div>
           </div>
@@ -82,29 +130,42 @@ export default function BlogPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
-               <div className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
+               <Link to="#" className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
                   <div className="p-space-md flex-grow flex flex-col bg-bg-primary">
                      <div className="text-label text-text-secondary mb-space-xs">Diagnostic Frameworks</div>
                      <h3 className="text-h3 text-text-primary mb-space-sm">
-                        Measuring the Cost of Institutional Workarounds
+                        The Bottleneck Wasn't the Process. It Was Visibility.
                      </h3>
                      <p className="text-body text-text-secondary line-clamp-3 mb-space-md">
-                        When process breaks down, employees create hidden systems. How to identify and quantify the impact of unmapped workflows.
+                        Why optimizing a documented process map rarely fixes execution issues when the true workflow happens in undocumented shadow systems.
                      </p>
                      <div className="mt-auto text-body font-medium text-accent-blue">Read Analysis →</div>
                   </div>
-               </div>
-               <div className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
-                  <div className="p-space-md flex-grow flex flex-col bg-bg-primary">
-                     <div className="text-label text-text-secondary mb-space-xs">Process Evaluation</div>
-                     <h3 className="text-h3 text-text-primary mb-space-sm">
-                        Identifying Structural Bottlenecks in Data Handoffs
-                     </h3>
-                     <p className="text-body text-text-secondary line-clamp-3 mb-space-md">
-                        A framework for evaluating the exact points where operational execution consistently slows due to structural misalignment.
-                     </p>
-                     <div className="mt-auto text-body font-medium text-accent-blue">Read Analysis →</div>
-                  </div>
+               </Link>
+
+               <div className="flex flex-col gap-space-lg">
+                 <Link to="#" className="flex gap-space-sm cursor-pointer group">
+                    <div>
+                       <div className="text-label text-text-secondary mb-space-xs">Workflow Health</div>
+                       <h4 className="text-body font-medium text-text-primary mb-space-xs group-hover:text-accent-blue transition-colors">
+                          How Workflow Weaknesses Compound Over Time
+                       </h4>
+                       <p className="text-body text-text-secondary line-clamp-2">
+                          Small frictions in daily operations don't scale linearly; they compound. Exploring the math behind operational drag.
+                       </p>
+                    </div>
+                 </Link>
+                 <Link to="#" className="flex gap-space-sm cursor-pointer group">
+                    <div>
+                       <div className="text-label text-text-secondary mb-space-xs">Assessment Flaws</div>
+                       <h4 className="text-body font-medium text-text-primary mb-space-xs group-hover:text-accent-blue transition-colors">
+                          What Traditional Assessments Fail to Measure
+                       </h4>
+                       <p className="text-body text-text-secondary line-clamp-2">
+                          The danger of relying on "how do you feel about this tool" surveys over behavioral diagnostics.
+                       </p>
+                    </div>
+                 </Link>
                </div>
             </div>
           </div>
@@ -117,30 +178,42 @@ export default function BlogPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
-               <div className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
+               <Link to="#" className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
                   <div className="p-space-md flex-grow flex flex-col bg-bg-primary">
+                     <div className="text-label text-text-secondary mb-space-xs">Advisory</div>
                      <h3 className="text-h3 text-text-primary mb-space-sm">
-                        Moving Clients from Subjective to Quantitative Baselines
+                        Turning Diagnostics Into Advisory Services
                      </h3>
+                     <p className="text-body text-text-secondary line-clamp-3 mb-space-md">
+                        How forward-thinking consulting firms are using operational intelligence platforms to transition from report-writers to strategic execution partners.
+                     </p>
                      <div className="mt-auto text-body font-medium text-accent-blue pt-space-sm">Read Article →</div>
                   </div>
-               </div>
-               <div className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
+               </Link>
+               <Link to="#" className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
                   <div className="p-space-md flex-grow flex flex-col bg-bg-primary">
+                     <div className="text-label text-text-secondary mb-space-xs">Methodology</div>
                      <h3 className="text-h3 text-text-primary mb-space-sm">
-                        Standardizing Failure Diagnostics Across Portfolios
+                        Building Repeatable Assessment Frameworks
                      </h3>
+                     <p className="text-body text-text-secondary line-clamp-3 mb-space-md">
+                        The architectural requirements for scaling a diagnostic practice across a diverse client portfolio without sacrificing depth.
+                     </p>
                      <div className="mt-auto text-body font-medium text-accent-blue pt-space-sm">Read Article →</div>
                   </div>
-               </div>
-               <div className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
+               </Link>
+               <Link to="#" className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
                   <div className="p-space-md flex-grow flex flex-col bg-bg-primary">
+                     <div className="text-label text-text-secondary mb-space-xs">Client Delivery</div>
                      <h3 className="text-h3 text-text-primary mb-space-sm">
-                        Using Evidence to Justify Structural Interventions
+                        Presenting AI Maturity Findings to Clients
                      </h3>
+                     <p className="text-body text-text-secondary line-clamp-3 mb-space-md">
+                        Structuring uncomfortable truths. How to deliver structural failure intelligence in a way that drives action rather than defensiveness.
+                     </p>
                      <div className="mt-auto text-body font-medium text-accent-blue pt-space-sm">Read Article →</div>
                   </div>
-               </div>
+               </Link>
             </div>
           </div>
 

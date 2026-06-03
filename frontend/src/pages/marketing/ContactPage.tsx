@@ -1,11 +1,37 @@
 import { useSearchParams } from 'react-router-dom';
+import { SeoHead } from '../../components/geo/SeoHead';
 
 export default function ContactPage() {
   const [searchParams] = useSearchParams();
   const initialInterest = searchParams.get('interest') || 'General Inquiry';
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tarkax.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Contact",
+        "item": "https://tarkax.com/contact"
+      }
+    ]
+  };
+
   return (
     <div className="bg-bg-primary min-h-screen flex flex-col animate-fade-up">
+      <SeoHead
+        title="Contact TarkaX | Request a Demo"
+        description="Request a demo of TarkaX to explore the operational realities of your organization through our AI Audit and Workflow Diagnostic."
+        canonical="https://tarkax.com/contact"
+        schema={[breadcrumbSchema]}
+      />
       {/* Header */}
       <section className="pt-[120px] pb-[80px]">
         <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">

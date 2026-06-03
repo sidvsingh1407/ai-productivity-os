@@ -1,15 +1,73 @@
 import { Link } from 'react-router-dom';
 import { BarChart3, Activity, FastForward, ShieldAlert, ArrowRight } from 'lucide-react';
+import { SeoHead } from '../../components/geo/SeoHead';
+import { DefinitionBlock } from '../../components/geo/DefinitionBlock';
+import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
 
 export default function Home() {
+  const faqItems = [
+    {
+      question: "What is Operational Intelligence?",
+      answer: "Operational Intelligence is the practice of identifying operational risks, governance gaps, workflow weaknesses, and execution issues before they become larger organizational problems. It shifts the focus from backward-looking metrics to forward-looking operational realities."
+    },
+    {
+      question: "What is Failure Intelligence?",
+      answer: "Failure Intelligence is a systematic approach to identifying the specific, recurring patterns that cause initiatives, projects, or adoptions to fail within an organization. It focuses on structural barriers rather than individual performance."
+    },
+    {
+      question: "What does an AI Audit measure?",
+      answer: "An AI Audit measures an organization's structural readiness to adopt and scale artificial intelligence. It evaluates governance frameworks, knowledge silos, technology infrastructure, and cultural alignment to identify where AI initiatives are most likely to break down."
+    },
+    {
+      question: "How is TarkaX different from traditional assessments?",
+      answer: "Traditional assessments rely on point-in-time snapshots and stated sentiment to generate generic scores. TarkaX focuses on structural reality, using diagnostic frameworks to identify underlying failure patterns and provide actionable decision intelligence."
+    }
+  ];
+
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "TarkaX",
+    "url": "https://tarkax.com",
+    "logo": "https://tarkax.com/logo.png",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "url": "https://tarkax.com/contact"
+    }
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "TarkaX",
+    "url": "https://tarkax.com"
+  };
+
+  const faqSchema = generateFAQSchema(faqItems);
+
   return (
     <div className="bg-bg-primary">
+      <SeoHead
+        title="TarkaX | Operational Intelligence Platform"
+        description="TarkaX is an Operational Intelligence Platform built on Failure Intelligence principles. We help organizations identify AI adoption gaps, workflow weaknesses, and execution risks."
+        canonical="https://tarkax.com/"
+        schema={[organizationSchema, websiteSchema, faqSchema]}
+      />
       {/* 1. Hero Section */}
       <section className="py-[120px] border-b border-border-light bg-bg-primary animate-fade-up">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col items-start">
           <h1 className="text-display text-text-primary max-w-4xl">
             Operational failures rarely arrive without warning.
           </h1>
+
+          <div className="mt-8 max-w-3xl w-full">
+            <DefinitionBlock
+              question="What is Operational Intelligence?"
+              answer="Operational Intelligence is the practice of identifying operational risks, governance gaps, workflow weaknesses, and execution issues before they become larger organizational problems."
+            />
+          </div>
+
           <p className="mt-space-md text-h3 font-normal text-text-secondary max-w-3xl">
             TarkaX helps organizations identify AI adoption gaps, workflow weaknesses, governance blind spots, and execution risks before they become larger operational problems.
           </p>
@@ -65,12 +123,34 @@ export default function Home() {
           <p className="text-body text-text-secondary mb-space-lg">
             TarkaX is not a chatbot, a dashboard, or an automation platform. It is a diagnostic system designed to capture the true state of your operational execution.
           </p>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-space-md text-h3 text-text-primary font-medium">
-            <span className="px-6 py-3 bg-bg-secondary rounded-lg border border-border-light shadow-subtle">Assess</span>
-            <ArrowRight className="text-border-strong hidden md:block" />
-            <span className="px-6 py-3 bg-bg-secondary rounded-lg border border-border-light shadow-subtle">Diagnose</span>
-            <ArrowRight className="text-border-strong hidden md:block" />
-            <span className="px-6 py-3 bg-bg-secondary rounded-lg border border-border-light shadow-subtle">Improve</span>
+
+          <div className="mt-space-xl overflow-x-auto">
+            <table className="w-full text-left border-collapse border border-border-light bg-bg-primary rounded-lg shadow-sm">
+              <thead>
+                <tr className="bg-bg-secondary border-b border-border-light">
+                  <th className="py-4 px-6 text-label text-text-secondary font-medium">Stage</th>
+                  <th className="py-4 px-6 text-label text-text-secondary font-medium">Purpose</th>
+                  <th className="py-4 px-6 text-label text-text-secondary font-medium">Output</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border-light text-body text-text-primary">
+                <tr>
+                  <td className="py-4 px-6 font-medium">Assess</td>
+                  <td className="py-4 px-6 text-text-secondary">Capture operational realities through targeted evaluations and objective evidence collection.</td>
+                  <td className="py-4 px-6 text-text-secondary">Raw diagnostic signals and capability gaps.</td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium">Diagnose</td>
+                  <td className="py-4 px-6 text-text-secondary">Analyze signals to identify structural weaknesses and recurring failure patterns.</td>
+                  <td className="py-4 px-6 text-text-secondary">Actionable findings and maturity insights.</td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium">Improve</td>
+                  <td className="py-4 px-6 text-text-secondary">Translate diagnostic insights into precise, prioritized interventions.</td>
+                  <td className="py-4 px-6 text-text-secondary">Targeted action plans and execution workflows.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -220,7 +300,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 8. Final CTA */}
+      {/* 8. FAQ Section */}
+      <FAQSection
+        title="Frequently Asked Questions"
+        faqItems={faqItems}
+      />
+
+      {/* 9. Final CTA */}
       <section className="py-[120px] bg-bg-primary text-center">
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
           <h2 className="text-h1 text-text-primary mb-space-lg">

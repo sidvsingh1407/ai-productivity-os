@@ -1,9 +1,54 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { SeoHead } from '../../components/geo/SeoHead';
+import { DefinitionBlock } from '../../components/geo/DefinitionBlock';
+import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
 
 export default function AiAuditPage() {
+  const faqItems = [
+    {
+      question: "What does an AI Audit measure?",
+      answer: "An AI Audit measures an organization's structural readiness to adopt and scale artificial intelligence. It evaluates governance frameworks, knowledge silos, technology infrastructure, and cultural alignment to identify where AI initiatives are most likely to break down."
+    },
+    {
+      question: "How is an AI Audit different from an IT assessment?",
+      answer: "While IT assessments focus on infrastructure and security compliance, an AI Audit evaluates operational integration, business alignment, and Failure Intelligence. It measures whether the organization can actually extract value from AI investments."
+    },
+    {
+      question: "What is the typical output of an AI Audit?",
+      answer: "The output is an actionable diagnostic report detailing maturity scores across key dimensions, identifying critical capability gaps, and providing prioritized operational interventions to mitigate adoption risk."
+    }
+  ];
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tarkax.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "AI Audit",
+        "item": "https://tarkax.com/ai-audit"
+      }
+    ]
+  };
+
+  const faqSchema = generateFAQSchema(faqItems);
+
   return (
     <div className="bg-bg-primary">
+      <SeoHead
+        title="AI Audit | TarkaX"
+        description="Establish a quantitative baseline for organizational AI readiness. Evaluate governance, integration, and operational maturity with TarkaX's AI Audit."
+        canonical="https://tarkax.com/ai-audit"
+        schema={[breadcrumbSchema, faqSchema]}
+      />
       {/* Header */}
       <section className="pt-[120px] pb-[80px] bg-bg-secondary border-b border-border-light animate-fade-up">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -13,7 +58,15 @@ export default function AiAuditPage() {
           <h1 className="text-h1 text-text-primary max-w-3xl mb-space-sm">
             AI Audit
           </h1>
-          <p className="text-h3 font-normal text-text-secondary max-w-2xl">
+
+          <div className="mt-8 max-w-3xl w-full">
+            <DefinitionBlock
+              question="What is an AI Audit?"
+              answer="An AI Audit is a diagnostic evaluation of an organization's structural readiness to adopt and scale artificial intelligence. It identifies governance gaps, operational misalignment, and execution risks before capital is deployed."
+            />
+          </div>
+
+          <p className="mt-space-md text-h3 font-normal text-text-secondary max-w-2xl">
             Establish a quantitative baseline for organizational AI readiness.
           </p>
         </div>
@@ -42,34 +95,37 @@ export default function AiAuditPage() {
           <h2 className="text-h2 text-text-primary mb-space-xl text-center">
             Assessment Dimensions
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
-            {[
-              {
-                title: "Awareness",
-                desc: "Does the organization understand what is possible and what is required?"
-              },
-              {
-                title: "Adoption",
-                desc: "How deeply are existing tools integrated into daily operations?"
-              },
-              {
-                title: "Integration",
-                desc: "Are systems technically and structurally aligned to support AI capabilities?"
-              },
-              {
-                title: "Governance",
-                desc: "Are policies, risks, and data access properly controlled and monitored?"
-              },
-              {
-                title: "ROI",
-                desc: "Is there a mechanism to measure the operational value being created?"
-              }
-            ].map((dim, i) => (
-              <div key={i} className="bg-bg-primary p-space-md rounded-lg border border-border-light shadow-subtle hover:shadow-card transition-shadow duration-300">
-                <h3 className="text-h3 text-text-primary mb-space-xs">{dim.title}</h3>
-                <p className="text-body text-text-secondary">{dim.desc}</p>
-              </div>
-            ))}
+          <div className="overflow-x-auto max-w-5xl mx-auto">
+            <table className="w-full text-left border-collapse border border-border-light bg-bg-primary rounded-lg shadow-sm">
+              <thead>
+                <tr className="bg-bg-secondary border-b border-border-light">
+                  <th className="py-4 px-6 text-label text-text-secondary font-medium w-1/3">Dimension</th>
+                  <th className="py-4 px-6 text-label text-text-secondary font-medium">Diagnostic Focus</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border-light text-body text-text-primary">
+                <tr>
+                  <td className="py-4 px-6 font-medium">Awareness</td>
+                  <td className="py-4 px-6 text-text-secondary">Does the organization understand what is possible and what is required operationally?</td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium">Adoption</td>
+                  <td className="py-4 px-6 text-text-secondary">How deeply are existing tools integrated into daily operations versus sporadic usage?</td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium">Integration</td>
+                  <td className="py-4 px-6 text-text-secondary">Are systems technically and structurally aligned to support advanced capabilities?</td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium">Governance</td>
+                  <td className="py-4 px-6 text-text-secondary">Are policies, risks, and data access properly controlled and monitored?</td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-medium">Value Realization (ROI)</td>
+                  <td className="py-4 px-6 text-text-secondary">Is there a mechanism to measure the operational value being created by the initiative?</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -122,8 +178,23 @@ export default function AiAuditPage() {
                </div>
             </div>
           </div>
+
+          <div className="mt-space-xl border-t border-border-light pt-space-lg">
+            <h3 className="text-h3 text-text-primary mb-space-sm">Explore Related Diagnostics</h3>
+            <div className="flex gap-4">
+              <Link to="/workflow-diagnostic" className="text-accent-blue font-medium hover:underline flex items-center gap-1">
+                Workflow Diagnostic <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link to="/forecasting" className="text-accent-blue font-medium hover:underline flex items-center gap-1">
+                Forecasting Framework <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
+
+      {/* FAQ */}
+      <FAQSection faqItems={faqItems} />
 
       {/* CTA */}
       <section className="py-[120px] bg-bg-dark text-text-inverse text-center">

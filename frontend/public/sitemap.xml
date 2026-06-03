@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://tarkax.com/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://tarkax.com/ai-audit</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://tarkax.com/workflow-diagnostic</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://tarkax.com/forecasting</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tarkax.com/about</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkax.com/blog</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkax.com/contact</loc>
+    <priority>0.6</priority>
+  </url>
+</urlset>
