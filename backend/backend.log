@@ -1,4 +1,4 @@
-INFO:     Started server process [169868]
+INFO:     Started server process [79818]
 INFO:     Waiting for application startup.
 SYSTEM LOG: Scanning models and verifying tables on Supabase...
 ERROR:    Traceback (most recent call last):
