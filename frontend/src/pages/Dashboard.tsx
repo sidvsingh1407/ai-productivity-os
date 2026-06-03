@@ -1,53 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/store/authStore';
-import { analyticsApi } from '@/api/analytics';
 import apiClient from '@/api/client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Activity, Play, ShieldAlert, RotateCcw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function Dashboard() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
 
-  const { data: latestAudits } = useQuery({
+  const { data: latestAudits, isLoading } = useQuery({
     queryKey: ['latestAudits'],
     queryFn: async () => {
-      const response = await apiClient.get('/audits/?limit=2');
+      const response = await apiClient.get('/audits/?limit=1');
       return response.data?.items || [];
     },
   });
 
-  const { data: stats, isLoading, isError } = useQuery({
-    queryKey: ['dashboardStats'],
-    queryFn: async () => {
-      // Trying to fetch from our analytics api wrappers.
-      // If backend endpoints don't exist yet, we catch the error and return fallback data.
-      try {
-        const volume = await analyticsApi.getAuditVolume();
-        const trend = await analyticsApi.getScoreTrend();
-        const compliance = await analyticsApi.getComplianceRate();
-
-        return {
-          totalAudits: volume?.total || 0,
-          lastScore: trend?.latestScore || 0,
-          complianceStatus: compliance?.rate ? `${compliance.rate}%` : 'Unknown',
-        };
-      } catch (err) {
-        // Fallback for when backend is not ready
-        console.warn('Backend not ready, using fallback stats.', err);
-        return {
-          totalAudits: 0,
-          lastScore: 0,
-          complianceStatus: 'Pending',
-        };
-      }
-    },
-  });
-
   const lastAudit = latestAudits?.[0];
-  const previousAudit = latestAudits?.[1];
 
   let daysSinceLastAudit = -1;
   if (lastAudit?.created_at) {
@@ -55,99 +23,113 @@ export function Dashboard() {
     daysSinceLastAudit = Math.floor((Date.now() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
   }
 
+  // --- Top Status Line ---
+  const getStatusLine = () => {
+    if (isLoading) return "Loading operational status...";
+    if (!lastAudit) return "Status: No operational baseline established.";
+
+    const daysText = daysSinceLastAudit === 0 ? 'Today' : `${daysSinceLastAudit} Days Ago`;
+
+    // Check if the audit has contradictions or missing data which we treat as "Unresolved Findings" for this demo.
+    const unresolvedCount = (lastAudit.contradictions?.length || 0) + (lastAudit.missing_data_flags?.length || 0);
+    const findingsText = unresolvedCount > 0 ? `${unresolvedCount} Structural Anomalies Detected` : 'Baseline Stabilized';
+
+    return `Last Assessment: ${daysText} — ${findingsText}`;
+  };
+
+  // Helper for determining the weakest dimension in the last audit
+  const getWeakestDimension = (scores: any) => {
+    if (!scores) return null;
+    let weakest = null;
+    let minScore = 101;
+    for (const [dim, score] of Object.entries(scores)) {
+      if (typeof score === 'number' && score < minScore) {
+        minScore = score;
+        weakest = dim;
+      }
+    }
+    return weakest;
+  };
+
+  const weakestDimension = getWeakestDimension(lastAudit?.scores);
+
+  // Helper for verdict
+  const getVerdictText = (score: number, govScore: number) => {
+    if (score > 75) return "Strong capability with minor operational optimizations required.";
+    if (score >= 50) {
+      if (govScore < 50) return "Moderate adoption undermined by significant governance vulnerabilities.";
+      return "Developing capability with structural bottlenecks preventing scale.";
+    }
+    return "Critical structural vulnerabilities preventing successful integration.";
+  };
+
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Welcome, {user?.full_name || 'User'}</h2>
-        <p className="text-muted-foreground mt-2">
-          Run your first audit or check your workflow diagnostics.
+    <div className="max-w-5xl mx-auto py-12 px-6">
+      <div className="mb-12">
+        <h1 className="text-display text-text-primary mb-4">Decision Support Interface</h1>
+        <p className="text-data text-text-secondary border-b border-border-strong pb-4">
+          {getStatusLine()}
         </p>
       </div>
 
-      {daysSinceLastAudit >= 0 && (
-        <Card className="bg-primary/5 border-primary/20">
-          <CardContent className="flex flex-col sm:flex-row items-center justify-between p-6">
-            <div>
-              <h3 className="font-semibold text-primary mb-1">Audit Reminder</h3>
-              <p className="text-sm text-slate-600">
-                {daysSinceLastAudit === 0 ? "You ran an audit today. Check back later to measure your progress." : `Your last audit was ${daysSinceLastAudit} day${daysSinceLastAudit > 1 ? 's' : ''} ago. Run another to measure progress.`}
-              </p>
-            </div>
-            {daysSinceLastAudit > 0 && (
-              <Button onClick={() => navigate(`/audits/new?sourceAuditId=${lastAudit.id}`)} className="mt-4 sm:mt-0 gap-2">
-                <RotateCcw className="w-4 h-4" />
-                Re-Run Audit
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      <div className="flex gap-4">
-        <Button className="gap-2" size="lg" onClick={() => navigate('/audits/new')}>
-          <Play className="w-4 h-4" />
-          Run AI Audit
-        </Button>
-        <Button variant="outline" className="gap-2" size="lg" onClick={() => navigate('/workflows/new')}>
-          <Activity className="w-4 h-4" />
-          Run Workflow Diagnostic
-        </Button>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Audits</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {isLoading ? '-' : (isError ? 'Error' : stats?.totalAudits)}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Lifetime audits run
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Last Score</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-baseline space-x-2">
-              <div className="text-2xl font-bold">
-                {lastAudit ? lastAudit.total_score : (isLoading ? '-' : (isError ? 'Error' : stats?.lastScore))}
-              </div>
-              {previousAudit && lastAudit && (
-                <div className={`text-sm font-semibold ${lastAudit.total_score >= previousAudit.total_score ? 'text-green-600' : 'text-red-600'}`}>
-                  {lastAudit.total_score >= previousAudit.total_score ? '+' : ''}
-                  {lastAudit.total_score - previousAudit.total_score} pts
+      {!isLoading && !lastAudit ? (
+        // --- Empty State ---
+        <div className="border border-border-strong bg-bg-primary p-12 text-center">
+          <h2 className="text-h2 text-text-primary mb-4">No structural assessments completed.</h2>
+          <p className="text-body text-text-secondary max-w-2xl mx-auto mb-8">
+            Run your first AI Audit to establish an operational baseline and identify areas requiring attention.
+          </p>
+          <button
+            onClick={() => navigate('/audits/new')}
+            className="px-8 py-4 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90"
+          >
+            Run AI Audit
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-8">
+          {/* --- Primary Card: Most Recent Assessment Summary --- */}
+          {lastAudit && (
+            <div className="border border-border-strong bg-bg-primary">
+              <div className="p-8 border-b border-border-strong">
+                <h3 className="text-label text-text-secondary mb-2">Most Recent Assessment</h3>
+                <h2 className="text-h2 text-text-primary mb-4">{lastAudit.company_name || 'Organization'} AI Readiness</h2>
+                <div className="text-body text-text-secondary max-w-3xl">
+                  {getVerdictText(lastAudit.total_score, lastAudit.scores?.governance || 0)}
+                  {' '}
+                  <span className="font-mono text-data ml-2">Score: {lastAudit.total_score}/100</span>
                 </div>
-              )}
+              </div>
+              <div className="p-6 bg-bg-secondary flex justify-end">
+                <button
+                  onClick={() => navigate(`/audits/${lastAudit.id}`)}
+                  className="px-6 py-3 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90"
+                >
+                  View Full Report
+                </button>
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {previousAudit ? `vs previous score: ${previousAudit.total_score}` : 'Latest audit performance'}
-            </p>
-          </CardContent>
-        </Card>
+          )}
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Compliance Status</CardTitle>
-            <ShieldAlert className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {isLoading ? '-' : (isError ? 'Error' : stats?.complianceStatus)}
+          {/* --- Secondary Card: Recommended Next Action --- */}
+          {lastAudit && (
+            <div className="border border-border-strong bg-bg-primary p-8">
+              <h3 className="text-label text-text-secondary mb-2">Recommended Action</h3>
+              <p className="text-h3 font-medium text-text-primary mb-6">
+                {weakestDimension
+                  ? `${weakestDimension.charAt(0).toUpperCase() + weakestDimension.slice(1)} capability is the primary operational bottleneck.`
+                  : 'Diagnostic complete.'} Run Workflow Diagnostic to evaluate targeted execution.
+              </p>
+              <button
+                onClick={() => navigate(`/workflows/new?auditId=${lastAudit.id}`)}
+                className="px-6 py-3 border border-border-strong bg-bg-primary text-text-primary text-body font-medium transition-colors hover:bg-bg-secondary"
+              >
+                Run Workflow Diagnostic
+              </button>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Overall compliance health
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
