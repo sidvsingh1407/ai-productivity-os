@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import apiClient from '@/api/client';
-import { ScoreRadarChart } from '@/components/charts/ScoreRadarChart';
-import { DimensionBar } from '@/components/charts/DimensionBar';
-import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { ComplianceAlert } from '@/components/audits/ComplianceAlert';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileDown, PlaySquare, RotateCcw } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
+
+import {
+  ReportHeader,
+  ExecutiveSummaryCard,
+  ScoreBreakdown,
+  FindingCard,
+  RecommendationCard
+} from '@/components/report';
 
 export default function AuditDetail() {
   const { id } = useParams<{ id: string }>();
@@ -21,21 +22,6 @@ export default function AuditDetail() {
     queryFn: async () => {
       const response = await apiClient.get(`/audits/${id}`);
       return response.data;
-    },
-    enabled: !!id,
-  });
-
-  const { data: previousAudit } = useQuery({
-    queryKey: ['previousAudit', id],
-    queryFn: async () => {
-      // Fetch latest 2 to find the one preceding this one
-      const response = await apiClient.get('/audits/?limit=10');
-      const audits = response.data?.items || [];
-      const currentIndex = audits.findIndex((a: any) => a.id === id);
-      if (currentIndex >= 0 && currentIndex < audits.length - 1) {
-        return audits[currentIndex + 1];
-      }
-      return null;
     },
     enabled: !!id,
   });
@@ -60,214 +46,180 @@ export default function AuditDetail() {
     refetchInterval: (query) => (query.state.data?.status === 'completed' ? false : 3000),
   });
 
-  if (isLoading) return <div>Loading audit details...</div>;
-  if (isError) return <div>Error loading audit details.</div>;
-  if (!audit) return <div>Audit not found.</div>;
+  if (isLoading) return <div className="max-w-4xl mx-auto py-16 text-center text-text-secondary">Loading intelligence report...</div>;
+  if (isError) return <div className="max-w-4xl mx-auto py-16 text-center text-accent-red">Error loading intelligence report.</div>;
+  if (!audit) return <div className="max-w-4xl mx-auto py-16 text-center text-text-secondary">Report not found.</div>;
 
   const {
     scores = {},
-    company_name = "Company",
-    rating = "N/A",
+    company_name = "Organization",
+    total_score = 0,
     compliance_risk_flag,
     compliance_risk_reasons,
-    contradictions,
-    missing_data_flags,
-    evidence_quality_score,
-    confidence_index
+    contradictions = [],
+    missing_data_flags = [],
+    created_at
   } = audit;
 
-  const totalScore = Object.values(scores as Record<string, number>).reduce((acc, val) => acc + val, 0);
+  const date = created_at ? new Date(created_at).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }) : 'Unknown Date';
 
-  const getConfidenceLevel = (score: number | null | undefined) => {
-    if (score === null || score === undefined) return null;
-    if (score < 40) return { label: 'Low Confidence', color: 'text-red-700', bg: 'bg-red-50', border: 'border-red-200' };
-    if (score < 70) return { label: 'Medium Confidence', color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200' };
-    return { label: 'High Confidence', color: 'text-green-700', bg: 'bg-green-50', border: 'border-green-200' };
+  // Helper to generate a verdict text
+  const getVerdict = (score: number, govScore: number) => {
+    if (score > 75) return "Strong capability with minor operational optimizations required.";
+    if (score >= 50) {
+      if (govScore < 50) return "Moderate adoption undermined by significant governance vulnerabilities.";
+      return "Developing capability with structural bottlenecks preventing scale.";
+    }
+    return "Critical structural vulnerabilities preventing successful integration.";
   };
 
-  const getEQSLevel = (score: number | null | undefined) => {
-    if (score === null || score === undefined) return null;
-    if (score <= 20) return 'L1';
-    if (score <= 40) return 'L2';
-    if (score <= 60) return 'L3';
-    if (score <= 80) return 'L4';
-    return 'L5';
-  };
+  const verdictText = getVerdict(total_score, scores.governance || 0);
 
-  const confidence = getConfidenceLevel(confidence_index);
-  const eqsLevel = getEQSLevel(evidence_quality_score);
+  // Map backend scores to the Dimension Breakdown
+  const dimensions = [
+    { label: 'Awareness', score: (scores.awareness || 0) * 5, keyFinding: (scores.awareness || 0) * 5 < 50 ? 'Knowledge silos prevent broad understanding.' : 'General awareness is established across target groups.' },
+    { label: 'Adoption', score: (scores.adoption || 0) * 5, keyFinding: (scores.adoption || 0) * 5 < 50 ? 'Adoption is localized and largely informal.' : 'Active usage observed across key workflows.' },
+    { label: 'Integration', score: (scores.integration || 0) * 5, keyFinding: (scores.integration || 0) * 5 < 50 ? 'Systems lack the infrastructure for deep integration.' : 'Core software is structurally prepared for automation.' },
+    { label: 'Governance', score: (scores.governance || 0) * 5, keyFinding: (scores.governance || 0) * 5 < 50 ? 'Severe lack of oversight and formal policy.' : 'Oversight committees and guidelines are active.' },
+    { label: 'ROI', score: (scores.roi || 0) * 5, keyFinding: (scores.roi || 0) * 5 < 50 ? 'No formal measurement of capability impact.' : 'Metrics are tracked against operational baselines.' },
+  ];
 
-  const radarData = [
-    { subject: 'Awareness', A: scores.awareness || 0, fullMark: 20 },
-    { subject: 'Adoption', A: scores.adoption || 0, fullMark: 20 },
-    { subject: 'Integration', A: scores.integration || 0, fullMark: 20 },
-    { subject: 'Governance', A: scores.governance || 0, fullMark: 20 },
-    { subject: 'ROI', A: scores.roi || 0, fullMark: 20 },
+  // Derive Critical Findings based on intelligence
+  const criticalFindings = [];
+  if (compliance_risk_flag) {
+    criticalFindings.push({
+      title: "Regulatory / Compliance Vulnerability",
+      explanation: compliance_risk_reasons?.[0] || "Identified severe governance gaps indicating non-compliance risks.",
+      severity: "Critical" as const
+    });
+  }
+  if (contradictions.length > 0) {
+    criticalFindings.push({
+      title: "Operational Contradictions Detected",
+      explanation: "Diagnostic algorithms identified conflicting evidence between stated policy and actual adoption.",
+      severity: "Major" as const
+    });
+  }
+  if (missing_data_flags.length > 0) {
+    criticalFindings.push({
+      title: "Structural Visibility Gaps",
+      explanation: `Lack of evidence in key dimensions (${missing_data_flags.join(', ')}) prevents full operational clarity.`,
+      severity: "Advisory" as const
+    });
+  }
+  if (criticalFindings.length === 0) {
+    criticalFindings.push({
+      title: "Baseline Established",
+      explanation: "Initial structural parameters have been evaluated without major contradictions.",
+      severity: "Advisory" as const
+    });
+  }
+
+  // Define recommendations based on score
+  const recommendations = [
+    {
+      action: "Establish Governance Framework",
+      rationale: "Unregulated adoption creates legal and operational exposure.",
+      futureState: "A formal oversight committee reviewing and approving all integration tools."
+    },
+    {
+      action: "Execute Workflow Diagnostic",
+      rationale: "High-level adoption scores must be validated against specific departmental execution.",
+      futureState: "Targeted map of process bottlenecks and tool bloat."
+    }
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">{company_name} Audit</h1>
-          <p className="text-slate-500">ID: {id}</p>
-        </div>
-        <div className="flex space-x-3">
-          <Button variant="outline" onClick={() => navigate(`/audits/new?sourceAuditId=${id}`)}>
-            <RotateCcw className="mr-2 h-4 w-4" />
-            Re-Run Audit
-          </Button>
-          <Button variant="outline" onClick={() => generatePdfMutation.mutate()} disabled={generatePdfMutation.isPending || !!downloadJobId}>
-            <FileDown className="mr-2 h-4 w-4" />
-            {generatePdfMutation.isPending ? 'Generating...' : 'Download PDF'}
-          </Button>
-          <Button onClick={() => navigate(`/workflows/new?auditId=${id}`)}>
-            <PlaySquare className="mr-2 h-4 w-4" />
-            Run Workflow Diagnostic
-          </Button>
-        </div>
-      </div>
+    <div className="max-w-5xl mx-auto py-12 px-6">
 
       {jobStatus?.status === 'completed' && jobStatus?.download_url && (
-        <div className="bg-green-50 p-4 rounded-md border border-green-200">
-          <p className="text-green-800">
-            PDF Report is ready! <a href={jobStatus.download_url} className="font-bold underline" target="_blank" rel="noreferrer">Click here to download</a>
+        <div className="mb-8 p-4 bg-bg-secondary border border-border-strong flex justify-between items-center">
+          <p className="text-body text-text-primary">
+            PDF Export generated successfully.
           </p>
+          <a href={jobStatus.download_url} className="text-body font-medium underline text-text-primary" target="_blank" rel="noreferrer">
+            Download Report
+          </a>
         </div>
       )}
 
       {compliance_risk_flag && (
-        <ComplianceAlert reasons={compliance_risk_reasons || ['Governance issues detected.']} />
+        <div className="mb-8 p-6 bg-accent-red/5 border border-accent-red/20 flex gap-4 items-start">
+          <ShieldAlert className="w-6 h-6 text-accent-red shrink-0" />
+          <div>
+            <h4 className="text-h3 font-medium text-accent-red mb-2">Compliance Risk Identified</h4>
+            <p className="text-body text-accent-red/80">
+              {compliance_risk_reasons?.[0] || "Governance issues detected requiring immediate review."}
+            </p>
+          </div>
+        </div>
       )}
 
-      {confidence && (
-        <Card className={`${confidence.border} ${confidence.bg}`}>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="col-span-1 border-r border-slate-200/50">
-                <p className={`text-sm font-semibold uppercase tracking-wider mb-1 ${confidence.color}`}>Confidence Index</p>
-                <div className="flex items-baseline space-x-2">
-                  <span className={`text-4xl font-bold ${confidence.color}`}>{confidence_index}%</span>
-                </div>
-                <p className={`text-sm mt-1 font-medium ${confidence.color}`}>{confidence.label}</p>
-              </div>
-              <div className="col-span-1 border-r border-slate-200/50 pl-4">
-                <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Evidence Quality</p>
-                <div className="flex items-baseline space-x-2">
-                  <span className="text-3xl font-bold text-slate-800">{eqsLevel}</span>
-                  <span className="text-sm text-slate-500">Score: {evidence_quality_score}</span>
-                </div>
-              </div>
-              <div className="col-span-1 pl-4">
-                <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Contradictions</p>
-                <div className="flex items-baseline space-x-2">
-                  <span className={`text-3xl font-bold ${contradictions?.length > 0 ? 'text-red-600' : 'text-slate-800'}`}>{contradictions?.length || 0}</span>
-                  <span className="text-sm text-slate-500">Detected</span>
-                </div>
-              </div>
-            </div>
+      <ReportHeader
+        organizationName={company_name}
+        reportTitle="AI Readiness Diagnostic"
+        date={date}
+        version="1.0"
+      />
 
-            {contradictions?.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-slate-200/50">
-                <h4 className={`font-medium mb-2 ${confidence.color}`}>Detected Contradictions:</h4>
-                <ul className={`list-disc pl-5 space-y-1 text-sm ${confidence.color}`}>
-                  {contradictions.map((item: string, i: number) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+      <ExecutiveSummaryCard
+        score={total_score}
+        maxScore={100}
+        verdict={verdictText}
+        onExportPdf={() => generatePdfMutation.mutate()}
+      />
 
-            {missing_data_flags?.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-slate-200/50">
-                <h4 className={`font-medium mb-2 ${confidence.color}`}>Missing Data In Dimensions:</h4>
-                <ul className={`list-disc pl-5 space-y-1 text-sm ${confidence.color}`}>
-                  {missing_data_flags.map((item: string, i: number) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
+      <ScoreBreakdown dimensions={dimensions} />
 
-      {(!confidence && (contradictions?.length > 0 || missing_data_flags?.length > 0)) && (
-        <Card className="border-amber-200 bg-amber-50">
-          <CardHeader>
-            <CardTitle className="text-amber-800 text-lg">Assessment Findings</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {contradictions?.length > 0 && (
-              <div>
-                <h4 className="font-medium text-amber-900 mb-2">Contradictions Detected:</h4>
-                <ul className="list-disc pl-5 space-y-1 text-sm text-amber-800">
-                  {contradictions.map((item: string, i: number) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {missing_data_flags?.length > 0 && (
-              <div>
-                <h4 className="font-medium text-amber-900 mb-2">Missing Data In Dimensions:</h4>
-                <ul className="list-disc pl-5 space-y-1 text-sm text-amber-800">
-                  {missing_data_flags.map((item: string, i: number) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="col-span-1">
-          <CardHeader>
-            <CardTitle>Total Score</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center py-6">
-            <div className="text-6xl font-bold text-slate-900 mb-4">{totalScore}</div>
-
-            {previousAudit && (
-              <div className={`flex items-center space-x-1 mb-4 text-lg font-medium ${totalScore >= (previousAudit.total_score || 0) ? 'text-green-600' : 'text-red-600'}`}>
-                {totalScore >= (previousAudit.total_score || 0) ? <ArrowUpRight className="h-5 w-5" /> : <ArrowDownRight className="h-5 w-5" />}
-                <span>{Math.abs(totalScore - (previousAudit.total_score || 0))} pts</span>
-                <span className="text-sm text-slate-500 ml-1 font-normal">(vs previous)</span>
-              </div>
-            )}
-
-            <Badge variant={totalScore > 75 ? "default" : totalScore > 50 ? "secondary" : "destructive"} className="text-lg py-1 px-4">
-              {rating}
-            </Badge>
-          </CardContent>
-        </Card>
-
-        <Card className="col-span-1 md:col-span-2">
-          <CardHeader>
-            <CardTitle>Score Breakdown</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <ScoreRadarChart data={radarData} />
-            </div>
-          </CardContent>
-        </Card>
+      <div className="mb-12">
+        <h2 className="text-h2 font-semibold text-text-primary mb-6 border-b border-border-light pb-4">Critical Findings</h2>
+        <div>
+          {criticalFindings.map((finding, idx) => (
+            <FindingCard
+              key={idx}
+              number={idx + 1}
+              title={finding.title}
+              explanation={finding.explanation}
+              severity={finding.severity}
+            />
+          ))}
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Dimensions Details</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <DimensionBar label="Awareness" score={scores.awareness || 0} />
-          <DimensionBar label="Adoption" score={scores.adoption || 0} />
-          <DimensionBar label="Integration" score={scores.integration || 0} />
-          <DimensionBar label="Governance" score={scores.governance || 0} />
-          <DimensionBar label="ROI" score={scores.roi || 0} />
-        </CardContent>
-      </Card>
+      <div className="mb-12">
+        <h2 className="text-h2 font-semibold text-text-primary mb-6 border-b border-border-light pb-4">Strategic Recommendations</h2>
+        <div>
+          {recommendations.map((rec, idx) => (
+            <RecommendationCard
+              key={idx}
+              number={idx + 1}
+              action={rec.action}
+              rationale={rec.rationale}
+              futureState={rec.futureState}
+            />
+          ))}
+        </div>
+
+        <div className="mt-8 pt-8 border-t border-border-strong text-center">
+          <button
+            onClick={() => navigate(`/workflows/new?auditId=${id}`)}
+            className="px-8 py-4 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90"
+          >
+            Run Workflow Diagnostic
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-24 pt-8 border-t border-border-light text-center">
+        <p className="text-data text-text-secondary">
+          Generated by TarkaX Operational Intelligence Platform
+        </p>
+      </div>
+
     </div>
   );
 }
