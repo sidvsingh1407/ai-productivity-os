@@ -18,12 +18,37 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['"IBM Plex Sans"', "sans-serif"],
+        mono: ['"IBM Plex Mono"', "monospace"],
+      },
+      spacing: {
+        "space-xs": "var(--space-xs)",
+        "space-sm": "var(--space-sm)",
+        "space-md": "var(--space-md)",
+        "space-lg": "var(--space-lg)",
+        "space-xl": "var(--space-xl)",
+        "space-2xl": "var(--space-2xl)",
+      },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        "bg-primary": "var(--bg-primary)",
+        "bg-secondary": "var(--bg-secondary)",
+        "bg-dark": "var(--bg-dark)",
+        "text-primary": "var(--text-primary)",
+        "text-secondary": "var(--text-secondary)",
+        "text-inverse": "var(--text-inverse)",
+        "accent-blue": "var(--accent-blue)",
+        "accent-amber": "var(--accent-amber)",
+        "accent-green": "var(--accent-green)",
+        "accent-red": "var(--accent-red)",
+        "border-light": "var(--border-light)",
+        "border-strong": "var(--border-strong)",
+        // Map shadcn variables to our tokens
+        border: "var(--border-light)",
+        input: "var(--border-light)",
+        ring: "var(--accent-blue)",
+        background: "var(--bg-primary)",
+        foreground: "var(--text-primary)",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -54,11 +79,19 @@ const config = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "var(--radius-card)",
+        md: "var(--radius-button)",
+        sm: "calc(var(--radius-button) - 2px)",
+      },
+      boxShadow: {
+        "subtle": "var(--shadow-subtle)",
+        "card": "var(--shadow-card)",
       },
       keyframes: {
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(12px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -69,6 +102,7 @@ const config = {
         },
       },
       animation: {
+        "fade-up": "fade-up 300ms ease-out forwards",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
