@@ -1,6 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { PrivateRoute } from './components/PrivateRoute';
 import { AppShell } from './components/layout/AppShell';
+import { MarketingLayout } from './components/layout/MarketingLayout';
+
+import Home from './pages/marketing/Home';
+import AiAuditPage from './pages/marketing/AiAuditPage';
+import WorkflowDiagnosticPage from './pages/marketing/WorkflowDiagnosticPage';
+import ForecastingPage from './pages/marketing/ForecastingPage';
+import AboutPage from './pages/marketing/AboutPage';
+import BlogPage from './pages/marketing/BlogPage';
+import ContactPage from './pages/marketing/ContactPage';
+
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
@@ -14,16 +24,28 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public Marketing Routes */}
+        <Route element={<MarketingLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/ai-audit" element={<AiAuditPage />} />
+          <Route path="/workflow-diagnostic" element={<WorkflowDiagnosticPage />} />
+          <Route path="/forecasting" element={<ForecastingPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Route>
+
+        {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* Protected Routes */}
-        <Route path="/" element={
+        <Route path="/app" element={
           <PrivateRoute>
             <AppShell />
           </PrivateRoute>
         }>
-          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route index element={<Navigate to="/app/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="audits/new" element={<NewAudit />} />
           <Route path="audits/:id" element={<AuditDetail />} />
@@ -31,6 +53,11 @@ function App() {
           <Route path="workflows/:id" element={<WorkflowDetail />} />
           <Route path="integrations/:id" element={<IntegrationResults />} />
         </Route>
+
+        {/* Redirect old dashboard to new app dashboard */}
+        <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
+        <Route path="/audits/*" element={<Navigate to={`/app/audits/${window.location.pathname.split('/').pop()}`} replace />} />
+        <Route path="/workflows/*" element={<Navigate to={`/app/workflows/${window.location.pathname.split('/').pop()}`} replace />} />
       </Routes>
     </BrowserRouter>
   );
