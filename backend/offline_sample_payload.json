@@ -1,0 +1,310 @@
+{
+  "id": "dab5b237-56ae-433b-93fb-e3170af4d7a8",
+  "org_id": "b3751226-24a2-4f41-ad84-089db7d79b6d",
+  "user_id": "d78b3b47-f7dc-4b0a-9485-fac78a78fe24",
+  "form_response": {
+    "q1_1": "c",
+    "q1_2": "b",
+    "q1_3": "c",
+    "q2_1": "d",
+    "q2_2": "c",
+    "q2_3": "b",
+    "q3_1": "c",
+    "q3_2": "d",
+    "q3_3": "b",
+    "q4_1": "d",
+    "q4_2": "d",
+    "q4_3": "b",
+    "q5_1": "c",
+    "q5_2": "b",
+    "q5_3": "c"
+  },
+  "evidence_response": {},
+  "scores": {
+    "awareness": 12,
+    "adoption": 10,
+    "integration": 10,
+    "governance": 8,
+    "roi": 12
+  },
+  "total_score": 52,
+  "rating": "AI Emerging",
+  "compliance_risk_flag": true,
+  "compliance_risk_reasons": [
+    "q4_1",
+    "q4_2"
+  ],
+  "contradictions": [],
+  "missing_data_flags": [],
+  "evidence_quality_score": 20,
+  "confidence_index": 0,
+  "intelligence": {
+    "executive_summary": {
+      "overall_assessment": "Developing Capability. The organization exhibits initial AI usage but lacks the consistency needed for systemic impact. Assessment confidence is reduced due to incomplete or contradictory evidence.",
+      "critical_risk": "Regulatory and compliance exposure is the most immediate threat, requiring urgent legal review of current AI tool usage.",
+      "primary_opportunity": "Formalizing AI adoption governance will structurally improve consistency and risk management across all other initiatives.",
+      "recommended_first_action": "Execute a workflow diagnostic to map process bottlenecks and prepare core systems for API integrations."
+    },
+    "findings": [
+      {
+        "title": "Organizational Knowledge Silos",
+        "severity": "Moderate",
+        "impact": "Resistance to change and underutilization of deployed capabilities.",
+        "rationale": "Score 60/100: General understanding of AI capabilities is restricted to specific groups."
+      },
+      {
+        "title": "Localized & Informal AI Adoption",
+        "severity": "Major",
+        "impact": "Uneven productivity gains and fragmented operational execution.",
+        "rationale": "Score 50/100: Usage remains localized without systemic integration into daily workflows."
+      },
+      {
+        "title": "Systems Integration Bottleneck",
+        "severity": "Major",
+        "impact": "Inability to scale automation, resulting in manual data entry and workflow friction.",
+        "rationale": "Score 50/100: Core software lacks the structural readiness for deep AI integration."
+      },
+      {
+        "title": "AI Governance Framework Vulnerability",
+        "severity": "Major",
+        "impact": "Increased compliance exposure, legal risk, and unmanaged shadow AI.",
+        "rationale": "Score 40/100: Governance structure is inadequate for the current or target operational scale."
+      },
+      {
+        "title": "Measurement & Value Tracking Gap",
+        "severity": "Moderate",
+        "impact": "Inability to justify AI investments or track actual productivity gains.",
+        "rationale": "Score 60/100: Formal measurement of operational and financial impact is missing."
+      },
+      {
+        "title": "Regulatory & Compliance Exposure",
+        "severity": "Critical",
+        "impact": "Direct regulatory vulnerability and potential legal liability.",
+        "rationale": "Specific compliance risks identified in responses. Specifically triggered by: q4_1, q4_2"
+      }
+    ],
+    "recommendations": [
+      {
+        "recommendation": "Execute a workflow diagnostic to map process bottlenecks and prepare core systems for API integrations.",
+        "priority": "Immediate",
+        "expected_impact": "High",
+        "implementation_effort": "High"
+      },
+      {
+        "recommendation": "Establish a formal AI Governance Committee to oversee policy, compliance, and tool approval.",
+        "priority": "Immediate",
+        "expected_impact": "High",
+        "implementation_effort": "High"
+      },
+      {
+        "recommendation": "Conduct an immediate legal and compliance review of current AI tool usage.",
+        "priority": "Immediate",
+        "expected_impact": "High",
+        "implementation_effort": "Medium"
+      },
+      {
+        "recommendation": "Develop formal playbooks and standardize AI tool usage across key departments.",
+        "priority": "Near-Term",
+        "expected_impact": "Medium",
+        "implementation_effort": "Medium"
+      },
+      {
+        "recommendation": "Implement standardized baseline metrics and tracking mechanisms for all AI initiatives.",
+        "priority": "Near-Term",
+        "expected_impact": "Medium-High",
+        "implementation_effort": "Medium"
+      },
+      {
+        "recommendation": "Launch an organization-wide AI literacy program to align leadership, management, and employees.",
+        "priority": "Long-Term",
+        "expected_impact": "Medium",
+        "implementation_effort": "Low"
+      }
+    ],
+    "target_state": [
+      {
+        "dimension": "Awareness",
+        "current_score": 60,
+        "target_score": 76,
+        "gap": 16,
+        "improvement_priority": "Low",
+        "rationale": "High AI literacy exists across the organization; shift focus to advanced capability training and specialized use cases."
+      },
+      {
+        "dimension": "Adoption",
+        "current_score": 50,
+        "target_score": 75,
+        "gap": 25,
+        "improvement_priority": "Medium",
+        "rationale": "Localized adoption is successful, but standardized playbooks are necessary to replicate gains across the enterprise."
+      },
+      {
+        "dimension": "Integration",
+        "current_score": 50,
+        "target_score": 75,
+        "gap": 25,
+        "improvement_priority": "Medium",
+        "rationale": "Partial integrations support isolated workflows, but deeper architectural alignment is required for scalable automation."
+      },
+      {
+        "dimension": "Governance",
+        "current_score": 40,
+        "target_score": 70,
+        "gap": 30,
+        "improvement_priority": "Medium",
+        "rationale": "Governance structures exist but require formalization to consistently manage AI risks across expanding use cases."
+      },
+      {
+        "dimension": "ROI",
+        "current_score": 60,
+        "target_score": 76,
+        "gap": 16,
+        "improvement_priority": "Low",
+        "rationale": "Strong value realization practices are in place; optimize by expanding measurement to strategic secondary benefits."
+      }
+    ],
+    "roadmap": {
+      "30_days": [
+        {
+          "action": "Assess effectiveness of current AI training programs",
+          "reason": "Evaluating what educational initiatives are working.",
+          "priority": "Medium"
+        },
+        {
+          "action": "Map successful AI usage patterns across departments",
+          "reason": "Identifying internal best practices for broader distribution.",
+          "priority": "Medium"
+        },
+        {
+          "action": "Audit existing system integrations for efficiency",
+          "reason": "Assessing current automation to identify optimization areas.",
+          "priority": "Medium"
+        },
+        {
+          "action": "Review and refine existing AI governance framework",
+          "reason": "Current governance exists but needs structural improvement.",
+          "priority": "Medium"
+        }
+      ],
+      "60_days": [
+        {
+          "action": "Develop advanced training modules for power users",
+          "reason": "Cultivating internal experts to drive departmental innovation.",
+          "priority": "Medium"
+        },
+        {
+          "action": "Expand AI pilots to adjacent teams and workflows",
+          "reason": "Scaling adoption beyond initial successful pockets.",
+          "priority": "Medium"
+        },
+        {
+          "action": "Automate repetitive cross-platform data transfers",
+          "reason": "Reducing manual data entry and improving data consistency.",
+          "priority": "Medium"
+        },
+        {
+          "action": "Formalize AI tool request and approval workflows",
+          "reason": "Standardizing the intake process reduces friction and shadow IT.",
+          "priority": "Medium"
+        }
+      ],
+      "90_days": [
+        {
+          "action": "Implement continuous learning program for AI advancements",
+          "reason": "Keeping the workforce updated on rapidly evolving technology.",
+          "priority": "Medium"
+        },
+        {
+          "action": "Establish an internal AI center of excellence or community",
+          "reason": "Peer-led knowledge sharing accelerates organic adoption.",
+          "priority": "Medium"
+        },
+        {
+          "action": "Establish continuous monitoring for integrated workflows",
+          "reason": "Ensuring reliability and performance of automated processes.",
+          "priority": "Medium"
+        },
+        {
+          "action": "Conduct audit of current AI deployments against policy",
+          "reason": "Ensuring alignment between policy and actual usage.",
+          "priority": "Medium"
+        }
+      ]
+    },
+    "dashboard": {
+      "critical_risk": "Regulatory and compliance exposure is the most immediate threat, requiring urgent legal review of current AI tool usage.",
+      "priority_action": "Execute a workflow diagnostic to map process bottlenecks and prepare core systems for API integrations.",
+      "improvement_opportunity": "Formalizing AI adoption governance will structurally improve consistency and risk management across all other initiatives.",
+      "executive_summary": "Developing Capability. The organization exhibits initial AI usage but lacks the consistency needed for systemic impact. Assessment confidence is reduced due to incomplete or contradictory evidence."
+    },
+    "risk_projection": {
+      "risk_level": "Critical",
+      "risk_score": 53,
+      "confidence": 100,
+      "risk_drivers": [
+        "Governance maturity gap",
+        "Adoption consistency gap",
+        "Integration maturity gap"
+      ],
+      "risk_timeline": {
+        "near_term": [
+          "Operational inefficiencies expand due to uncoordinated usage."
+        ],
+        "mid_term": [
+          "Governance and adoption gaps begin affecting execution quality.",
+          "System bottlenecks prevent scaling of initial successes."
+        ],
+        "long_term": [
+          "Strategic value realization becomes increasingly difficult.",
+          "Significant compliance and shadow IT risks materialize."
+        ]
+      }
+    },
+    "cost_of_inaction": [
+      {
+        "risk_category": "Adoption Risk",
+        "risk_level": "Medium",
+        "potential_consequence": "Successful AI practices are not shared across departments.",
+        "business_impact": "Repeated effort and slower capability maturation.",
+        "related_recommendation": "Launch an organization-wide AI literacy program to align leadership, management, and employees."
+      },
+      {
+        "risk_category": "Adoption Risk",
+        "risk_level": "Medium",
+        "potential_consequence": "AI knowledge remains concentrated within isolated teams.",
+        "business_impact": "Slow organizational adoption and inconsistent capability development.",
+        "related_recommendation": "Develop formal playbooks and standardize AI tool usage across key departments."
+      },
+      {
+        "risk_category": "Operational Risk",
+        "risk_level": "Medium",
+        "potential_consequence": "AI tools remain isolated from core workflows.",
+        "business_impact": "Reduced efficiency gains and duplicated operational effort.",
+        "related_recommendation": "Execute a workflow diagnostic to map process bottlenecks and prepare core systems for API integrations."
+      },
+      {
+        "risk_category": "Governance Risk",
+        "risk_level": "High",
+        "potential_consequence": "AI initiatives evolve without consistent oversight or accountability.",
+        "business_impact": "Increased policy inconsistency, fragmented decision-making, and elevated governance exposure.",
+        "related_recommendation": "Establish a formal AI Governance Committee to oversee policy, compliance, and tool approval."
+      },
+      {
+        "risk_category": "ROI Risk",
+        "risk_level": "Medium",
+        "potential_consequence": "Leadership cannot determine whether AI investments create value.",
+        "business_impact": "Budget inefficiency and reduced executive confidence in AI initiatives.",
+        "related_recommendation": "Implement standardized baseline metrics and tracking mechanisms for all AI initiatives."
+      },
+      {
+        "risk_category": "Compliance Risk",
+        "risk_level": "High",
+        "potential_consequence": "AI usage may violate internal or external compliance requirements.",
+        "business_impact": "Regulatory scrutiny, audit findings, or reputational risk.",
+        "related_recommendation": "Conduct an immediate legal and compliance review of current AI tool usage."
+      }
+    ]
+  },
+  "status": "complete",
+  "created_at": "2026-06-04T22:03:32.173337"
+}

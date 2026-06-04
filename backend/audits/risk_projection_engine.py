@@ -80,27 +80,6 @@ def generate_risk_drivers(dimension_scores: Dict[str, int]) -> List[str]:
 
     return drivers
 
-def generate_cost_of_inaction(dimension_scores: Dict[str, int]) -> List[str]:
-    """
-    Maps weak dimensions to business-oriented outcomes.
-    """
-    coi = []
-
-    coi_mapping = {
-        'governance': "Compliance exposure and unmanaged AI adoption.",
-        'integration': "Fragmented AI implementation and duplicated effort.",
-        'roi': "Inability to demonstrate business value.",
-        'awareness': "Low organizational readiness.",
-        'adoption': "Uncoordinated AI usage patterns."
-    }
-
-    # Include COI for dimensions scoring below 70
-    for dim, score in dimension_scores.items():
-        if score < 70 and dim in coi_mapping:
-            coi.append(coi_mapping[dim])
-
-    return coi
-
 def generate_risk_timeline(dimension_scores: Dict[str, int]) -> Dict[str, List[str]]:
     """
     Projects consequences at Near-Term, Mid-Term, and Long-Term intervals.
@@ -156,7 +135,6 @@ def generate_risk_projection(scores: Dict[str, Any], findings: List[Dict[str, An
     risk_level = determine_risk_level(total_score, dimension_scores, findings, compliance_risk, missing_data, contradictions)
     risk_score = calculate_risk_score(total_score, dimension_scores)
     risk_drivers = generate_risk_drivers(dimension_scores)
-    cost_of_inaction = generate_cost_of_inaction(dimension_scores)
     risk_timeline = generate_risk_timeline(dimension_scores)
 
     # Determine confidence loosely based on missing data or contradiction flags
@@ -172,6 +150,5 @@ def generate_risk_projection(scores: Dict[str, Any], findings: List[Dict[str, An
         "risk_score": risk_score,
         "confidence": confidence,
         "risk_drivers": risk_drivers,
-        "cost_of_inaction": cost_of_inaction,
         "risk_timeline": risk_timeline
     }
