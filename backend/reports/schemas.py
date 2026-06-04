@@ -13,6 +13,7 @@ class ExportJobResponse(BaseModel):
     job_type: ExportJobType
     status: ExportJobStatus
     result_path: Optional[str] = None
+    download_url: Optional[str] = None
     created_at: datetime
 
     class Config:

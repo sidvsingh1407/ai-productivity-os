@@ -37,7 +37,29 @@ async def get_status(
 ):
     """Poll export job status."""
     job = await service.get_export_job_status(db, job_id, str(user["id"]))
-    return job
+
+    # Map download_url dynamically if completed
+    from config import settings
+    base_url = settings.API_URL if hasattr(settings, 'API_URL') and settings.API_URL else ""
+
+    response = schemas.ExportJobResponse.model_validate(job)
+    if job.status == "complete" and job.result_path:
+        # report_id isn't directly on job, but in tasks it stores file path
+        # Assuming we can download by job_id instead for simplicity if we update download_report
+        # or we just fetch the Report by audit_id
+
+        # We need the report ID to download it.
+        # Let's query the Report model for this audit.
+        from models.report import Report
+        from sqlalchemy import select
+        stmt = select(Report).where(Report.audit_id == job.audit_id).order_by(Report.generated_at.desc())
+        result = await db.execute(stmt)
+        report = result.scalars().first()
+
+        if report:
+            response.download_url = f"{base_url}/reports/download/{str(report.id)}"
+
+    return response
 
 @router.get("/download/{report_id}")
 async def download_report(

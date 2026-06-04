@@ -32,6 +32,8 @@ from reports.router import router as reports_router  # noqa: E402
 from users.router import router as users_router  # noqa: E402
 from organizations.router import router as organizations_router  # noqa: E402
 from billing.router import router as billing_router  # noqa: E402
+from contact.router import router as contact_router  # noqa: E402
+from sample.router import router as sample_router  # noqa: E402
 from config import settings  # noqa: E402
 import re  # noqa: E402
 
@@ -140,6 +142,8 @@ app.include_router(reports_router)
 app.include_router(users_router)
 app.include_router(organizations_router, prefix="/organizations")
 app.include_router(billing_router, prefix="/billing")
+app.include_router(contact_router)
+app.include_router(sample_router)
 
 
 @app.get("/")

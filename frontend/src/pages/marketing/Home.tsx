@@ -240,9 +240,14 @@ export default function Home() {
               <p className="text-body text-text-secondary mb-8 flex-grow">
                 Evaluate organizational readiness for AI deployment across awareness, adoption, integration, governance, and ROI.
               </p>
-              <Link to="/ai-audit" className="text-body font-medium text-text-primary hover:underline inline-flex items-center gap-2">
-                View Instrument Details <ArrowRight className="w-4 h-4" />
-              </Link>
+              <div className="flex flex-col space-y-3">
+                <Link to="/ai-audit" className="text-body font-medium text-text-primary hover:underline inline-flex items-center gap-2">
+                  View Instrument Details <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link to="/sample-report" className="text-body font-medium text-text-secondary hover:text-accent-blue inline-flex items-center gap-2">
+                  View Sample Report
+                </Link>
+              </div>
             </div>
             <div className="border border-border-strong p-8 flex flex-col">
               <h3 className="text-h3 text-text-primary mb-4">Workflow Diagnostic</h3>

@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 type SeverityLevel = 'Critical' | 'Major' | 'Advisory';
 

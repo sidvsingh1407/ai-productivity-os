@@ -8,8 +8,10 @@ import { MarketingLayout } from './components/layout/MarketingLayout';
 import Home from './pages/marketing/Home';
 import AiAuditPage from './pages/marketing/AiAuditPage';
 import WorkflowDiagnosticPage from './pages/marketing/WorkflowDiagnosticPage';
-import ForecastingPage from './pages/marketing/ForecastingPage';
 import AboutPage from './pages/marketing/AboutPage';
+import PrivacyPage from './pages/marketing/PrivacyPage';
+import SampleReportPage from './pages/marketing/SampleReportPage';
+import TermsPage from './pages/marketing/TermsPage';
 import BlogPage from './pages/marketing/BlogPage';
 import ContactPage from './pages/marketing/ContactPage';
 
@@ -33,10 +35,13 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/ai-audit" element={<AiAuditPage />} />
           <Route path="/workflow-diagnostic" element={<WorkflowDiagnosticPage />} />
-          <Route path="/forecasting" element={<ForecastingPage />} />
+          <Route path="/forecasting" element={<Navigate to="/contact?interest=Forecasting Framework" replace />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/sample-report" element={<SampleReportPage />} />
         </Route>
 
         {/* Auth Routes */}

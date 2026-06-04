@@ -181,11 +181,14 @@ export default function AiAuditPage() {
 
           <div className="mt-space-xl border-t border-border-light pt-space-lg">
             <h3 className="text-h3 text-text-primary mb-space-sm">Explore Related Diagnostics</h3>
-            <div className="flex gap-4">
-              <Link to="/workflow-diagnostic" className="text-accent-blue font-medium hover:underline flex items-center gap-1">
+            <div className="flex gap-4 flex-wrap">
+              <Link to="/sample-report" className="text-accent-blue font-medium hover:underline flex items-center gap-1">
+                View Sample Report <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link to="/workflow-diagnostic" className="text-text-secondary font-medium hover:text-accent-blue flex items-center gap-1">
                 Workflow Diagnostic <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link to="/forecasting" className="text-accent-blue font-medium hover:underline flex items-center gap-1">
+              <Link to="/contact?interest=Forecasting Framework" className="text-text-secondary font-medium hover:text-accent-blue flex items-center gap-1">
                 Forecasting Framework <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
