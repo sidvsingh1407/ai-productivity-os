@@ -20,6 +20,12 @@ class Recommendation(BaseModel):
     expected_impact: str
     implementation_effort: str
 
+class ExecutiveSummary(BaseModel):
+    overall_assessment: str
+    critical_risk: str
+    primary_opportunity: str
+    recommended_first_action: str
+
 class AuditResponse(BaseModel):
     id: uuid.UUID
     org_id: uuid.UUID
@@ -39,6 +45,7 @@ class AuditResponse(BaseModel):
     # Intelligence Engine Dynamic Outputs
     findings: Optional[List[Finding]] = None
     recommendations: Optional[List[Recommendation]] = None
+    executive_summary: Optional[ExecutiveSummary] = None
 
     status: AuditStatus
     created_at: datetime

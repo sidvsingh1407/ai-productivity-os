@@ -141,13 +141,113 @@ def generate_recommendations(findings: List[Dict[str, Any]]) -> List[Dict[str, A
 
     return recommendations
 
+def generate_executive_summary(scores: Dict[str, Any], recommendations: List[Dict[str, Any]]) -> Dict[str, str]:
+    """
+    Generates an executive summary based on assessment scores and generated recommendations.
+    """
+    summary = {}
+
+    # 1. Overall Assessment
+    total_score = sum(scores.get('dimensions', {}).values())
+    if total_score >= 80:
+        maturity = "High Maturity"
+        business_context = "demonstrates advanced AI capabilities with strong alignment across operations."
+    elif total_score >= 60:
+        maturity = "Moderate Maturity"
+        business_context = "shows solid foundational AI adoption, though scaling requires addressing structural gaps."
+    elif total_score >= 40:
+        maturity = "Developing Capability"
+        business_context = "exhibits initial AI usage but lacks the consistency needed for systemic impact."
+    else:
+        maturity = "Early Stage Capability"
+        business_context = "is in the preliminary phases of AI exploration with significant operational vulnerabilities."
+
+    assessment_text = f"The organization {business_context}"
+    confidence_index = scores.get('confidence_index', 100)
+    if confidence_index < 70:
+        assessment_text += " Assessment confidence is reduced due to incomplete or contradictory evidence."
+
+    summary["overall_assessment"] = f"{maturity}. {assessment_text}"
+
+    # 2. Critical Risk
+    critical_risk_text = ""
+    if scores.get('compliance_risk_flag'):
+        critical_risk_text = "Regulatory and compliance exposure is the most immediate threat, requiring urgent legal review of current AI tool usage."
+    else:
+        # Check for critically low governance score
+        gov_score = scores.get('dimensions', {}).get('governance', 0) * 5
+        if gov_score <= 39:
+            critical_risk_text = "A critical lack of formal AI governance exposes the organization to unmanaged shadow AI and operational risk."
+        else:
+            # Lowest dimension
+            dimensions = scores.get('dimensions', {})
+            if dimensions:
+                lowest_dim = min(dimensions, key=dimensions.get)
+                if lowest_dim == 'integration':
+                    critical_risk_text = "System integration bottlenecks present the most significant risk to scaling automation and realizing ROI."
+                elif lowest_dim == 'adoption':
+                    critical_risk_text = "Fragmented and informal AI adoption patterns threaten operational consistency and increase shadow IT risks."
+                elif lowest_dim == 'roi':
+                    critical_risk_text = "The inability to measure AI value creation prevents strategic investment and limits organizational buy-in."
+                elif lowest_dim == 'awareness':
+                    critical_risk_text = "Knowledge silos regarding AI capabilities restrict usage to specific groups, limiting enterprise-wide impact."
+                else:
+                    critical_risk_text = f"Weaknesses in {lowest_dim} represent the primary operational vulnerability."
+            elif scores.get('contradictions'):
+                 critical_risk_text = "Operational contradictions indicate a significant gap between stated policies and actual execution."
+            else:
+                 critical_risk_text = "No critical risks identified based on the provided assessment data."
+
+    summary["critical_risk"] = critical_risk_text
+
+    # 3. Primary Opportunity
+    # Leverage order: Governance, Integration, Adoption, ROI, Awareness
+    leverage_order = ['governance', 'integration', 'adoption', 'roi', 'awareness']
+    dimensions = scores.get('dimensions', {})
+
+    # Identify dimensions that need improvement (e.g., score < 14/20 which is < 70/100)
+    improvement_areas = [dim for dim, score in dimensions.items() if score * 5 < 70]
+
+    primary_opportunity = ""
+    for dim in leverage_order:
+        if dim in improvement_areas:
+            if dim == 'governance':
+                primary_opportunity = "Formalizing AI adoption governance will structurally improve consistency and risk management across all other initiatives."
+            elif dim == 'integration':
+                primary_opportunity = "Addressing core system integration readiness will unblock scalable automation and improve data flow."
+            elif dim == 'adoption':
+                primary_opportunity = "Standardizing localized AI usage into formal playbooks will drive consistent productivity gains."
+            elif dim == 'roi':
+                primary_opportunity = "Establishing standardized measurement frameworks will immediately improve the ability to justify and focus future AI investments."
+            elif dim == 'awareness':
+                primary_opportunity = "Launching an enterprise-wide AI literacy program will unlock currently underutilized capabilities and reduce resistance."
+            break
+
+    if not primary_opportunity:
+        # Fallback if no areas need improvement (highly unlikely, but possible)
+        primary_opportunity = "The organization should focus on continuous optimization and extending its advanced capabilities into new strategic areas."
+
+    summary["primary_opportunity"] = primary_opportunity
+
+    # 4. Recommended First Action
+    # Select the highest-priority recommendation
+    first_action = "Conduct a detailed operational review to determine the next strategic step."
+    if recommendations:
+        # Since recommendations are already sorted Immediate -> Near-Term -> Long-Term
+        first_action = recommendations[0]["recommendation"]
+
+    summary["recommended_first_action"] = first_action
+
+    return summary
+
 def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
     """
     Entrypoint for intelligence generation.
-    Takes a raw scores dictionary and returns a structure with findings and recommendations.
+    Takes a raw scores dictionary and returns a structure with findings, recommendations, and executive summary.
     """
     findings = generate_findings(scores)
     recommendations = generate_recommendations(findings)
+    executive_summary = generate_executive_summary(scores, recommendations)
 
     # Clean up internal 'type' and 'dimension' fields from findings before returning
     clean_findings = []
@@ -173,5 +273,6 @@ def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
 
     return {
         "findings": clean_findings,
-        "recommendations": clean_recommendations
+        "recommendations": clean_recommendations,
+        "executive_summary": executive_summary
     }
