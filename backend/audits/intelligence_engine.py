@@ -12,6 +12,7 @@ from audits.intelligence_rules import (
 )
 from audits.target_state_engine import generate_target_state
 from audits.roadmap_engine import generate_roadmap
+from audits.risk_projection_engine import generate_risk_projection
 
 def generate_findings(scores: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
@@ -304,11 +305,15 @@ def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
         "executive_summary": executive_summary.get("overall_assessment", "")
     }
 
+    # Generate Risk Projection
+    risk_projection = generate_risk_projection(scores, clean_findings)
+
     return {
         "executive_summary": executive_summary,
         "findings": clean_findings,
         "recommendations": clean_recommendations,
         "target_state": target_state,
         "roadmap": roadmap,
-        "dashboard": dashboard
+        "dashboard": dashboard,
+        "risk_projection": risk_projection
     }

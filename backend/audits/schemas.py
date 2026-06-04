@@ -50,6 +50,19 @@ class DashboardPayload(BaseModel):
     improvement_opportunity: str
     executive_summary: str
 
+class RiskTimeline(BaseModel):
+    near_term: List[str]
+    mid_term: List[str]
+    long_term: List[str]
+
+class RiskProjection(BaseModel):
+    risk_level: str
+    risk_score: int
+    confidence: int
+    risk_drivers: List[str]
+    cost_of_inaction: List[str]
+    risk_timeline: RiskTimeline
+
 class AuditIntelligenceResponse(BaseModel):
     executive_summary: ExecutiveSummary
     findings: List[Finding]
@@ -57,6 +70,7 @@ class AuditIntelligenceResponse(BaseModel):
     target_state: List[TargetStateItem]
     roadmap: Roadmap
     dashboard: DashboardPayload
+    risk_projection: RiskProjection
 
 class AuditResponse(BaseModel):
     id: uuid.UUID
