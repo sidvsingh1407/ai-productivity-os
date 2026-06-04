@@ -7,9 +7,12 @@ import { ShieldAlert } from 'lucide-react';
 import {
   ReportHeader,
   ExecutiveSummaryCard,
+  AssessmentOverviewCard,
   ScoreBreakdown,
+  CurrentTargetStateTable,
   FindingCard,
-  RecommendationCard
+  RecommendationCard,
+  RoadmapTimeline
 } from '@/components/report';
 
 export default function AuditDetail() {
@@ -54,10 +57,12 @@ export default function AuditDetail() {
     scores = {},
     company_name = "Organization",
     total_score = 0,
+    evidence_quality_score = 0,
+    confidence_index = 0,
+    rating = "Needs Improvement",
     compliance_risk_flag,
     compliance_risk_reasons,
-    contradictions = [],
-    missing_data_flags = [],
+    intelligence,
     created_at
   } = audit;
 
@@ -67,18 +72,6 @@ export default function AuditDetail() {
     day: 'numeric'
   }) : 'Unknown Date';
 
-  // Helper to generate a verdict text
-  const getVerdict = (score: number, govScore: number) => {
-    if (score > 75) return "Strong capability with minor operational optimizations required.";
-    if (score >= 50) {
-      if (govScore < 50) return "Moderate adoption undermined by significant governance vulnerabilities.";
-      return "Developing capability with structural bottlenecks preventing scale.";
-    }
-    return "Critical structural vulnerabilities preventing successful integration.";
-  };
-
-  const verdictText = getVerdict(total_score, scores.governance || 0);
-
   // Map backend scores to the Dimension Breakdown
   const dimensions = [
     { label: 'Awareness', score: (scores.awareness || 0) * 5, keyFinding: (scores.awareness || 0) * 5 < 50 ? 'Knowledge silos prevent broad understanding.' : 'General awareness is established across target groups.' },
@@ -86,51 +79,6 @@ export default function AuditDetail() {
     { label: 'Integration', score: (scores.integration || 0) * 5, keyFinding: (scores.integration || 0) * 5 < 50 ? 'Systems lack the infrastructure for deep integration.' : 'Core software is structurally prepared for automation.' },
     { label: 'Governance', score: (scores.governance || 0) * 5, keyFinding: (scores.governance || 0) * 5 < 50 ? 'Severe lack of oversight and formal policy.' : 'Oversight committees and guidelines are active.' },
     { label: 'ROI', score: (scores.roi || 0) * 5, keyFinding: (scores.roi || 0) * 5 < 50 ? 'No formal measurement of capability impact.' : 'Metrics are tracked against operational baselines.' },
-  ];
-
-  // Derive Critical Findings based on intelligence
-  const criticalFindings = [];
-  if (compliance_risk_flag) {
-    criticalFindings.push({
-      title: "Regulatory / Compliance Vulnerability",
-      explanation: compliance_risk_reasons?.[0] || "Identified severe governance gaps indicating non-compliance risks.",
-      severity: "Critical" as const
-    });
-  }
-  if (contradictions.length > 0) {
-    criticalFindings.push({
-      title: "Operational Contradictions Detected",
-      explanation: "Diagnostic algorithms identified conflicting evidence between stated policy and actual adoption.",
-      severity: "Major" as const
-    });
-  }
-  if (missing_data_flags.length > 0) {
-    criticalFindings.push({
-      title: "Structural Visibility Gaps",
-      explanation: `Lack of evidence in key dimensions (${missing_data_flags.join(', ')}) prevents full operational clarity.`,
-      severity: "Advisory" as const
-    });
-  }
-  if (criticalFindings.length === 0) {
-    criticalFindings.push({
-      title: "Baseline Established",
-      explanation: "Initial structural parameters have been evaluated without major contradictions.",
-      severity: "Advisory" as const
-    });
-  }
-
-  // Define recommendations based on score
-  const recommendations = [
-    {
-      action: "Establish Governance Framework",
-      rationale: "Unregulated adoption creates legal and operational exposure.",
-      futureState: "A formal oversight committee reviewing and approving all integration tools."
-    },
-    {
-      action: "Execute Workflow Diagnostic",
-      rationale: "High-level adoption scores must be validated against specific departmental execution.",
-      futureState: "Targeted map of process bottlenecks and tool bloat."
-    }
   ];
 
   return (
@@ -166,59 +114,87 @@ export default function AuditDetail() {
         version="1.0"
       />
 
-      <div className="mb-8 p-6 bg-bg-secondary border border-border-strong">
-        <h4 className="text-h4 font-medium text-text-primary mb-2">Assessment Limitations</h4>
-        <p className="text-body text-text-secondary">
-          This assessment is based on self-reported organizational responses. Results indicate potential strengths, risks, and opportunities but should not be considered a substitute for a full organizational review.
-        </p>
-      </div>
+      {intelligence?.executive_summary ? (
+        <ExecutiveSummaryCard
+          overallAssessment={intelligence.executive_summary.overall_assessment}
+          criticalRisk={intelligence.executive_summary.critical_risk}
+          biggestOpportunity={intelligence.executive_summary.primary_opportunity}
+          recommendedFirstAction={intelligence.executive_summary.recommended_first_action}
+          onExportPdf={() => generatePdfMutation.mutate()}
+        />
+      ) : (
+        <div className="mb-12 p-6 border border-border-strong bg-bg-secondary text-text-secondary">
+          Executive summary intelligence unavailable.
+        </div>
+      )}
 
-      <ExecutiveSummaryCard
-        score={total_score}
-        maxScore={100}
-        verdict={verdictText}
-        onExportPdf={() => generatePdfMutation.mutate()}
+      <AssessmentOverviewCard
+        overallScore={total_score}
+        rating={rating}
+        confidenceIndex={confidence_index}
+        evidenceQuality={evidence_quality_score}
       />
 
       <ScoreBreakdown dimensions={dimensions} />
 
-      <div className="mb-12">
-        <h2 className="text-h2 font-semibold text-text-primary mb-6 border-b border-border-light pb-4">Critical Findings</h2>
-        <div>
-          {criticalFindings.map((finding, idx) => (
-            <FindingCard
-              key={idx}
-              number={idx + 1}
-              title={finding.title}
-              explanation={finding.explanation}
-              severity={finding.severity}
-            />
-          ))}
+      {intelligence?.target_state && intelligence.target_state.length > 0 && (
+        <CurrentTargetStateTable targetState={intelligence.target_state} />
+      )}
+
+      {intelligence?.findings && intelligence.findings.length > 0 && (
+        <div className="mb-12">
+          <h2 className="text-h2 font-semibold text-text-primary mb-6 border-b border-border-light pb-4">Prioritized Findings</h2>
+          <div>
+            {intelligence.findings.map((finding: any, idx: number) => (
+              <FindingCard
+                key={idx}
+                number={idx + 1}
+                title={finding.title}
+                severity={finding.severity}
+                impact={finding.impact}
+                rationale={finding.rationale}
+              />
+            ))}
+          </div>
         </div>
+      )}
+
+      {intelligence?.recommendations && intelligence.recommendations.length > 0 && (
+        <div className="mb-12">
+          <h2 className="text-h2 font-semibold text-text-primary mb-6 border-b border-border-light pb-4">Prioritized Recommendations</h2>
+          <div>
+            {intelligence.recommendations.map((rec: any, idx: number) => (
+              <RecommendationCard
+                key={idx}
+                number={idx + 1}
+                recommendation={rec.recommendation}
+                priority={rec.priority}
+                expectedImpact={rec.expected_impact}
+                implementationEffort={rec.implementation_effort}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {intelligence?.roadmap && (
+        <RoadmapTimeline roadmap={intelligence.roadmap} />
+      )}
+
+      <div className="mb-8 p-6 bg-bg-secondary border border-border-strong mt-12">
+        <h4 className="text-h4 font-medium text-text-primary mb-2">Assessment Limitations</h4>
+        <p className="text-body text-text-secondary">
+          This assessment is based on self-reported organizational responses and should be used as a directional decision-support tool rather than a substitute for a full organizational review.
+        </p>
       </div>
 
-      <div className="mb-12">
-        <h2 className="text-h2 font-semibold text-text-primary mb-6 border-b border-border-light pb-4">Strategic Recommendations</h2>
-        <div>
-          {recommendations.map((rec, idx) => (
-            <RecommendationCard
-              key={idx}
-              number={idx + 1}
-              action={rec.action}
-              rationale={rec.rationale}
-              futureState={rec.futureState}
-            />
-          ))}
-        </div>
-
-        <div className="mt-8 pt-8 border-t border-border-strong text-center">
-          <button
-            onClick={() => navigate(`/workflows/new?auditId=${id}`)}
-            className="px-8 py-4 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90"
-          >
-            Run Workflow Diagnostic
-          </button>
-        </div>
+      <div className="mt-8 pt-8 border-t border-border-strong text-center">
+        <button
+          onClick={() => navigate(`/workflows/new?auditId=${id}`)}
+          className="px-8 py-4 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90"
+        >
+          Run Workflow Diagnostic
+        </button>
       </div>
 
       <div className="mt-24 pt-8 border-t border-border-light text-center">
