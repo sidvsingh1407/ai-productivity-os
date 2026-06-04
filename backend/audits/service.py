@@ -42,6 +42,7 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
             missing_data_flags=scores_dict.get('missing_data_flags', []),
             findings=intelligence.get("findings", []),
             recommendations=intelligence.get("recommendations", []),
+            executive_summary=intelligence.get("executive_summary"),
             status=audit.status,
             created_at=audit.created_at
         )
