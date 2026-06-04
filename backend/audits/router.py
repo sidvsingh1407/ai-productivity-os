@@ -59,8 +59,7 @@ async def get_audits(
         # We need to construct a response model manually to inject these fields
         # since they are not present in the ORM model natively.
         audit_dict = schemas.AuditResponse.model_validate(audit).model_dump()
-        audit_dict["findings"] = intelligence.get("findings", [])
-        audit_dict["recommendations"] = intelligence.get("recommendations", [])
+        audit_dict["intelligence"] = intelligence
         items.append(schemas.AuditResponse(**audit_dict))
 
     return schemas.AuditListResponse(
@@ -90,8 +89,7 @@ async def get_single_audit(
     intelligence = generate_intelligence(scores_dict)
 
     audit_dict = schemas.AuditResponse.model_validate(audit).model_dump()
-    audit_dict["findings"] = intelligence.get("findings", [])
-    audit_dict["recommendations"] = intelligence.get("recommendations", [])
+    audit_dict["intelligence"] = intelligence
 
     return schemas.AuditResponse(**audit_dict)
 

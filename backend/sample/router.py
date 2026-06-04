@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime
 
 from audits.scoring_engine import score_response
+from audits.intelligence_engine import generate_intelligence
 
 router = APIRouter(tags=["Sample Report"])
 
@@ -33,6 +34,9 @@ async def get_sample_report(db: AsyncSession = Depends(get_db)):
     # Run the deterministic scoring engine on a pre-defined sample payload
     scores = score_response(SAMPLE_FORM_RESPONSE)
 
+    # Generate full intelligence payload
+    intelligence = generate_intelligence(scores)
+
     return {
         "id": str(uuid.uuid4()),
         "org_id": str(uuid.uuid4()),
@@ -48,6 +52,7 @@ async def get_sample_report(db: AsyncSession = Depends(get_db)):
         "missing_data_flags": scores.get('missing_data_flags', []),
         "evidence_quality_score": scores.get('evidence_quality_score', 0),
         "confidence_index": scores.get('confidence_index', 0),
+        "intelligence": intelligence,
         "status": "complete",
         "created_at": datetime.utcnow().isoformat()
     }

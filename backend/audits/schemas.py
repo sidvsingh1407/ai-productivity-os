@@ -34,6 +34,30 @@ class TargetStateItem(BaseModel):
     improvement_priority: str
     rationale: str
 
+class RoadmapAction(BaseModel):
+    action: str
+    reason: str
+    priority: str
+
+class Roadmap(BaseModel):
+    day_30: List[RoadmapAction]
+    day_60: List[RoadmapAction]
+    day_90: List[RoadmapAction]
+
+class DashboardPayload(BaseModel):
+    critical_risk: str
+    priority_action: str
+    improvement_opportunity: str
+    executive_summary: str
+
+class AuditIntelligenceResponse(BaseModel):
+    executive_summary: ExecutiveSummary
+    findings: List[Finding]
+    recommendations: List[Recommendation]
+    target_state: List[TargetStateItem]
+    roadmap: Roadmap
+    dashboard: DashboardPayload
+
 class AuditResponse(BaseModel):
     id: uuid.UUID
     org_id: uuid.UUID
@@ -50,11 +74,8 @@ class AuditResponse(BaseModel):
     contradictions: Optional[List[str]] = None
     missing_data_flags: Optional[List[str]] = None
 
-    # Intelligence Engine Dynamic Outputs
-    findings: Optional[List[Finding]] = None
-    recommendations: Optional[List[Recommendation]] = None
-    executive_summary: Optional[ExecutiveSummary] = None
-    target_state: Optional[List[TargetStateItem]] = None
+    # Consolidated Intelligence Payload
+    intelligence: Optional[AuditIntelligenceResponse] = None
 
     status: AuditStatus
     created_at: datetime

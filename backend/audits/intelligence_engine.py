@@ -10,6 +10,8 @@ from audits.intelligence_rules import (
     CONTRADICTION_FINDING,
     MISSING_DATA_FINDING
 )
+from audits.target_state_engine import generate_target_state
+from audits.roadmap_engine import generate_roadmap
 
 def generate_findings(scores: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
@@ -243,7 +245,8 @@ def generate_executive_summary(scores: Dict[str, Any], recommendations: List[Dic
 def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
     """
     Entrypoint for intelligence generation.
-    Takes a raw scores dictionary and returns a structure with findings, recommendations, and executive summary.
+    Takes a raw scores dictionary and returns a structure with findings, recommendations, executive summary,
+    target state, roadmap, and dashboard payload.
     """
     findings = generate_findings(scores)
     recommendations = generate_recommendations(findings)
@@ -271,8 +274,41 @@ def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
         }
         clean_recommendations.append(cr)
 
+    # Generate Target State
+    target_state = generate_target_state(scores)
+
+    # Generate Roadmap
+    total_score = sum(scores.get('dimensions', {}).values())
+
+    # Generate roadmap requires scaled up dimensions (out of 100) or original
+    raw_dimensions = scores.get('dimensions', {})
+    scaled_dimensions = {k: v * 5 for k, v in raw_dimensions.items()}
+
+    severity_levels = {f["title"]: f["severity"] for f in clean_findings}
+
+    roadmap_result = generate_roadmap(
+        total_score=total_score * 5,
+        dimension_scores=scaled_dimensions,
+        findings=clean_findings,
+        recommendations=clean_recommendations,
+        severity_levels=severity_levels
+    )
+
+    roadmap = roadmap_result.get("roadmap", {})
+
+    # Generate Dashboard Payload
+    dashboard = {
+        "critical_risk": executive_summary.get("critical_risk", ""),
+        "priority_action": executive_summary.get("recommended_first_action", ""),
+        "improvement_opportunity": executive_summary.get("primary_opportunity", ""),
+        "executive_summary": executive_summary.get("overall_assessment", "")
+    }
+
     return {
+        "executive_summary": executive_summary,
         "findings": clean_findings,
         "recommendations": clean_recommendations,
-        "executive_summary": executive_summary
+        "target_state": target_state,
+        "roadmap": roadmap,
+        "dashboard": dashboard
     }
