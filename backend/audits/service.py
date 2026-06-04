@@ -5,6 +5,7 @@ from fastapi import HTTPException, status
 from audits import repository
 from audits.scoring_engine import score_response
 from audits.schemas import AuditResponse
+from audits.intelligence_engine import generate_intelligence
 
 async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Dict[str, Any] = None) -> AuditResponse:
     # 1. create audit record (status: running)
@@ -19,6 +20,9 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
 
         # 4. create audit_version record (initial version)
         await repository.create_audit_version(db, audit.id, 1, scores_dict)
+
+        # 4.5 generate intelligence dynamically
+        intelligence = generate_intelligence(scores_dict)
 
         # 5. return AuditResponse
         return AuditResponse(
@@ -36,6 +40,8 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
             compliance_risk_reasons=audit.compliance_risk_reasons,
             contradictions=audit.contradictions,
             missing_data_flags=scores_dict.get('missing_data_flags', []),
+            findings=intelligence.get("findings", []),
+            recommendations=intelligence.get("recommendations", []),
             status=audit.status,
             created_at=audit.created_at
         )

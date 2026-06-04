@@ -7,6 +7,7 @@ from dependencies import get_db, get_current_user, get_current_org
 from models.user import User
 from models.organization import Organization
 from audits import schemas, service, repository
+from audits.intelligence_engine import generate_intelligence
 
 router = APIRouter()
 
@@ -38,8 +39,32 @@ async def get_audits(
     audits = await repository.list_audits(db, current_org.id, skip=skip, limit=limit)
     total = await repository.get_total_audits(db, current_org.id)
 
+    # Process items to attach intelligence dynamically
+    items = []
+    for audit in audits:
+        # Reconstruct the scores dict to pass to the intelligence engine
+        scores_dict = {
+            'dimensions': audit.scores or {},
+            'compliance_risk_flag': audit.compliance_risk_flag,
+            'compliance_risk_reasons': audit.compliance_risk_reasons or [],
+            'contradictions': audit.contradictions or [],
+            # In repository, missing_data_flags might not be stored directly if it's derived.
+            # Assuming we can just pass an empty list if not available directly, or reconstruct if needed.
+            # But wait, audit model does not have missing_data_flags stored directly!
+            # Let's derive it or pass empty if not found.
+            'missing_data_flags': []
+        }
+        intelligence = generate_intelligence(scores_dict)
+
+        # We need to construct a response model manually to inject these fields
+        # since they are not present in the ORM model natively.
+        audit_dict = schemas.AuditResponse.model_validate(audit).model_dump()
+        audit_dict["findings"] = intelligence.get("findings", [])
+        audit_dict["recommendations"] = intelligence.get("recommendations", [])
+        items.append(schemas.AuditResponse(**audit_dict))
+
     return schemas.AuditListResponse(
-        items=audits, # type: ignore (Audit -> AuditResponse conversion by pydantic)
+        items=items,
         total=total,
         skip=skip,
         limit=limit
@@ -54,7 +79,21 @@ async def get_single_audit(
 ):
     """Get a single audit by ID, scoped to org."""
     audit = await repository.get_audit(db, id, current_org.id)
-    return audit # type: ignore
+
+    scores_dict = {
+        'dimensions': audit.scores or {},
+        'compliance_risk_flag': audit.compliance_risk_flag,
+        'compliance_risk_reasons': audit.compliance_risk_reasons or [],
+        'contradictions': audit.contradictions or [],
+        'missing_data_flags': []
+    }
+    intelligence = generate_intelligence(scores_dict)
+
+    audit_dict = schemas.AuditResponse.model_validate(audit).model_dump()
+    audit_dict["findings"] = intelligence.get("findings", [])
+    audit_dict["recommendations"] = intelligence.get("recommendations", [])
+
+    return schemas.AuditResponse(**audit_dict)
 
 @router.get("/{id}/versions", response_model=List[schemas.AuditVersionResponse])
 async def get_audit_versions(
