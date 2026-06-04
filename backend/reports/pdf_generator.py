@@ -231,22 +231,50 @@ def create_recommendations_table(recommendations):
     """Create prioritized recommendations table."""
     data = [
         [
-            Paragraph("<b>#</b>", get_styles()['BodyText']),
+            Paragraph("<b>Priority</b>", get_styles()['BodyText']),
             Paragraph("<b>Recommendation</b>", get_styles()['BodyText']),
-            Paragraph("<b>Impact</b>", get_styles()['BodyText']),
+            Paragraph("<b>Expected Impact</b>", get_styles()['BodyText']),
             Paragraph("<b>Effort</b>", get_styles()['BodyText']),
         ]
     ]
 
-    for rec in recommendations[:5]:  # Top 5
+    for rec in recommendations:
         data.append([
-            Paragraph(str(rec.get('rank', '')), get_styles()['BodyText']),
-            Paragraph(rec.get('action', ''), get_styles()['BodyText']),
-            Paragraph(rec.get('impact', ''), get_styles()['BodyText']),
-            Paragraph(rec.get('effort', ''), get_styles()['BodyText']),
+            Paragraph(rec.get('priority', ''), get_styles()['BodyText']),
+            Paragraph(rec.get('recommendation', ''), get_styles()['BodyText']),
+            Paragraph(rec.get('expected_impact', ''), get_styles()['BodyText']),
+            Paragraph(rec.get('implementation_effort', ''), get_styles()['BodyText']),
         ])
 
-    table = Table(data, colWidths=[0.5*inch, 3*inch, 1.2*inch, 1*inch])
+    table = Table(data, colWidths=[1*inch, 3*inch, 1.2*inch, 1*inch])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor(COLOR_PRIMARY)),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ]))
+
+    return table
+
+def create_target_state_table(target_state):
+    """Create Current vs Target State table."""
+    data = [
+        [
+            Paragraph("<b>Dimension</b>", get_styles()['BodyText']),
+            Paragraph("<b>Current Score</b>", get_styles()['BodyText']),
+            Paragraph("<b>Target Score</b>", get_styles()['BodyText']),
+        ]
+    ]
+
+    for ts in target_state:
+        data.append([
+            Paragraph(ts.get('dimension', ''), get_styles()['BodyText']),
+            Paragraph(str(ts.get('current_score', '')), get_styles()['BodyText']),
+            Paragraph(str(ts.get('target_score', '')), get_styles()['BodyText']),
+        ])
+
+    table = Table(data, colWidths=[3*inch, 1.5*inch, 1.5*inch])
     table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor(COLOR_PRIMARY)),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
@@ -259,27 +287,9 @@ def create_recommendations_table(recommendations):
 
 
 def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
-    """Generate the full PDF report based on the consolidated audit data."""
+    """Generate the full PDF report based on the consolidated audit data and intelligence payload."""
     scores = audit_data.get('scores', {})
-
-    # Extract agent findings mock-up (this can be populated directly in real implementation if available)
-    # The original script requires 'agent_findings'. We'll extract these from `audit_data` or provide defaults
-    agent_findings = {
-        'tool_evaluator': {
-            'redundancies': audit_data.get('redundancies', []),
-            'underutilized': audit_data.get('underutilized', []),
-        },
-        'workflow_optimizer': {
-            'quick_wins': audit_data.get('quick_wins', []),
-        },
-        'compliance_auditor': {
-            'summary': audit_data.get('compliance_summary', 'No compliance summary available.')
-        },
-        'analytics_reporter': {
-            'top_5_recommendations': audit_data.get('recommendations', []),
-            'cost_waste': audit_data.get('cost_waste', {}),
-        }
-    }
+    intelligence = audit_data.get('intelligence', {})
 
     doc = SimpleDocTemplate(
         output_path,
@@ -293,7 +303,7 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
     story = []
     styles = get_styles()
 
-    # === PAGE 1: Executive Summary ===
+    # === PAGE 1: Summary ===
 
     # Header
     company_name = audit_data.get('company_name', 'Unknown')
@@ -305,13 +315,35 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
 
     # Assessment Limitations
     story.append(Paragraph("Assessment Limitations", styles['SectionHeading']))
-    limitations_text = "This assessment is based on self-reported organizational responses. Results indicate potential strengths, risks, and opportunities but should not be considered a substitute for a full organizational review."
-    story.append(Paragraph(limitations_text, styles['NormalText']))
+    # Use exact approved wording required by spec
+    limitations_text = "This assessment is based on self-reported organizational responses and should be used as a directional decision-support tool rather than a substitute for a full organizational review."
+    story.append(Paragraph(limitations_text, styles['Normal']))
     story.append(Spacer(1, 20))
 
     # Score gauge
     story.append(create_score_gauge(audit_data.get('total_score', 0), audit_data.get('rating', 'N/A')))
     story.append(Spacer(1, 20))
+
+    # Executive Summary (from Intelligence Layer)
+    exec_summary = intelligence.get('executive_summary', {})
+    if exec_summary:
+        story.append(Paragraph("Executive Summary", styles['SectionHeading']))
+
+        story.append(Paragraph("<b>Overall Assessment:</b>", styles['BodyText']))
+        story.append(Paragraph(exec_summary.get('overall_assessment', ''), styles['BodyText']))
+        story.append(Spacer(1, 10))
+
+        story.append(Paragraph("<b>Critical Risk:</b>", styles['BodyText']))
+        story.append(Paragraph(exec_summary.get('critical_risk', ''), styles['BodyText']))
+        story.append(Spacer(1, 10))
+
+        story.append(Paragraph("<b>Primary Opportunity:</b>", styles['BodyText']))
+        story.append(Paragraph(exec_summary.get('primary_opportunity', ''), styles['BodyText']))
+        story.append(Spacer(1, 10))
+
+        story.append(Paragraph("<b>Recommended First Action:</b>", styles['BodyText']))
+        story.append(Paragraph(exec_summary.get('recommended_first_action', ''), styles['BodyText']))
+        story.append(Spacer(1, 20))
 
     # Dimension breakdown
     story.append(Paragraph("Dimension Breakdown", styles['SectionHeading']))
@@ -331,77 +363,57 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
 
     story.append(PageBreak())
 
-    # === PAGE 2: Findings ===
+    # === PAGE 2: Current vs Target State & Findings ===
 
-    story.append(Paragraph("Key Findings", styles['SectionHeading']))
+    # Current vs Target State
+    target_state = intelligence.get('target_state', [])
+    if target_state:
+        story.append(Paragraph("Current vs Target State", styles['SectionHeading']))
+        story.append(create_target_state_table(target_state))
+        story.append(Spacer(1, 20))
 
-    # Tool findings
-    if agent_findings.get('tool_evaluator'):
-        story.append(Paragraph("Tool Stack Analysis", styles['SubHeading']))
-        tool_findings = agent_findings['tool_evaluator']
+    # Findings
+    findings = intelligence.get('findings', [])
+    if findings:
+        story.append(Paragraph("Findings", styles['SectionHeading']))
 
-        redundancies = tool_findings.get('redundancies', [])
-        if redundancies:
-            story.append(Paragraph("<b>Redundancies identified:</b>", styles['BodyText']))
-            for r in redundancies:
-                tools = r.get('tools', [])
-                overlap = r.get('overlap', '')
-                story.append(Paragraph(f"  - {', '.join(tools)}: {overlap}", styles['BodyText']))
-            story.append(Spacer(1, 10))
+        for finding in findings:
+            story.append(Paragraph(f"<b>{finding.get('severity', '')}</b>", styles['BodyText']))
+            story.append(Paragraph(f"{finding.get('title', '')}", styles['BodyText']))
+            story.append(Spacer(1, 5))
 
-        underutilized = tool_findings.get('underutilized', [])
-        if underutilized:
-            story.append(Paragraph("<b>Underutilized tools:</b>", styles['BodyText']))
-            for u in underutilized:
-                tool = u.get('tool', '')
-                cost = u.get('cost', '')
-                story.append(Paragraph(f"  - {tool}: ${cost}/month", styles['BodyText']))
-            story.append(Spacer(1, 10))
+            story.append(Paragraph("<b>Impact:</b>", styles['BodyText']))
+            story.append(Paragraph(finding.get('impact', ''), styles['BodyText']))
+            story.append(Spacer(1, 5))
 
-        story.append(Spacer(1, 15))
-
-    # Workflow findings
-    if agent_findings.get('workflow_optimizer'):
-        story.append(Paragraph("Workflow Analysis", styles['SubHeading']))
-        workflow_findings = agent_findings['workflow_optimizer']
-        quick_wins = workflow_findings.get('quick_wins', [])
-        if quick_wins:
-            story.append(Paragraph("<b>Quick Wins (implement within 1 week):</b>", styles['BodyText']))
-            for win in quick_wins[:3]:
-                story.append(Paragraph(f"  - {win.get('action', '')}", styles['BodyText']))
-        story.append(Spacer(1, 15))
-
-    # Compliance findings
-    if agent_findings.get('compliance_auditor'):
-        story.append(Paragraph("Compliance Assessment", styles['SubHeading']))
-        compliance = agent_findings['compliance_auditor']
-        summary = compliance.get('summary', 'No compliance summary available.')
-        story.append(Paragraph(summary, styles['BodyText']))
-        story.append(Spacer(1, 15))
+            story.append(Paragraph("<b>Rationale:</b>", styles['BodyText']))
+            story.append(Paragraph(finding.get('rationale', ''), styles['BodyText']))
+            story.append(Spacer(1, 15))
 
     story.append(PageBreak())
 
-    # === PAGE 3: Recommendations ===
+    # === PAGE 3: Recommendations & Roadmap ===
 
-    story.append(Paragraph("Top 5 Recommendations", styles['SectionHeading']))
-
-    if agent_findings.get('analytics_reporter'):
-        recommendations = agent_findings['analytics_reporter'].get('top_5_recommendations', [])
+    # Recommendations
+    recommendations = intelligence.get('recommendations', [])
+    if recommendations:
+        story.append(Paragraph("Recommendations", styles['SectionHeading']))
         story.append(create_recommendations_table(recommendations))
         story.append(Spacer(1, 30))
 
-        # Cost waste summary
-        cost_data = agent_findings['analytics_reporter'].get('cost_waste', {})
-        if cost_data:
-            story.append(Paragraph("Cost Waste Estimate", styles['SectionHeading']))
-            waste_text = f"""
-            <b>Monthly Waste:</b> {cost_data.get('monthly_estimate', 'N/A')}<br/>
-            <b>Annual Waste:</b> {cost_data.get('annual_estimate', 'N/A')}<br/><br/>
-            <b>Categories:</b><br/>
-            """
-            for cat in cost_data.get('waste_categories', []):
-                waste_text += f"  - {cat}<br/>"
-            story.append(Paragraph(waste_text, styles['BodyText']))
+    # Roadmap
+    roadmap = intelligence.get('roadmap', {})
+    if roadmap:
+        story.append(Paragraph("30/60/90 Day Roadmap", styles['SectionHeading']))
+
+        for period in ['30_days', '60_days', '90_days']:
+            actions = roadmap.get(period, [])
+            if actions:
+                title = period.replace('_', ' ').title()
+                story.append(Paragraph(f"<b>{title}</b>", styles['SubHeading']))
+                for action in actions:
+                    story.append(Paragraph(f"• {action.get('action', '')}", styles['BodyText']))
+                story.append(Spacer(1, 10))
 
     # Footer
     story.append(Spacer(1, 50))
