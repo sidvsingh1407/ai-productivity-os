@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { useAuthStore } from '@/store/authStore';
 import apiClient from '@/api/client';
 import { useNavigate } from 'react-router-dom';
 
 export function Dashboard() {
-  const { user } = useAuthStore();
   const navigate = useNavigate();
 
   const { data: latestAudits, isLoading } = useQuery({
@@ -121,7 +119,7 @@ export function Dashboard() {
                   : 'Diagnostic complete.'} Run Workflow Diagnostic to evaluate targeted execution.
               </p>
               <button
-                onClick={() => navigate(`/workflows/new?auditId=${lastAudit.id}`)}
+                onClick={() => navigate(`/workflows/new${lastAudit ? `?auditId=${lastAudit.id}` : ''}`)}
                 className="px-6 py-3 border border-border-strong bg-bg-primary text-text-primary text-body font-medium transition-colors hover:bg-bg-secondary"
               >
                 Run Workflow Diagnostic

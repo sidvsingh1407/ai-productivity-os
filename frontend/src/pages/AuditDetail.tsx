@@ -166,6 +166,13 @@ export default function AuditDetail() {
         version="1.0"
       />
 
+      <div className="mb-8 p-6 bg-bg-secondary border border-border-strong">
+        <h4 className="text-h4 font-medium text-text-primary mb-2">Assessment Limitations</h4>
+        <p className="text-body text-text-secondary">
+          This assessment is based on self-reported organizational responses. Results indicate potential strengths, risks, and opportunities but should not be considered a substitute for a full organizational review.
+        </p>
+      </div>
+
       <ExecutiveSummaryCard
         score={total_score}
         maxScore={100}

@@ -301,7 +301,13 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
     report_id = f"AUDIT-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
 
     story.append(create_header_table(company_name, audit_date, report_id))
-    story.append(Spacer(1, 30))
+    story.append(Spacer(1, 20))
+
+    # Assessment Limitations
+    story.append(Paragraph("Assessment Limitations", styles['SectionHeading']))
+    limitations_text = "This assessment is based on self-reported organizational responses. Results indicate potential strengths, risks, and opportunities but should not be considered a substitute for a full organizational review."
+    story.append(Paragraph(limitations_text, styles['NormalText']))
+    story.append(Spacer(1, 20))
 
     # Score gauge
     story.append(create_score_gauge(audit_data.get('total_score', 0), audit_data.get('rating', 'N/A')))
