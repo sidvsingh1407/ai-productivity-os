@@ -26,6 +26,14 @@ class ExecutiveSummary(BaseModel):
     primary_opportunity: str
     recommended_first_action: str
 
+class TargetStateItem(BaseModel):
+    dimension: str
+    current_score: int
+    target_score: int
+    gap: int
+    improvement_priority: str
+    rationale: str
+
 class AuditResponse(BaseModel):
     id: uuid.UUID
     org_id: uuid.UUID
@@ -46,6 +54,7 @@ class AuditResponse(BaseModel):
     findings: Optional[List[Finding]] = None
     recommendations: Optional[List[Recommendation]] = None
     executive_summary: Optional[ExecutiveSummary] = None
+    target_state: Optional[List[TargetStateItem]] = None
 
     status: AuditStatus
     created_at: datetime
