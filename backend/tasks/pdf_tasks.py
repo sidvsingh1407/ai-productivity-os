@@ -8,6 +8,7 @@ from models.workflow import IntegrationResult
 from models.report import ExportJob, Report, ExportJobStatus
 from tasks.celery_app import celery_app
 from reports.pdf_generator import generate_audit_pdf
+from audits.intelligence_engine import generate_intelligence
 
 async def _generate_pdf_async(audit_id: str, org_id: str):
     async with async_session_maker() as session:
@@ -20,11 +21,17 @@ async def _generate_pdf_async(audit_id: str, org_id: str):
         if str(audit.org_id) != org_id:
             raise ValueError("Audit does not belong to the organization")
 
-        # 2. Load integration_result if exists
-        from sqlalchemy import select
-        stmt = select(IntegrationResult).where(IntegrationResult.audit_id == audit_id)
-        result = await session.execute(stmt)
-        integration_result = result.scalars().first()
+        # 2. Reconstruct scores_dict to generate intelligence
+        scores_dict = {
+            'dimensions': audit.scores or {},
+            'compliance_risk_flag': audit.compliance_risk_flag,
+            'compliance_risk_reasons': audit.compliance_risk_reasons or [],
+            'contradictions': audit.contradictions or [],
+            'missing_data_flags': []
+        }
+
+        # 3. Generate Intelligence Package
+        intelligence = generate_intelligence(scores_dict)
 
         # Prepare data for PDF generator
         audit_data = {
@@ -34,7 +41,7 @@ async def _generate_pdf_async(audit_id: str, org_id: str):
             "rating": audit.rating,
             "compliance_risk_flag": audit.compliance_risk_flag,
             "compliance_risk_reasons": audit.compliance_risk_reasons or [],
-            "recommendations": integration_result.recommendations if integration_result else []
+            "intelligence": intelligence
         }
 
         # Output path
