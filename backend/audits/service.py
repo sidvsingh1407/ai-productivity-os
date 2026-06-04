@@ -6,6 +6,7 @@ from audits import repository
 from audits.scoring_engine import score_response
 from audits.schemas import AuditResponse
 from audits.intelligence_engine import generate_intelligence
+from audits.target_state_engine import generate_target_state
 
 async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Dict[str, Any] = None) -> AuditResponse:
     # 1. create audit record (status: running)
@@ -23,6 +24,9 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
 
         # 4.5 generate intelligence dynamically
         intelligence = generate_intelligence(scores_dict)
+
+        # 4.6 generate target state dynamically
+        target_state = generate_target_state(scores_dict)
 
         # 5. return AuditResponse
         return AuditResponse(
@@ -43,6 +47,7 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
             findings=intelligence.get("findings", []),
             recommendations=intelligence.get("recommendations", []),
             executive_summary=intelligence.get("executive_summary"),
+            target_state=target_state,
             status=audit.status,
             created_at=audit.created_at
         )
