@@ -8,6 +8,18 @@ class AuditCreate(BaseModel):
     form_response: Dict[str, Any]
     evidence_response: Optional[Dict[str, Any]] = None
 
+class Finding(BaseModel):
+    title: str
+    severity: str
+    impact: str
+    rationale: str
+
+class Recommendation(BaseModel):
+    recommendation: str
+    priority: str
+    expected_impact: str
+    implementation_effort: str
+
 class AuditResponse(BaseModel):
     id: uuid.UUID
     org_id: uuid.UUID
@@ -23,6 +35,11 @@ class AuditResponse(BaseModel):
     compliance_risk_reasons: Optional[List[str]] = None
     contradictions: Optional[List[str]] = None
     missing_data_flags: Optional[List[str]] = None
+
+    # Intelligence Engine Dynamic Outputs
+    findings: Optional[List[Finding]] = None
+    recommendations: Optional[List[Recommendation]] = None
+
     status: AuditStatus
     created_at: datetime
 
