@@ -45,12 +45,10 @@ export default function SampleReportPage() {
   }
 
   const {
-    total_score,
     scores,
     compliance_risk_flag,
     compliance_risk_reasons,
-    contradictions,
-    rating
+    contradictions
   } = auditData;
 
   const date = new Date(auditData.created_at).toLocaleDateString();
@@ -96,11 +94,18 @@ export default function SampleReportPage() {
           </p>
         </div>
 
-        <ExecutiveSummaryCard
-          score={total_score}
-          maxScore={100}
-          verdict={rating}
-        />
+        {auditData?.intelligence?.executive_summary ? (
+          <ExecutiveSummaryCard
+            overallAssessment={auditData.intelligence.executive_summary.overall_assessment}
+            criticalRisk={auditData.intelligence.executive_summary.critical_risk}
+            biggestOpportunity={auditData.intelligence.executive_summary.primary_opportunity}
+            recommendedFirstAction={auditData.intelligence.executive_summary.recommended_first_action}
+          />
+        ) : (
+          <div className="mb-12 p-6 border border-border-strong bg-bg-secondary text-text-secondary">
+            Executive summary intelligence unavailable.
+          </div>
+        )}
 
         <ScoreBreakdown dimensions={[
           { label: 'Awareness', score: (scores.awareness || 0) * 5, keyFinding: (scores.awareness || 0) * 5 < 50 ? 'Knowledge silos prevent broad understanding.' : 'General awareness is established across target groups.' },
