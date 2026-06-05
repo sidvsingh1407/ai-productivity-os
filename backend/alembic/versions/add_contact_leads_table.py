@@ -1,7 +1,7 @@
 """add contact_leads table
 
 Revision ID: manual_001
-Revises:
+Revises: 6f5a34a2e5d9
 Create Date: 2024-06-04 10:00:00.000000
 
 """
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = 'manual_001'
-down_revision: Union[str, None] = None
+down_revision: Union[str, None] = '6f5a34a2e5d9'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
