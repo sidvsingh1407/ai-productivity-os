@@ -37,12 +37,10 @@ export function Dashboard() {
     return `Last Assessment: ${daysText} — ${findingsText}`;
   };
 
-  // Helper for Card 1: Critical Risk
-  const getCriticalRisk = () => {
+  // Helper for Card 1: Highest Risk Area
+  const getHighestRiskArea = () => {
     if (intelligence?.findings && intelligence.findings.length > 0) {
-      // Find highest severity finding. We assume 'Critical' is highest, then 'High', 'Medium', 'Low'
       const severityOrder: Record<string, number> = { 'Critical': 4, 'High': 3, 'Medium': 2, 'Low': 1 };
-
       const highestSeverityFinding = intelligence.findings.reduce((prev: any, current: any) => {
         const prevScore = severityOrder[prev.severity] || 0;
         const currentScore = severityOrder[current.severity] || 0;
@@ -52,75 +50,56 @@ export function Dashboard() {
       return {
         title: highestSeverityFinding.title,
         severity: highestSeverityFinding.severity,
-        impact: highestSeverityFinding.impact,
         rationale: highestSeverityFinding.rationale,
       };
     }
-
     if (dashboardPayload?.critical_risk) {
       return {
         title: "Critical Risk Identified",
+        severity: "Critical",
         rationale: dashboardPayload.critical_risk,
-        severity: null,
-        impact: null,
       };
     }
     return null;
   };
+  const highestRiskArea = getHighestRiskArea();
 
-  const criticalRisk = getCriticalRisk();
+  // Helper for Card 2: Projected Business Impact
+  const getProjectedBusinessImpact = () => {
+    if (intelligence?.risk_projection) {
+      const impactText =
+        intelligence.risk_projection.risk_timeline?.near_term?.[0] ||
+        intelligence.risk_projection.risk_drivers?.[0] ||
+        intelligence.cost_of_inaction?.[0]?.business_impact ||
+        'Immediate operational friction increases if current trajectory is maintained.';
 
-  // Helper for Card 2: Highest Priority Action
-  const getPriorityAction = () => {
+      return {
+        impact: impactText,
+        risk_level: intelligence.risk_projection.risk_level
+      };
+    }
+    return null;
+  };
+  const projectedBusinessImpact = getProjectedBusinessImpact();
+
+  // Helper for Card 3: Immediate Action Required
+  const getImmediateAction = () => {
     if (intelligence?.recommendations && intelligence.recommendations.length > 0) {
       const topRec = intelligence.recommendations[0];
       return {
         recommendation: topRec.recommendation,
-        priority: topRec.priority,
         expected_impact: topRec.expected_impact,
       };
     }
-
     if (dashboardPayload?.priority_action) {
       return {
         recommendation: dashboardPayload.priority_action,
-        priority: null,
         expected_impact: null,
       };
     }
     return null;
   };
-
-  const priorityAction = getPriorityAction();
-
-  // Helper for Card 3: Fastest Improvement Opportunity
-  const getImprovementOpportunity = () => {
-    if (intelligence?.target_state && intelligence.target_state.length > 0) {
-      // Weakest dimension is the one with the lowest current_score
-      const weakest = intelligence.target_state.reduce((prev: any, current: any) => {
-        return (current.current_score < prev.current_score) ? current : prev;
-      }, intelligence.target_state[0]);
-
-      return {
-        dimension: weakest.dimension,
-        current_score: weakest.current_score,
-        target_score: weakest.target_score,
-        rationale: weakest.rationale,
-      };
-    }
-
-    if (dashboardPayload?.improvement_opportunity) {
-      return {
-        dimension: "Improvement Opportunity",
-        rationale: dashboardPayload.improvement_opportunity,
-        current_score: null,
-        target_score: null,
-      };
-    }
-    return null;
-  };
-
-  const improvementOpportunity = getImprovementOpportunity();
+  const immediateAction = getImmediateAction();
 
   return (
     <div className="max-w-5xl mx-auto py-12 px-6">
@@ -147,47 +126,50 @@ export function Dashboard() {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* --- Card 1: Most Critical Risk --- */}
-          {criticalRisk && (
-            <div className="border border-border-strong bg-bg-primary p-8">
-              <h3 className="text-label text-text-secondary mb-4 uppercase tracking-wider">Most Critical Risk</h3>
-              <h2 className="text-h2 text-text-primary mb-2">{criticalRisk.title}</h2>
-              {criticalRisk.severity && criticalRisk.impact && (
-                <div className="flex gap-6 mb-4">
-                  <div>
-                    <span className="text-label text-text-secondary uppercase">Severity: </span>
-                    <span className="text-body font-medium text-text-primary">{criticalRisk.severity}</span>
-                  </div>
-                  <div>
-                    <span className="text-label text-text-secondary uppercase">Impact: </span>
-                    <span className="text-body font-medium text-text-primary">{criticalRisk.impact}</span>
-                  </div>
+          {/* --- Card 1: Highest Risk Area --- */}
+          {highestRiskArea && (
+            <div className="border border-border-strong bg-bg-primary p-8 border-l-4 border-l-accent-red">
+              <h3 className="text-label text-text-secondary mb-4 uppercase tracking-wider">Highest Risk Area</h3>
+              <h2 className="text-h2 text-text-primary mb-2">{highestRiskArea.title}</h2>
+              {highestRiskArea.severity && (
+                <div className="mb-4">
+                  <span className="text-label text-text-secondary uppercase">Severity: </span>
+                  <span className="text-body font-medium text-accent-red">{highestRiskArea.severity}</span>
                 </div>
               )}
               <p className="text-body text-text-secondary max-w-3xl">
-                {criticalRisk.rationale}
+                {highestRiskArea.rationale}
               </p>
             </div>
           )}
 
-          {/* --- Card 2: Highest Priority Action --- */}
-          {priorityAction && (
+          {/* --- Card 2: Projected Business Impact --- */}
+          {projectedBusinessImpact && (
             <div className="border border-border-strong bg-bg-primary p-8">
-              <h3 className="text-label text-text-secondary mb-4 uppercase tracking-wider">Highest Priority Action</h3>
-              <h2 className="text-h2 text-text-primary mb-2">{priorityAction.recommendation}</h2>
-              {priorityAction.priority && priorityAction.expected_impact && (
-                <div className="flex gap-6 mt-4">
-                  <div>
-                    <span className="text-label text-text-secondary uppercase">Impact: </span>
-                    <span className="text-body font-medium text-text-primary">{priorityAction.expected_impact}</span>
-                  </div>
-                  <div>
-                    <span className="text-label text-text-secondary uppercase">Priority: </span>
-                    <span className="text-body font-medium text-text-primary">{priorityAction.priority}</span>
-                  </div>
+              <h3 className="text-label text-text-secondary mb-4 uppercase tracking-wider">Projected Business Impact</h3>
+              <h2 className="text-h2 text-text-primary mb-2 font-medium leading-relaxed">
+                {projectedBusinessImpact.impact}
+              </h2>
+              {projectedBusinessImpact.risk_level && (
+                <div className="mt-4">
+                  <span className="text-label text-text-secondary uppercase">Risk Level: </span>
+                  <span className={`text-body font-medium ${projectedBusinessImpact.risk_level === 'Critical' ? 'text-accent-red' : 'text-text-primary'}`}>{projectedBusinessImpact.risk_level}</span>
                 </div>
               )}
-              {/* Optional CTA to run workflow diagnostic? Keeping it simple per spec. */}
+            </div>
+          )}
+
+          {/* --- Card 3: Immediate Action Required --- */}
+          {immediateAction && (
+            <div className="border border-border-strong bg-bg-primary p-8 bg-text-primary/5">
+              <h3 className="text-label text-text-secondary mb-4 uppercase tracking-wider">Immediate Action Required</h3>
+              <h2 className="text-h2 text-text-primary mb-2">{immediateAction.recommendation}</h2>
+              {immediateAction.expected_impact && (
+                <div className="mt-4">
+                  <span className="text-label text-text-secondary uppercase">Expected Impact: </span>
+                  <span className="text-body font-medium text-text-primary">{immediateAction.expected_impact}</span>
+                </div>
+              )}
               <div className="mt-8">
                 <button
                   onClick={() => navigate(`/workflows/new${lastAudit ? `?auditId=${lastAudit.id}` : ''}`)}
@@ -196,31 +178,6 @@ export function Dashboard() {
                   Run Workflow Diagnostic
                 </button>
               </div>
-            </div>
-          )}
-
-          {/* --- Card 3: Fastest Improvement Opportunity --- */}
-          {improvementOpportunity && (
-            <div className="border border-border-strong bg-bg-primary p-8">
-              <h3 className="text-label text-text-secondary mb-4 uppercase tracking-wider">Fastest Improvement Opportunity</h3>
-              <h2 className="text-h2 text-text-primary capitalize mb-2">{improvementOpportunity.dimension}</h2>
-              {improvementOpportunity.current_score !== null && improvementOpportunity.target_score !== null && (
-                 <div className="flex gap-6 mb-4">
-                  <div>
-                    <span className="text-label text-text-secondary uppercase">Current: </span>
-                    <span className="text-body font-mono font-medium text-text-primary">{improvementOpportunity.current_score}</span>
-                  </div>
-                  <div>
-                    <span className="text-label text-text-secondary uppercase">Target: </span>
-                    <span className="text-body font-mono font-medium text-text-primary">{improvementOpportunity.target_score}</span>
-                  </div>
-                </div>
-              )}
-              {improvementOpportunity.rationale && (
-                <p className="text-body text-text-secondary max-w-3xl">
-                  {improvementOpportunity.rationale}
-                </p>
-              )}
             </div>
           )}
 

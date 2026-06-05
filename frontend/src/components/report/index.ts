@@ -6,3 +6,6 @@ export * from './CurrentTargetStateTable';
 export * from './FindingCard';
 export * from './RecommendationCard';
 export * from './RoadmapTimeline';
+export * from './RiskSeverityCard';
+export * from './RiskTimeline';
+export * from './CostOfInactionTable';
