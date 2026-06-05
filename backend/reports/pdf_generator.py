@@ -168,12 +168,13 @@ def create_score_gauge(score, rating):
 
 def create_dimension_breakdown(scores):
     """Create dimension score table."""
+    dims = scores.get('dimensions', scores)
     dimensions = [
-        ("Awareness", scores['dimensions']['awareness'], 20),
-        ("Adoption", scores['dimensions']['adoption'], 20),
-        ("Integration", scores['dimensions']['integration'], 20),
-        ("Governance", scores['dimensions']['governance'], 20),
-        ("ROI", scores['dimensions']['roi'], 20),
+        ("Awareness", dims.get('awareness', 0), 20),
+        ("Adoption", dims.get('adoption', 0), 20),
+        ("Integration", dims.get('integration', 0), 20),
+        ("Governance", dims.get('governance', 0), 20),
+        ("ROI", dims.get('roi', 0), 20),
     ]
 
     data = [
@@ -247,6 +248,43 @@ def create_recommendations_table(recommendations):
         ])
 
     table = Table(data, colWidths=[1*inch, 3*inch, 1.2*inch, 1*inch])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor(COLOR_PRIMARY)),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ]))
+
+    return table
+
+def create_cost_of_inaction_table(coi_data):
+    """Create Cost of Inaction table."""
+    # Create a custom style for white text if it doesn't exist
+    styles = get_styles()
+    if 'BodyTextWhite' not in styles:
+        styles.add(ParagraphStyle(
+            name='BodyTextWhite',
+            parent=styles['BodyText'],
+            textColor=colors.white
+        ))
+
+    data = [[
+        Paragraph("<b>Risk Area</b>", styles['BodyTextWhite']),
+        Paragraph("<b>Consequence</b>", styles['BodyTextWhite']),
+        Paragraph("<b>Business Impact</b>", styles['BodyTextWhite']),
+    ]]
+
+    for item in coi_data:
+        risk_area_text = f"<b>{item.get('risk_category', '')}</b><br/><font color='{COLOR_HIGHLIGHT if item.get('risk_level') in ['Critical', 'High'] else COLOR_PRIMARY}'>{item.get('risk_level', '')} Exposure</font>"
+
+        data.append([
+            Paragraph(risk_area_text, get_styles()['BodyText']),
+            Paragraph(item.get('potential_consequence', ''), get_styles()['BodyText']),
+            Paragraph(item.get('business_impact', ''), get_styles()['BodyText']),
+        ])
+
+    table = Table(data, colWidths=[1.8*inch, 2.3*inch, 2.4*inch])
     table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor(COLOR_PRIMARY)),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
@@ -345,6 +383,68 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
         story.append(Paragraph(exec_summary.get('recommended_first_action', ''), styles['BodyText']))
         story.append(Spacer(1, 20))
 
+    # Risk Projection
+    risk_projection = intelligence.get('risk_projection', {})
+    if risk_projection:
+        story.append(Paragraph("Risk Projection", styles['SectionHeading']))
+
+        # Risk Severity Card (text format)
+        risk_level = risk_projection.get('risk_level', 'Unknown')
+        confidence = risk_projection.get('confidence', 0)
+        risk_drivers = risk_projection.get('risk_drivers', [])
+        top_risk_driver = risk_drivers[0] if risk_drivers else 'Unknown Risk Driver'
+
+        story.append(Paragraph("<b>Current Risk Profile</b>", styles['SubHeading']))
+        story.append(Paragraph(f"<b>Overall Risk Level:</b> <font color='{COLOR_HIGHLIGHT if risk_level in ['Critical', 'High'] else COLOR_PRIMARY}'>{risk_level}</font>", styles['BodyText']))
+        story.append(Paragraph(f"<b>Confidence Index:</b> {confidence}% (Based on data consistency)", styles['BodyText']))
+        story.append(Paragraph(f"<b>Primary Risk Driver:</b> {top_risk_driver}", styles['BodyText']))
+        story.append(Spacer(1, 10))
+
+        # Projected Business Impact
+        risk_timeline = risk_projection.get('risk_timeline', {})
+        coi = intelligence.get('cost_of_inaction', [])
+        projected_impact = (
+            (risk_timeline.get('near_term') and risk_timeline['near_term'][0]) or
+            top_risk_driver or
+            (coi and coi[0].get('business_impact')) or
+            "Immediate operational friction increases."
+        )
+
+        story.append(Paragraph("<b>Projected Business Impact Summary</b>", styles['SubHeading']))
+        story.append(Paragraph(projected_impact, styles['BodyText']))
+        story.append(Spacer(1, 15))
+
+        # Cost of Inaction Table
+        if coi:
+            story.append(Paragraph("<b>Cost of Inaction</b>", styles['SubHeading']))
+            story.append(create_cost_of_inaction_table(coi))
+            story.append(Spacer(1, 15))
+
+        # Risk Timeline
+        if risk_timeline:
+            story.append(Paragraph("<b>Risk Progression Timeline</b>", styles['SubHeading']))
+
+            # Current State
+            story.append(Paragraph("<b>Current State:</b>", styles['BodyText']))
+            story.append(Paragraph("• Maturity gaps identified across core operational dimensions.", styles['BodyText']))
+
+            # 30 Days
+            story.append(Paragraph("<b>30 Days:</b>", styles['BodyText']))
+            for item in risk_timeline.get('near_term', ["Initial operational friction increases."]):
+                story.append(Paragraph(f"• {item}", styles['BodyText']))
+
+            # 60 Days
+            story.append(Paragraph("<b>60 Days:</b>", styles['BodyText']))
+            for item in risk_timeline.get('mid_term', ["Maturity gaps begin affecting execution quality."]):
+                story.append(Paragraph(f"• {item}", styles['BodyText']))
+
+            # 90 Days
+            story.append(Paragraph("<b>90 Days:</b>", styles['BodyText']))
+            for item in risk_timeline.get('long_term', ["Systemic risks impact strategic outcomes."]):
+                story.append(Paragraph(f"• {item}", styles['BodyText']))
+
+        story.append(Spacer(1, 20))
+
     # Dimension breakdown
     story.append(Paragraph("Dimension Breakdown", styles['SectionHeading']))
     story.append(create_dimension_breakdown(scores))
@@ -427,6 +527,8 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
     doc.build(story)
     return output_path
 
+def generate_report(audit_data: dict, output_path: str) -> str:
+    return generate_audit_pdf(audit_data, output_path)
 
 def main():
     if len(sys.argv) < 4:

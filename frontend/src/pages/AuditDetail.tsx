@@ -12,7 +12,10 @@ import {
   CurrentTargetStateTable,
   FindingCard,
   RecommendationCard,
-  RoadmapTimeline
+  RoadmapTimeline,
+  RiskSeverityCard,
+  RiskTimeline,
+  CostOfInactionTable
 } from '@/components/report';
 
 export default function AuditDetail() {
@@ -126,6 +129,29 @@ export default function AuditDetail() {
         <div className="mb-12 p-6 border border-border-strong bg-bg-secondary text-text-secondary">
           Executive summary intelligence unavailable.
         </div>
+      )}
+
+      {intelligence?.risk_projection && (
+        <RiskSeverityCard
+          riskLevel={intelligence.risk_projection.risk_level}
+          riskScore={intelligence.risk_projection.risk_score}
+          confidence={intelligence.risk_projection.confidence}
+          topRiskDriver={intelligence.risk_projection.risk_drivers?.[0] || 'Unknown Risk Driver'}
+          projectedImpactSummary={
+            intelligence.risk_projection.risk_timeline?.near_term?.[0] ||
+            intelligence.risk_projection.risk_drivers?.[0] ||
+            (intelligence.cost_of_inaction?.[0]?.business_impact) ||
+            'Immediate operational friction increases.'
+          }
+        />
+      )}
+
+      {intelligence?.cost_of_inaction && intelligence.cost_of_inaction.length > 0 && (
+        <CostOfInactionTable coiData={intelligence.cost_of_inaction} />
+      )}
+
+      {intelligence?.risk_projection?.risk_timeline && (
+        <RiskTimeline timeline={intelligence.risk_projection.risk_timeline} />
       )}
 
       <AssessmentOverviewCard
