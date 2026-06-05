@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import apiClient from '@/api/client';
 import { useNavigate } from 'react-router-dom';
+import { BenchmarkIntelligenceCards } from '@/components/dashboard/BenchmarkIntelligenceCards';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -189,6 +190,9 @@ export function Dashboard() {
               </div>
             </div>
           )}
+
+          {/* --- Benchmark Intelligence Section --- */}
+          <BenchmarkIntelligenceCards benchmark={intelligence?.benchmark} />
 
           {/* --- Card 4: Latest Assessment Summary --- */}
           {lastAudit && (
