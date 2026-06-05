@@ -51,9 +51,43 @@ async def get_current_org(current_user: User = Depends(get_current_user), db: As
 
     return org
 
+ROLE_HIERARCHY = {
+    "owner": 4,
+    "admin": 3,
+    "member": 2,
+    "viewer": 1
+}
+
 def require_role(required_role: str):
-    async def role_checker(current_user: User = Depends(get_current_user)):
-        # Very basic role check for placeholder purposes
+    async def role_checker(
+        current_user: User = Depends(get_current_user),
+        current_org: Organization = Depends(get_current_org),
+        db: AsyncSession = Depends(get_db)
+    ):
+        required_weight = ROLE_HIERARCHY.get(required_role.lower(), 4)
+
+        # Verify member's role within the specific org
+        stmt = select(OrgMember).where(
+            OrgMember.user_id == current_user.id,
+            OrgMember.org_id == current_org.id
+        )
+        result = await db.execute(stmt)
+        member = result.scalar_one_or_none()
+
+        if not member:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not a member of this organization"
+            )
+
+        user_role_weight = ROLE_HIERARCHY.get(member.role.lower(), 1)
+
+        if user_role_weight < required_weight:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions"
+            )
+
         return current_user
     return role_checker
 
