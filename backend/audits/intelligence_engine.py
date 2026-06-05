@@ -13,6 +13,7 @@ from audits.intelligence_rules import (
 from audits.target_state_engine import generate_target_state
 from audits.roadmap_engine import generate_roadmap
 from audits.risk_projection_engine import generate_risk_projection
+from audits.coi_engine import generate_cost_of_inaction
 
 def generate_findings(scores: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
@@ -264,14 +265,15 @@ def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
         }
         clean_findings.append(cf)
 
-    # Also clean up 'linked_finding' if desired, but might be useful to keep
+    # Also clean up 'linked_finding' if desired, but might be useful to keep for COI mapping
     clean_recommendations = []
     for r in recommendations:
         cr = {
             "recommendation": r["recommendation"],
             "priority": r["priority"],
             "expected_impact": r["expected_impact"],
-            "implementation_effort": r["implementation_effort"]
+            "implementation_effort": r["implementation_effort"],
+            "linked_finding": r.get("linked_finding")
         }
         clean_recommendations.append(cr)
 
@@ -308,6 +310,21 @@ def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
     # Generate Risk Projection
     risk_projection = generate_risk_projection(scores, clean_findings)
 
+    # Generate Cost of Inaction
+    contradiction_count = len(scores.get('contradictions', []))
+    confidence_index = scores.get('confidence_index', 100)
+    coi = generate_cost_of_inaction(
+        findings=findings, # pass original findings so we have access to "type" / "dimension" if needed, though title is used in coi_engine
+        recommendations=clean_recommendations,
+        dimension_scores=scaled_dimensions,
+        contradiction_count=contradiction_count,
+        confidence_index=confidence_index
+    )
+
+    # Remove 'linked_finding' from recommendations before final output
+    for r in clean_recommendations:
+        r.pop("linked_finding", None)
+
     return {
         "executive_summary": executive_summary,
         "findings": clean_findings,
@@ -315,5 +332,6 @@ def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
         "target_state": target_state,
         "roadmap": roadmap,
         "dashboard": dashboard,
-        "risk_projection": risk_projection
+        "risk_projection": risk_projection,
+        "cost_of_inaction": coi
     }
