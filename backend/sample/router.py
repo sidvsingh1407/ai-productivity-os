@@ -6,6 +6,8 @@ from datetime import datetime
 
 from audits.scoring_engine import score_response
 from audits.intelligence_engine import generate_intelligence
+from benchmarking.adapter import get_api_benchmark_payload
+from audits.repository import get_all_completed_audits
 
 router = APIRouter(tags=["Sample Report"])
 
@@ -36,6 +38,17 @@ async def get_sample_report(db: AsyncSession = Depends(get_db)):
 
     # Generate full intelligence payload
     intelligence = generate_intelligence(scores)
+
+    # Generate benchmark intelligence
+    completed_audits = await get_all_completed_audits(db)
+    org_total_score = scores.get('total_score', 0)
+    org_dimension_scores = scores.get('dimensions', {})
+    benchmark_payload = get_api_benchmark_payload(
+        organization_total_score=org_total_score,
+        organization_dimension_scores=org_dimension_scores,
+        assessments=completed_audits
+    )
+    intelligence["benchmark"] = benchmark_payload
 
     return {
         "id": str(uuid.uuid4()),

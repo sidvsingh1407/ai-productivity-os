@@ -6,6 +6,7 @@ from audits import repository
 from audits.scoring_engine import score_response
 from audits.schemas import AuditResponse
 from audits.intelligence_engine import generate_intelligence
+from benchmarking.adapter import get_api_benchmark_payload
 
 async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Dict[str, Any] = None) -> AuditResponse:
     # 1. create audit record (status: running)
@@ -23,6 +24,17 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
 
         # 4.5 generate intelligence dynamically
         intelligence = generate_intelligence(scores_dict)
+
+        # 4.6 append benchmark intelligence
+        completed_audits = await repository.get_all_completed_audits(db)
+        org_total_score = audit.total_score or 0
+        org_dimension_scores = audit.scores or {}
+        benchmark_payload = get_api_benchmark_payload(
+            organization_total_score=org_total_score,
+            organization_dimension_scores=org_dimension_scores,
+            assessments=completed_audits
+        )
+        intelligence["benchmark"] = benchmark_payload
 
         # 5. return AuditResponse
         return AuditResponse(

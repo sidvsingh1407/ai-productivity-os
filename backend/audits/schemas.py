@@ -78,6 +78,21 @@ class FailureIntelligence(BaseModel):
     consequences: List[str]
     recommended_actions: List[FailureIntervention]
 
+class BenchmarkDimension(BaseModel):
+    score: float
+    benchmark: int
+    difference: float
+
+class BenchmarkPayload(BaseModel):
+    available: bool
+    benchmark_type: str
+    message: Optional[str] = None
+    sample_size: Optional[int] = None
+    platform_average: Optional[float] = None
+    percentile_rank: Optional[int] = None
+    dimension_comparisons: Optional[Dict[str, BenchmarkDimension]] = None
+    insights: Optional[List[str]] = None
+
 class AuditIntelligenceResponse(BaseModel):
     executive_summary: ExecutiveSummary
     findings: List[Finding]
@@ -87,6 +102,7 @@ class AuditIntelligenceResponse(BaseModel):
     dashboard: DashboardPayload
     risk_projection: RiskProjection
     failure_intelligence: Optional[List[FailureIntelligence]] = None
+    benchmark: Optional[BenchmarkPayload] = None
 
 class AuditResponse(BaseModel):
     id: uuid.UUID
