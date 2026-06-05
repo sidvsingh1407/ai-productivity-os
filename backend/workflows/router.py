@@ -5,7 +5,8 @@ from typing import Dict, Any, List
 from database import get_db
 from . import service
 from . import repository
-from .schemas import WorkflowCreate, WorkflowDetailResponse, WorkflowResponse
+from .schemas import WorkflowCreate, WorkflowDetailResponse, WorkflowResponse, WorkflowIntelligence
+from .workflow_intelligence_engine import generate_workflow_intelligence
 
 router = APIRouter(prefix="/workflows", tags=["Workflows"])
 
@@ -65,8 +66,12 @@ async def get_workflow(
 
     blueprints = await repository.get_workflow_blueprints(db=db, workflow_id=workflow_id)
 
+    intelligence_payload = generate_workflow_intelligence(workflow.input_config)
+    intelligence = WorkflowIntelligence(**intelligence_payload)
+
     workflow_resp = WorkflowResponse.model_validate(workflow)
     return WorkflowDetailResponse(
         **workflow_resp.model_dump(),
-        blueprints=blueprints
+        blueprints=blueprints,
+        intelligence=intelligence
     )

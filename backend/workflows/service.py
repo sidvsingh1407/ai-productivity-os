@@ -4,7 +4,8 @@ from fastapi import HTTPException, status
 
 from . import repository
 from .pipeline import run_pipeline
-from .schemas import WorkflowDetailResponse, WorkflowResponse, BlueprintResponse
+from .schemas import WorkflowDetailResponse, WorkflowResponse, BlueprintResponse, WorkflowIntelligence
+from .workflow_intelligence_engine import generate_workflow_intelligence
 
 async def run_workflow(db: AsyncSession, org_id: str, user_id: str, input_config: Dict[str, Any]) -> WorkflowDetailResponse:
     # 1. create workflow record (status: running)
@@ -22,13 +23,18 @@ async def run_workflow(db: AsyncSession, org_id: str, user_id: str, input_config
         # Update workflow status to complete
         workflow = await repository.update_workflow_status(db, workflow, "complete")
 
+        # Generate intelligence on-demand
+        intelligence_payload = generate_workflow_intelligence(input_config)
+        intelligence = WorkflowIntelligence(**intelligence_payload)
+
         # 4. return WorkflowDetailResponse
         workflow_resp = WorkflowResponse.model_validate(workflow)
         blueprint_resps = [BlueprintResponse.model_validate(bp) for bp in blueprints]
 
         return WorkflowDetailResponse(
             **workflow_resp.model_dump(),
-            blueprints=blueprint_resps
+            blueprints=blueprint_resps,
+            intelligence=intelligence
         )
 
     except Exception as e:

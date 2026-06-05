@@ -71,6 +71,47 @@ export default function WorkflowDetail() {
         </Badge>
       </div>
 
+      {workflow.intelligence && (
+        <Card className="mb-6 border-l-4 border-l-blue-600">
+          <CardHeader>
+            <CardTitle>Workflow Intelligence Summary</CardTitle>
+            <CardDescription>Operational diagnostic results</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="p-4 bg-slate-50 rounded-lg">
+                <div className="text-sm text-slate-500 mb-1">Maturity Level</div>
+                <div className="font-semibold text-lg">{workflow.intelligence.workflow_maturity}</div>
+              </div>
+              <div className="p-4 bg-slate-50 rounded-lg">
+                <div className="text-sm text-slate-500 mb-1">Risk Level</div>
+                <div className="font-semibold text-lg">{workflow.intelligence.workflow_risk_level}</div>
+              </div>
+              <div className="p-4 bg-slate-50 rounded-lg col-span-2">
+                <div className="text-sm text-slate-500 mb-1">Critical Bottleneck</div>
+                <div className="font-semibold">{workflow.intelligence.executive_summary.most_critical_bottleneck}</div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-medium border-b pb-2">Identified Bottlenecks</h3>
+              {workflow.intelligence.bottlenecks.map((b: any, idx: number) => (
+                <div key={idx} className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold">{b.title}</h4>
+                    <Badge variant={b.severity === 'Critical' ? 'destructive' : 'default'}>{b.severity}</Badge>
+                  </div>
+                  <p className="text-sm text-slate-600 mb-2">{b.rationale}</p>
+                  <div className="bg-slate-50 p-3 rounded text-sm">
+                    <strong>Root Cause:</strong> {b.root_cause.root_cause}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="col-span-1 md:col-span-2">
           <CardHeader>

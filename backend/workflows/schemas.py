@@ -27,5 +27,51 @@ class BlueprintResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class RootCause(BaseModel):
+    root_cause: str
+    evidence: str
+    impact: str
+
+class Bottleneck(BaseModel):
+    title: str
+    severity: str
+    impacted_area: str
+    rationale: str
+    root_cause: RootCause
+
+class Risk(BaseModel):
+    workflow_risk: str
+    primary_risk: str
+    rationale: str
+    execution_risk: str
+    delay_risk: str
+    dependency_risk: str
+    scalability_risk: str
+
+class Recommendation(BaseModel):
+    recommendation: str
+    priority: str
+    expected_impact: str
+    implementation_effort: str
+
+class ExecutiveSummary(BaseModel):
+    most_critical_bottleneck: str
+    primary_root_cause: str
+    highest_priority_intervention: str
+    workflow_risk_level: str
+    workflow_maturity: str
+
+class WorkflowIntelligence(BaseModel):
+    executive_summary: ExecutiveSummary
+    workflow_maturity: str
+    workflow_risk_level: str
+    most_critical_bottleneck: str
+    primary_root_cause: str
+    highest_priority_intervention: str
+    bottlenecks: List[Bottleneck]
+    risks: List[Risk]
+    recommendations: List[Recommendation]
+
 class WorkflowDetailResponse(WorkflowResponse):
     blueprints: List[BlueprintResponse] = []
+    intelligence: Optional[WorkflowIntelligence] = None
