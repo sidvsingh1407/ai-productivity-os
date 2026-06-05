@@ -49,6 +49,7 @@ class DashboardPayload(BaseModel):
     priority_action: str
     improvement_opportunity: str
     executive_summary: str
+    top_failure_risk: Optional[Dict[str, str]] = None
 
 class RiskTimeline(BaseModel):
     near_term: List[str]
@@ -63,6 +64,20 @@ class RiskProjection(BaseModel):
     cost_of_inaction: List[str]
     risk_timeline: RiskTimeline
 
+class FailureIntervention(BaseModel):
+    intervention: str
+    impact: str
+    effort: str
+
+class FailureIntelligence(BaseModel):
+    pattern: str
+    severity: str
+    confidence: int
+    why_detected: str
+    root_causes: List[str]
+    consequences: List[str]
+    recommended_actions: List[FailureIntervention]
+
 class AuditIntelligenceResponse(BaseModel):
     executive_summary: ExecutiveSummary
     findings: List[Finding]
@@ -71,6 +86,7 @@ class AuditIntelligenceResponse(BaseModel):
     roadmap: Roadmap
     dashboard: DashboardPayload
     risk_projection: RiskProjection
+    failure_intelligence: Optional[List[FailureIntelligence]] = None
 
 class AuditResponse(BaseModel):
     id: uuid.UUID

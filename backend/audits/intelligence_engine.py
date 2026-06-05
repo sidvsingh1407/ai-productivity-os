@@ -14,6 +14,7 @@ from audits.target_state_engine import generate_target_state
 from audits.roadmap_engine import generate_roadmap
 from audits.risk_projection_engine import generate_risk_projection
 from audits.coi_engine import generate_cost_of_inaction
+from failure_intelligence import detect_failure_patterns
 
 def generate_findings(scores: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
@@ -307,6 +308,27 @@ def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
         "executive_summary": executive_summary.get("overall_assessment", "")
     }
 
+    # Generate Failure Intelligence
+    failure_intelligence = detect_failure_patterns(scores)
+
+    # Generate Dashboard Payload
+    top_failure_risk = None
+    if failure_intelligence:
+        top_risk = failure_intelligence[0]
+        top_failure_risk = {
+            "pattern": top_risk["pattern"],
+            "severity": top_risk["severity"],
+            "recommended_intervention": top_risk["recommended_actions"][0]["intervention"] if top_risk["recommended_actions"] else "Conduct a detailed operational review."
+        }
+
+    dashboard = {
+        "critical_risk": executive_summary.get("critical_risk", ""),
+        "priority_action": executive_summary.get("recommended_first_action", ""),
+        "improvement_opportunity": executive_summary.get("primary_opportunity", ""),
+        "executive_summary": executive_summary.get("overall_assessment", ""),
+        "top_failure_risk": top_failure_risk
+    }
+
     # Generate Risk Projection
     risk_projection = generate_risk_projection(scores, clean_findings)
 
@@ -333,5 +355,6 @@ def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
         "roadmap": roadmap,
         "dashboard": dashboard,
         "risk_projection": risk_projection,
-        "cost_of_inaction": coi
+        "cost_of_inaction": coi,
+        "failure_intelligence": failure_intelligence
     }
