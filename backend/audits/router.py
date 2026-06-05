@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dependencies import get_db, get_current_user, get_current_org
+from dependencies import get_db, get_current_user, get_current_org, require_role
 from models.user import User
 from models.organization import Organization
 from audits import schemas, service, repository
@@ -12,7 +12,7 @@ from benchmarking.adapter import get_api_benchmark_payload
 
 router = APIRouter()
 
-@router.post("/", response_model=schemas.AuditResponse)
+@router.post("/", response_model=schemas.AuditResponse, dependencies=[Depends(require_role("member"))])
 async def create_and_run_audit(
     audit_in: schemas.AuditCreate,
     db: AsyncSession = Depends(get_db),
@@ -28,7 +28,7 @@ async def create_and_run_audit(
         evidence_response=audit_in.evidence_response
     )
 
-@router.get("/", response_model=schemas.AuditListResponse)
+@router.get("/", response_model=schemas.AuditListResponse, dependencies=[Depends(require_role("viewer"))])
 async def get_audits(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
@@ -82,7 +82,7 @@ async def get_audits(
         limit=limit
     )
 
-@router.get("/{id}", response_model=schemas.AuditResponse)
+@router.get("/{id}", response_model=schemas.AuditResponse, dependencies=[Depends(require_role("viewer"))])
 async def get_single_audit(
     id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
@@ -117,7 +117,7 @@ async def get_single_audit(
 
     return schemas.AuditResponse(**audit_dict)
 
-@router.get("/{id}/versions", response_model=List[schemas.AuditVersionResponse])
+@router.get("/{id}/versions", response_model=List[schemas.AuditVersionResponse], dependencies=[Depends(require_role("viewer"))])
 async def get_audit_versions(
     id: uuid.UUID,
     db: AsyncSession = Depends(get_db),

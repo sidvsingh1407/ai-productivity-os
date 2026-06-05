@@ -7,7 +7,9 @@ from .pipeline import run_pipeline
 from .schemas import WorkflowDetailResponse, WorkflowResponse, BlueprintResponse, WorkflowIntelligence
 from .workflow_intelligence_engine import generate_workflow_intelligence
 
-async def run_workflow(db: AsyncSession, org_id: str, user_id: str, input_config: Dict[str, Any]) -> WorkflowDetailResponse:
+import uuid
+
+async def run_workflow(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, input_config: Dict[str, Any]) -> WorkflowDetailResponse:
     # 1. create workflow record (status: running)
     workflow = await repository.create_workflow(db, org_id, user_id, input_config)
 

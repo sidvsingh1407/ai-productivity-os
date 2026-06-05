@@ -8,8 +8,10 @@ from database import Base
 import enum
 
 class OrgRole(str, enum.Enum):
+    owner = "owner"
     admin = "admin"
     member = "member"
+    viewer = "viewer"
 
 class Organization(Base):
     __tablename__ = "organizations"
