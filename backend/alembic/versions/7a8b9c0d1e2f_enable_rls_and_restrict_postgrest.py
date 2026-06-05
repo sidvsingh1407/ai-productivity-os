@@ -1,7 +1,7 @@
 """Enable RLS and restrict PostgREST
 
 Revision ID: 7a8b9c0d1e2f
-Revises: 6f5a34a2e5d9
+Revises: manual_001
 Create Date: 2026-05-18 07:00:00.000000
 
 """
@@ -10,7 +10,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = '7a8b9c0d1e2f'
-down_revision: Union[str, Sequence[str], None] = '6f5a34a2e5d9'
+down_revision: Union[str, Sequence[str], None] = 'manual_001'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -27,7 +27,8 @@ tables = [
     'audit_versions',
     'blueprints',
     'integration_results',
-    'billing_plans'
+    'billing_plans',
+    'contact_leads'
 ]
 
 def upgrade() -> None:
