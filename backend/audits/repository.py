@@ -77,3 +77,7 @@ async def list_audit_versions(db: AsyncSession, audit_id: uuid.UUID) -> List[Aud
     stmt = select(AuditVersion).where(AuditVersion.audit_id == audit_id).order_by(AuditVersion.version_number.desc())
     result = await db.execute(stmt)
     return list(result.scalars().all())
+async def get_all_completed_audits(db: AsyncSession) -> List[Audit]:
+    stmt = select(Audit).where(Audit.status == AuditStatus.complete)
+    result = await db.execute(stmt)
+    return list(result.scalars().all())

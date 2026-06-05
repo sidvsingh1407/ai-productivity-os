@@ -8,6 +8,7 @@ from models.user import User
 from models.organization import Organization
 from audits import schemas, service, repository
 from audits.intelligence_engine import generate_intelligence
+from benchmarking.adapter import get_api_benchmark_payload
 
 router = APIRouter()
 
@@ -41,6 +42,8 @@ async def get_audits(
 
     # Process items to attach intelligence dynamically
     items = []
+    completed_audits = await repository.get_all_completed_audits(db)
+
     for audit in audits:
         # Reconstruct the scores dict to pass to the intelligence engine
         scores_dict = {
@@ -59,6 +62,16 @@ async def get_audits(
         # We need to construct a response model manually to inject these fields
         # since they are not present in the ORM model natively.
         audit_dict = schemas.AuditResponse.model_validate(audit).model_dump()
+
+        org_total_score = audit.total_score or 0
+        org_dimension_scores = audit.scores or {}
+        benchmark_payload = get_api_benchmark_payload(
+            organization_total_score=org_total_score,
+            organization_dimension_scores=org_dimension_scores,
+            assessments=completed_audits
+        )
+        intelligence["benchmark"] = benchmark_payload
+
         audit_dict["intelligence"] = intelligence
         items.append(schemas.AuditResponse(**audit_dict))
 
@@ -89,6 +102,17 @@ async def get_single_audit(
     intelligence = generate_intelligence(scores_dict)
 
     audit_dict = schemas.AuditResponse.model_validate(audit).model_dump()
+
+    completed_audits = await repository.get_all_completed_audits(db)
+    org_total_score = audit.total_score or 0
+    org_dimension_scores = audit.scores or {}
+    benchmark_payload = get_api_benchmark_payload(
+        organization_total_score=org_total_score,
+        organization_dimension_scores=org_dimension_scores,
+        assessments=completed_audits
+    )
+    intelligence["benchmark"] = benchmark_payload
+
     audit_dict["intelligence"] = intelligence
 
     return schemas.AuditResponse(**audit_dict)
