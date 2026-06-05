@@ -463,7 +463,7 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
 
     story.append(PageBreak())
 
-    # === PAGE 2: Current vs Target State & Findings ===
+    # === PAGE 2: Current vs Target State & Failure Intelligence ===
 
     # Current vs Target State
     target_state = intelligence.get('target_state', [])
@@ -471,6 +471,40 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
         story.append(Paragraph("Current vs Target State", styles['SectionHeading']))
         story.append(create_target_state_table(target_state))
         story.append(Spacer(1, 20))
+
+    # Failure Intelligence Analysis
+    failure_intelligence = intelligence.get('failure_intelligence', [])
+    if failure_intelligence:
+        story.append(Paragraph("Failure Intelligence Analysis", styles['SectionHeading']))
+
+        for fi in failure_intelligence:
+            story.append(Paragraph(f"<b>Pattern: {fi.get('pattern', '')} ({fi.get('severity', '')} Risk)</b>", styles['SubHeading']))
+
+            story.append(Paragraph("<b>Why Detected:</b>", styles['BodyText']))
+            story.append(Paragraph(fi.get('why_detected', ''), styles['BodyText']))
+            story.append(Spacer(1, 5))
+
+            story.append(Paragraph("<b>Root Causes:</b>", styles['BodyText']))
+            for cause in fi.get('root_causes', []):
+                story.append(Paragraph(f"• {cause}", styles['BodyText']))
+            story.append(Spacer(1, 5))
+
+            story.append(Paragraph("<b>Consequences:</b>", styles['BodyText']))
+            for consequence in fi.get('consequences', []):
+                story.append(Paragraph(f"• {consequence}", styles['BodyText']))
+            story.append(Spacer(1, 5))
+
+            story.append(Paragraph("<b>Recommended Actions:</b>", styles['BodyText']))
+            for action in fi.get('recommended_actions', []):
+                intervention = action.get('intervention', '')
+                impact = action.get('impact', '')
+                effort = action.get('effort', '')
+                story.append(Paragraph(f"• {intervention} (Impact: {impact}, Effort: {effort})", styles['BodyText']))
+            story.append(Spacer(1, 15))
+
+    story.append(PageBreak())
+
+    # === PAGE 3: Findings, Recommendations & Roadmap ===
 
     # Findings
     findings = intelligence.get('findings', [])

@@ -39,6 +39,15 @@ export function Dashboard() {
 
   // Helper for Card 1: Highest Risk Area
   const getHighestRiskArea = () => {
+    if (dashboardPayload?.top_failure_risk) {
+      return {
+        title: "Top Failure Risk",
+        label: `${dashboardPayload.top_failure_risk.severity} Severity`,
+        value: dashboardPayload.top_failure_risk.pattern,
+        description: `Recommended Action: ${dashboardPayload.top_failure_risk.recommended_intervention}`,
+      };
+    }
+
     if (intelligence?.findings && intelligence.findings.length > 0) {
       const severityOrder: Record<string, number> = { 'Critical': 4, 'High': 3, 'Medium': 2, 'Low': 1 };
       const highestSeverityFinding = intelligence.findings.reduce((prev: any, current: any) => {

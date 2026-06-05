@@ -167,6 +167,79 @@ export default function AuditDetail() {
         <CurrentTargetStateTable targetState={intelligence.target_state} />
       )}
 
+      {intelligence?.failure_intelligence && intelligence.failure_intelligence.length > 0 && (
+        <div className="mb-12">
+          <h2 className="text-h2 font-semibold text-text-primary mb-6 border-b border-border-light pb-4">Failure Intelligence Analysis</h2>
+          <div className="space-y-8">
+            {intelligence.failure_intelligence.map((fi: any, idx: number) => (
+              <div key={idx} className="p-6 bg-white border border-border-light rounded-md">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-h3 font-semibold text-text-primary">{fi.pattern}</h3>
+                  <span className={`px-3 py-1 text-data font-medium rounded-full ${
+                    fi.severity === 'Critical' ? 'bg-red-50 text-red-700 border border-red-200' :
+                    fi.severity === 'Major' ? 'bg-orange-50 text-orange-700 border border-orange-200' :
+                    'bg-yellow-50 text-yellow-700 border border-yellow-200'
+                  }`}>
+                    {fi.severity} Risk
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                  <div>
+                    <h4 className="text-h4 font-medium text-text-secondary mb-2">Why Detected</h4>
+                    <p className="text-body text-text-primary bg-bg-secondary p-3 rounded border border-border-light">{fi.why_detected}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-h4 font-medium text-text-secondary mb-2">Confidence Level</h4>
+                    <div className="flex items-center">
+                      <div className="w-full bg-border-light h-2 rounded-full mr-3">
+                        <div className="bg-navy h-2 rounded-full" style={{ width: `${fi.confidence}%` }}></div>
+                      </div>
+                      <span className="text-data font-medium">{fi.confidence}%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                  <div>
+                    <h4 className="text-h4 font-medium text-text-secondary mb-2">Root Causes</h4>
+                    <ul className="list-disc pl-5 text-body text-text-primary space-y-1">
+                      {fi.root_causes.map((cause: string, i: number) => (
+                        <li key={i}>{cause}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-h4 font-medium text-text-secondary mb-2">Operational Consequences</h4>
+                    <ul className="list-disc pl-5 text-body text-text-primary space-y-1">
+                      {fi.consequences.map((consequence: string, i: number) => (
+                        <li key={i}>{consequence}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-h4 font-medium text-text-secondary mb-3">Recommended Actions</h4>
+                  <div className="space-y-3">
+                    {fi.recommended_actions.map((action: any, i: number) => (
+                      <div key={i} className="bg-bg-secondary p-4 rounded border border-border-light flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <span className="text-body font-medium text-text-primary">{action.intervention}</span>
+                        <div className="flex gap-3 shrink-0">
+                          <span className="text-data bg-white px-2 py-1 border border-border-light rounded text-text-secondary">Impact: {action.impact}</span>
+                          <span className="text-data bg-white px-2 py-1 border border-border-light rounded text-text-secondary">Effort: {action.effort}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {intelligence?.findings && intelligence.findings.length > 0 && (
         <div className="mb-12">
           <h2 className="text-h2 font-semibold text-text-primary mb-6 border-b border-border-light pb-4">Prioritized Findings</h2>
