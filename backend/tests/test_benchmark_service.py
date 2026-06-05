@@ -109,4 +109,5 @@ def test_generate_benchmark_payload_success():
         "awareness": {"your_score": 70, "benchmark": 60, "difference": 10},
         "adoption": {"your_score": 50, "benchmark": 60, "difference": -10}
     }
-    assert payload["benchmark_summary"] == ""
+    assert "benchmark_insights" in payload
+    assert payload["benchmark_insights"]["overall_summary"] == "Your organization performs above the current platform average by 5 points and ranks in the 100th percentile based on 10 completed assessments."
