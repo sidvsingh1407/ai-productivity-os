@@ -9,3 +9,4 @@ export * from './RoadmapTimeline';
 export * from './RiskSeverityCard';
 export * from './RiskTimeline';
 export * from './CostOfInactionTable';
+export * from './BenchmarkPerformanceSection';

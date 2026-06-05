@@ -9,6 +9,7 @@ import {
   ExecutiveSummaryCard,
   AssessmentOverviewCard,
   ScoreBreakdown,
+  BenchmarkPerformanceSection,
   CurrentTargetStateTable,
   FindingCard,
   RecommendationCard,
@@ -162,6 +163,8 @@ export default function AuditDetail() {
       />
 
       <ScoreBreakdown dimensions={dimensions} />
+
+      <BenchmarkPerformanceSection benchmark={intelligence?.benchmark} yourScores={scores} />
 
       {intelligence?.target_state && intelligence.target_state.length > 0 && (
         <CurrentTargetStateTable targetState={intelligence.target_state} />
