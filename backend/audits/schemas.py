@@ -2,11 +2,12 @@ from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, ConfigDict
 import uuid
 from datetime import datetime
-from models.audit import AuditStatus
+from models.audit import AuditStatus, IndustryType
 
 class AuditCreate(BaseModel):
     form_response: Dict[str, Any]
     evidence_response: Optional[Dict[str, Any]] = None
+    industry_type: Optional[IndustryType] = None
 
 class Finding(BaseModel):
     title: str
@@ -89,6 +90,8 @@ class BenchmarkPayload(BaseModel):
     message: Optional[str] = None
     sample_size: Optional[int] = None
     platform_average: Optional[float] = None
+    industry_average: Optional[float] = None
+    industry_benchmark_available: Optional[bool] = None
     percentile_rank: Optional[int] = None
     dimension_comparisons: Optional[Dict[str, BenchmarkDimension]] = None
     insights: Optional[List[str]] = None
@@ -124,6 +127,7 @@ class AuditResponse(BaseModel):
     intelligence: Optional[AuditIntelligenceResponse] = None
 
     status: AuditStatus
+    industry_type: Optional[IndustryType] = None
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)

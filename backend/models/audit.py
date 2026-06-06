@@ -12,6 +12,18 @@ class AuditStatus(str, enum.Enum):
     complete = "complete"
     failed = "failed"
 
+class IndustryType(str, enum.Enum):
+    SAAS = "SAAS"
+    FINTECH = "FINTECH"
+    BANKING = "BANKING"
+    INSURANCE = "INSURANCE"
+    HEALTHCARE = "HEALTHCARE"
+    MANUFACTURING = "MANUFACTURING"
+    EDUCATION = "EDUCATION"
+    GOVERNMENT = "GOVERNMENT"
+    RETAIL = "RETAIL"
+    LOGISTICS = "LOGISTICS"
+
 class Audit(Base):
     __tablename__ = "audits"
 
@@ -29,6 +41,7 @@ class Audit(Base):
     compliance_risk_flag: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     compliance_risk_reasons: Mapped[list | None] = mapped_column(JSON, nullable=True)
     status: Mapped[AuditStatus] = mapped_column(Enum(AuditStatus), default=AuditStatus.pending, nullable=False)
+    industry_type: Mapped[IndustryType | None] = mapped_column(Enum(IndustryType), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 

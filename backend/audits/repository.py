@@ -5,12 +5,13 @@ from sqlalchemy.future import select
 from fastapi import HTTPException, status
 from models.audit import Audit, AuditVersion, AuditStatus
 
-async def create_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Optional[Dict[str, Any]] = None) -> Audit:
+async def create_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Optional[Dict[str, Any]] = None, industry_type: Optional[str] = None) -> Audit:
     db_audit = Audit(
         org_id=org_id,
         user_id=user_id,
         form_response=form_response,
         evidence_response=evidence_response,
+        industry_type=industry_type,
         status=AuditStatus.running
     )
     db.add(db_audit)

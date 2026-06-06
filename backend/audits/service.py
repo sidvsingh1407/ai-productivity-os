@@ -8,9 +8,9 @@ from audits.schemas import AuditResponse
 from audits.intelligence_engine import generate_intelligence
 from benchmarking.adapter import get_api_benchmark_payload
 
-async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Dict[str, Any] = None) -> AuditResponse:
+async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Dict[str, Any] = None, industry_type: str = None) -> AuditResponse:
     # 1. create audit record (status: running)
-    audit = await repository.create_audit(db, org_id, user_id, form_response, evidence_response)
+    audit = await repository.create_audit(db, org_id, user_id, form_response, evidence_response, industry_type)
 
     try:
         # 2. call scoring_engine.score_response(form_response)
@@ -23,7 +23,8 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
         await repository.create_audit_version(db, audit.id, 1, scores_dict)
 
         # 4.5 generate intelligence dynamically
-        intelligence = generate_intelligence(scores_dict)
+        industry_type_str = audit.industry_type.value if hasattr(audit.industry_type, 'value') else audit.industry_type
+        intelligence = generate_intelligence(scores_dict, industry_type_str)
 
         # 4.6 append benchmark intelligence
         completed_audits = await repository.get_all_completed_audits(db)
@@ -32,7 +33,8 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
         benchmark_payload = get_api_benchmark_payload(
             organization_total_score=org_total_score,
             organization_dimension_scores=org_dimension_scores,
-            assessments=completed_audits
+            assessments=completed_audits,
+            industry_type=industry_type_str
         )
         intelligence["benchmark"] = benchmark_payload
 
@@ -54,6 +56,7 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
             missing_data_flags=scores_dict.get('missing_data_flags', []),
             intelligence=intelligence,
             status=audit.status,
+            industry_type=audit.industry_type,
             created_at=audit.created_at
         )
 

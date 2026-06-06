@@ -1,7 +1,7 @@
 from typing import Dict, Any, List
 from benchmarking.service import generate_benchmark_payload
 
-def get_api_benchmark_payload(organization_total_score: float, organization_dimension_scores: Dict[str, float], assessments: List[Any]) -> Dict[str, Any]:
+def get_api_benchmark_payload(organization_total_score: float, organization_dimension_scores: Dict[str, float], assessments: List[Any], industry_type: str = None) -> Dict[str, Any]:
     """
     Adapter to convert the service-layer benchmark payload into the API schema format
     expected by frontend consumers (AuditDetail, Dashboard, PDF Export).
@@ -64,7 +64,7 @@ def get_api_benchmark_payload(organization_total_score: float, organization_dime
     if opportunity := benchmark_insights.get("improvement_opportunity"):
         insights.append(opportunity)
 
-    return {
+    api_payload = {
         "available": True,
         "benchmark_type": "platform",
         "sample_size": service_payload.get("sample_size"),
@@ -73,3 +73,9 @@ def get_api_benchmark_payload(organization_total_score: float, organization_dime
         "dimension_comparisons": dimension_comparisons,
         "insights": insights
     }
+
+    if industry_type:
+        api_payload["industry_average"] = None
+        api_payload["industry_benchmark_available"] = False
+
+    return api_payload

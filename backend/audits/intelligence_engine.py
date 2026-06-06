@@ -15,6 +15,7 @@ from audits.roadmap_engine import generate_roadmap
 from audits.risk_projection_engine import generate_risk_projection
 from audits.coi_engine import generate_cost_of_inaction
 from failure_intelligence import detect_failure_patterns
+from .industry_intelligence_engine import adapt_findings, adapt_recommendations, adapt_executive_summary, adapt_risk_projection
 
 def generate_findings(scores: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
@@ -245,7 +246,7 @@ def generate_executive_summary(scores: Dict[str, Any], recommendations: List[Dic
 
     return summary
 
-def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
+def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = None) -> Dict[str, Any]:
     """
     Entrypoint for intelligence generation.
     Takes a raw scores dictionary and returns a structure with findings, recommendations, executive summary,
@@ -254,6 +255,11 @@ def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
     findings = generate_findings(scores)
     recommendations = generate_recommendations(findings)
     executive_summary = generate_executive_summary(scores, recommendations)
+
+    # Adapt using Industry Intelligence Engine
+    findings = adapt_findings(findings, industry_type)
+    recommendations = adapt_recommendations(recommendations, industry_type)
+    executive_summary = adapt_executive_summary(executive_summary, industry_type)
 
     # Clean up internal 'type' and 'dimension' fields from findings before returning
     clean_findings = []
@@ -331,6 +337,7 @@ def generate_intelligence(scores: Dict[str, Any]) -> Dict[str, Any]:
 
     # Generate Risk Projection
     risk_projection = generate_risk_projection(scores, clean_findings)
+    risk_projection = adapt_risk_projection(risk_projection, industry_type)
 
     # Generate Cost of Inaction
     contradiction_count = len(scores.get('contradictions', []))
