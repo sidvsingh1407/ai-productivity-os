@@ -193,7 +193,7 @@ export default function ContactPage() {
                   className="mt-1 h-4 w-4 rounded border-border-strong text-accent-blue focus:ring-accent-blue bg-bg-primary"
                 />
                 <label htmlFor="consent_given" className="text-body text-text-secondary leading-tight">
-                  I consent to having TarkaX store my submitted information so they can respond to my inquiry.
+                  I have read and agree to the <a href="/privacy" className="text-accent-blue hover:underline">Privacy Policy</a>.
                 </label>
               </div>
 

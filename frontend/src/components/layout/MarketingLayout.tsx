@@ -1,6 +1,7 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import { CookieBanner } from './CookieBanner';
 
 export function MarketingLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -81,6 +82,15 @@ export function MarketingLayout() {
               </Link>
               <Link to="/blog" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Blog</Link>
               <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Sign In</Link>
+              <div className="pt-4 mt-4 border-t border-border-light">
+                <p className="px-3 text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2">Legal</p>
+                <Link to="/privacy" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Privacy Policy</Link>
+                <Link to="/terms" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Terms of Service</Link>
+                <Link to="/cookies" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Cookie Policy</Link>
+                <Link to="/ai-disclaimer" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">AI Disclaimer</Link>
+                <Link to="/data-retention" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Data Retention</Link>
+                <Link to="/security" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Security</Link>
+              </div>
               <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="block mt-4 px-3 py-3 bg-accent-blue text-text-inverse text-center text-body font-medium rounded-md shadow-sm">Request a Demo</Link>
             </div>
           </div>
@@ -91,6 +101,9 @@ export function MarketingLayout() {
       <main className="flex-grow">
         <Outlet />
       </main>
+
+      {/* Global Cookie Banner */}
+      <CookieBanner />
 
       {/* Footer */}
       <footer className="bg-bg-dark border-t border-border-strong py-space-xl mt-auto text-text-inverse">
@@ -135,6 +148,10 @@ export function MarketingLayout() {
               <ul className="space-y-3">
                 <li><Link to="/privacy" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Privacy Policy</Link></li>
                 <li><Link to="/terms" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Terms of Service</Link></li>
+                <li><Link to="/cookies" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Cookie Policy</Link></li>
+                <li><Link to="/ai-disclaimer" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">AI Disclaimer</Link></li>
+                <li><Link to="/data-retention" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Data Retention</Link></li>
+                <li><Link to="/security" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Security</Link></li>
               </ul>
             </div>
           </div>

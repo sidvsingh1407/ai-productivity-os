@@ -12,6 +12,10 @@ import AboutPage from './pages/marketing/AboutPage';
 import PrivacyPage from './pages/marketing/PrivacyPage';
 import SampleReportPage from './pages/marketing/SampleReportPage';
 import TermsPage from './pages/marketing/TermsPage';
+import CookiesPage from './pages/marketing/CookiesPage';
+import AiDisclaimerPage from './pages/marketing/AiDisclaimerPage';
+import DataRetentionPage from './pages/marketing/DataRetentionPage';
+import SecurityPage from './pages/marketing/SecurityPage';
 import BlogPage from './pages/marketing/BlogPage';
 import ContactPage from './pages/marketing/ContactPage';
 
@@ -42,6 +46,10 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/cookies" element={<CookiesPage />} />
+          <Route path="/ai-disclaimer" element={<AiDisclaimerPage />} />
+          <Route path="/data-retention" element={<DataRetentionPage />} />
+          <Route path="/security" element={<SecurityPage />} />
           <Route path="/sample-report" element={<SampleReportPage />} />
         </Route>
 
