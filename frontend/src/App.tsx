@@ -23,6 +23,7 @@ import AuditDetail from './pages/AuditDetail';
 import NewWorkflow from './pages/NewWorkflow';
 import WorkflowDetail from './pages/WorkflowDetail';
 import IntegrationResults from './pages/IntegrationResults';
+import PromptImprover from './pages/PromptImprover';
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
           <Route path="workflows/new" element={<NewWorkflow />} />
           <Route path="workflows/:id" element={<WorkflowDetail />} />
           <Route path="integrations/:id" element={<IntegrationResults />} />
+          <Route path="prompt-improver" element={<PromptImprover />} />
         </Route>
 
         {/* Redirect old dashboard to new app dashboard */}
