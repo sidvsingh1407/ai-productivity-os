@@ -25,7 +25,8 @@ async def create_and_run_audit(
         org_id=current_org.id,
         user_id=current_user.id,
         form_response=audit_in.form_response,
-        evidence_response=audit_in.evidence_response
+        evidence_response=audit_in.evidence_response,
+        industry_type=audit_in.industry_type
     )
 
 @router.get("/", response_model=schemas.AuditListResponse, dependencies=[Depends(require_role("viewer"))])
@@ -57,7 +58,8 @@ async def get_audits(
             # Let's derive it or pass empty if not found.
             'missing_data_flags': []
         }
-        intelligence = generate_intelligence(scores_dict)
+        industry_type_str = audit.industry_type.value if hasattr(audit.industry_type, 'value') else audit.industry_type
+        intelligence = generate_intelligence(scores_dict, industry_type_str)
 
         # We need to construct a response model manually to inject these fields
         # since they are not present in the ORM model natively.
@@ -68,7 +70,8 @@ async def get_audits(
         benchmark_payload = get_api_benchmark_payload(
             organization_total_score=org_total_score,
             organization_dimension_scores=org_dimension_scores,
-            assessments=completed_audits
+            assessments=completed_audits,
+            industry_type=industry_type_str
         )
         intelligence["benchmark"] = benchmark_payload
 
@@ -99,7 +102,8 @@ async def get_single_audit(
         'contradictions': audit.contradictions or [],
         'missing_data_flags': []
     }
-    intelligence = generate_intelligence(scores_dict)
+    industry_type_str = audit.industry_type.value if hasattr(audit.industry_type, 'value') else audit.industry_type
+    intelligence = generate_intelligence(scores_dict, industry_type_str)
 
     audit_dict = schemas.AuditResponse.model_validate(audit).model_dump()
 
@@ -109,7 +113,8 @@ async def get_single_audit(
     benchmark_payload = get_api_benchmark_payload(
         organization_total_score=org_total_score,
         organization_dimension_scores=org_dimension_scores,
-        assessments=completed_audits
+        assessments=completed_audits,
+        industry_type=industry_type_str
     )
     intelligence["benchmark"] = benchmark_payload
 
