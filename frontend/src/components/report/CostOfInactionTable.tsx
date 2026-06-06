@@ -2,9 +2,10 @@ import React from 'react';
 
 interface COIItem {
   risk_category: string;
-  risk_level: string;
-  potential_consequence: string;
-  business_impact: string;
+  current_risk?: number;
+  projected_12m_risk?: number;
+  risk_change?: string;
+  expected_impact?: string[];
   related_recommendation: string;
 }
 
@@ -27,8 +28,7 @@ export function CostOfInactionTable({ coiData }: CostOfInactionTableProps) {
           <thead>
             <tr className="bg-bg-secondary border-b border-border-strong">
               <th className="py-4 px-6 text-label text-text-secondary uppercase tracking-wider font-medium w-1/4">Risk Area</th>
-              <th className="py-4 px-6 text-label text-text-secondary uppercase tracking-wider font-medium w-1/3">Consequence</th>
-              <th className="py-4 px-6 text-label text-text-secondary uppercase tracking-wider font-medium w-5/12">Business Impact</th>
+              <th className="py-4 px-6 text-label text-text-secondary uppercase tracking-wider font-medium" colSpan={2}>Expected Consequence & Business Impact</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border-light">

@@ -506,7 +506,47 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
 
     # === PAGE 3: Findings, Recommendations & Roadmap ===
 
+
+    # --- Predictive Intelligence ---
+    intel = audit_data.get('intelligence', {})
+
+    # Early Warnings
+    early_warnings = intel.get('early_warnings', [])
+    if early_warnings:
+        story.append(Paragraph("Early Warnings", styles['Heading2']))
+        for ew in early_warnings:
+            story.append(Paragraph(f"• <b>{ew.get('warning', '')}</b> ({ew.get('severity', '')}): {ew.get('suggested_action', '')}", styles['BodyText']))
+        story.append(Spacer(1, 10))
+
+    # Cost of Inaction
+    coi = intel.get('cost_of_inaction', [])
+    if coi:
+        story.append(Paragraph("Cost of Inaction (12-Month Projection)", styles['Heading2']))
+        for item in coi[:3]:
+            # Use current vs projected risk or just fallback to category + consequence
+            risk_cat = item.get('risk_category', '')
+            curr = item.get('current_risk', '')
+            proj = item.get('projected_12m_risk', '')
+            if curr and proj:
+                story.append(Paragraph(f"<b>{risk_cat}</b> (Risk projected to increase from {curr} to {proj})", styles['SubHeading']))
+            else:
+                story.append(Paragraph(f"<b>{risk_cat}</b>", styles['SubHeading']))
+
+            # expected_impact is a list now
+            impacts = item.get('expected_impact', [])
+            if impacts:
+                for imp in impacts:
+                    story.append(Paragraph(f"• {imp}", styles['BodyText']))
+            else:
+                story.append(Paragraph(f"• {item.get('potential_consequence', '')}", styles['BodyText']))
+                story.append(Paragraph(f"• {item.get('business_impact', '')}", styles['BodyText']))
+
+            story.append(Spacer(1, 5))
+
+        story.append(Spacer(1, 15))
+
     # Findings
+
     findings = intelligence.get('findings', [])
     if findings:
         story.append(Paragraph("Findings", styles['SectionHeading']))
