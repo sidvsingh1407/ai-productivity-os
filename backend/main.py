@@ -34,6 +34,7 @@ from organizations.router import router as organizations_router  # noqa: E402
 from billing.router import router as billing_router  # noqa: E402
 from contact.router import router as contact_router  # noqa: E402
 from sample.router import router as sample_router  # noqa: E402
+from prompt_intelligence.router import router as prompt_intelligence_router # noqa: E402
 from config import settings  # noqa: E402
 import re  # noqa: E402
 
@@ -144,6 +145,7 @@ app.include_router(organizations_router, prefix="/organizations")
 app.include_router(billing_router, prefix="/billing")
 app.include_router(contact_router)
 app.include_router(sample_router)
+app.include_router(prompt_intelligence_router, prefix="/api")
 
 
 @app.get("/")
