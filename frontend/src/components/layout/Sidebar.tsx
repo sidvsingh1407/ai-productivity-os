@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
-import { LayoutDashboard, LogOut } from 'lucide-react';
+import { LayoutDashboard, Target, GitBranch, Sparkles, FileText, Settings, LogOut } from 'lucide-react';
 import { Button } from '../ui/button';
 
 export function Sidebar() {
@@ -17,13 +17,45 @@ export function Sidebar() {
         </div>
 
         <nav className="space-y-1">
-          <Link to="/dashboard">
-            <Button variant="secondary" className="w-full justify-start gap-2">
+          <Link to="/app/dashboard">
+            <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
               <LayoutDashboard className="w-4 h-4" />
               Dashboard
             </Button>
           </Link>
-          {/* Add more links here later */}
+          <Link to="/app/audits/new">
+            <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
+              <Target className="w-4 h-4" />
+              AI Audit
+            </Button>
+          </Link>
+          <Link to="/app/workflows/new">
+            <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
+              <GitBranch className="w-4 h-4" />
+              Workflow Diagnostic
+            </Button>
+          </Link>
+          <Link to="/app/prompt-improver">
+            <Button variant="secondary" className="w-full justify-start gap-2">
+              <Sparkles className="w-4 h-4 text-accent-blue" />
+              Prompt Improver
+            </Button>
+          </Link>
+          <div className="pt-4 pb-2 px-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">
+            Organization
+          </div>
+          <Link to="/app/audits">
+            <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
+              <FileText className="w-4 h-4" />
+              Reports
+            </Button>
+          </Link>
+          <Link to="/app/settings">
+            <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
+              <Settings className="w-4 h-4" />
+              Settings
+            </Button>
+          </Link>
         </nav>
       </div>
 
