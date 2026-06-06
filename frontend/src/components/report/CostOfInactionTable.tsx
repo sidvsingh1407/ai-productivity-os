@@ -7,6 +7,9 @@ interface COIItem {
   risk_change?: string;
   expected_impact?: string[];
   related_recommendation: string;
+  risk_level?: string;
+  potential_consequence?: string;
+  business_impact?: string;
 }
 
 interface CostOfInactionTableProps {
