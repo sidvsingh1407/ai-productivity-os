@@ -60,10 +60,35 @@ class RiskTimeline(BaseModel):
 class RiskProjection(BaseModel):
     risk_level: str
     risk_score: int
+    risk_trend: str
     confidence: int
+    explanation: str
     risk_drivers: List[str]
-    cost_of_inaction: List[str]
     risk_timeline: RiskTimeline
+
+class CostOfInaction(BaseModel):
+    risk_category: str
+    current_risk: int
+    projected_12m_risk: int
+    risk_change: str
+    expected_impact: List[str]
+    related_recommendation: str
+
+class EarlyWarning(BaseModel):
+    warning: str
+    severity: str
+    suggested_action: str
+
+class ScenarioOutcome(BaseModel):
+    scenario_name: str
+    expected_ohi: int
+    expected_risk: int
+    outcome: str
+    description: str
+
+class OperationalHealth(BaseModel):
+    index: int
+    explanation: str
 
 class FailureIntervention(BaseModel):
     intervention: str
@@ -97,6 +122,7 @@ class BenchmarkPayload(BaseModel):
     insights: Optional[List[str]] = None
 
 class AuditIntelligenceResponse(BaseModel):
+    operational_health: Optional[OperationalHealth] = None
     executive_summary: ExecutiveSummary
     findings: List[Finding]
     recommendations: List[Recommendation]
@@ -104,6 +130,9 @@ class AuditIntelligenceResponse(BaseModel):
     roadmap: Roadmap
     dashboard: DashboardPayload
     risk_projection: RiskProjection
+    cost_of_inaction: Optional[List[CostOfInaction]] = None
+    early_warnings: Optional[List[EarlyWarning]] = None
+    scenario_analysis: Optional[Dict[str, ScenarioOutcome]] = None
     failure_intelligence: Optional[List[FailureIntelligence]] = None
     benchmark: Optional[BenchmarkPayload] = None
 

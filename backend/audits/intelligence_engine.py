@@ -13,6 +13,9 @@ from audits.intelligence_rules import (
 from audits.target_state_engine import generate_target_state
 from audits.roadmap_engine import generate_roadmap
 from audits.risk_projection_engine import generate_risk_projection
+from audits.ohi_engine import calculate_ohi, generate_ohi_explanation
+from audits.early_warning_engine import generate_early_warnings
+from audits.scenario_engine import simulate_scenarios
 from audits.coi_engine import generate_cost_of_inaction
 from failure_intelligence import detect_failure_patterns
 from .industry_intelligence_engine import adapt_findings, adapt_recommendations, adapt_executive_summary, adapt_risk_projection
@@ -350,11 +353,35 @@ def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = No
         confidence_index=confidence_index
     )
 
+    eqs = scores.get('evidence_quality_score', 100)
+    ohi_score = calculate_ohi(scaled_dimensions, risk_projection['risk_score'], eqs)
+    ohi_explanation = generate_ohi_explanation(ohi_score, eqs)
+
+    operational_health = {
+        "index": ohi_score,
+        "explanation": ohi_explanation
+    }
+
+    missing_data = scores.get('missing_data_flags', [])
+    early_warnings = generate_early_warnings(
+        scaled_dimensions,
+        missing_data,
+        eqs,
+        scores.get('contradictions', [])
+    )
+
+    scenario_analysis = simulate_scenarios(
+        risk_projection['risk_score'],
+        ohi_score,
+        roadmap
+    )
+
     # Remove 'linked_finding' from recommendations before final output
     for r in clean_recommendations:
         r.pop("linked_finding", None)
 
     return {
+        "operational_health": operational_health,
         "executive_summary": executive_summary,
         "findings": clean_findings,
         "recommendations": clean_recommendations,
@@ -363,5 +390,7 @@ def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = No
         "dashboard": dashboard,
         "risk_projection": risk_projection,
         "cost_of_inaction": coi,
+        "early_warnings": early_warnings,
+        "scenario_analysis": scenario_analysis,
         "failure_intelligence": failure_intelligence
     }
