@@ -88,7 +88,7 @@ async def test_valid_key_access_granted(api_key_fixture):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get(
             "/test-endpoint",
-            headers={"Authorization": f"Bearer {raw_key}"}
+                headers={"X-API-Key": raw_key}
         )
 
         assert response.status_code == 200
@@ -99,7 +99,7 @@ async def test_invalid_key_rejected():
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get(
             "/test-endpoint",
-            headers={"Authorization": "Bearer tkx_test_invalid123"}
+                headers={"X-API-Key": "tkx_test_invalid123"}
         )
 
         assert response.status_code == 401
@@ -119,7 +119,7 @@ async def test_expired_key_rejected(db_session: AsyncSession, organization: Orga
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get(
             "/test-endpoint",
-            headers={"Authorization": f"Bearer {raw_key}"}
+                headers={"X-API-Key": raw_key}
         )
 
         assert response.status_code == 401
@@ -133,7 +133,7 @@ async def test_revoked_key_rejected(db_session: AsyncSession, api_key_fixture):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get(
             "/test-endpoint",
-            headers={"Authorization": f"Bearer {raw_key}"}
+                headers={"X-API-Key": raw_key}
         )
 
         assert response.status_code == 403
@@ -157,7 +157,7 @@ async def test_rate_limit_exceeded(db_session: AsyncSession, organization: Organ
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get(
             "/test-endpoint",
-            headers={"Authorization": f"Bearer {raw_key}"}
+                headers={"X-API-Key": raw_key}
         )
 
         assert response.status_code == 429
@@ -174,7 +174,7 @@ async def test_usage_log_created(db_session: AsyncSession, organization: Organiz
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get(
             "/test-endpoint",
-            headers={"Authorization": f"Bearer {raw_key}"}
+                headers={"X-API-Key": raw_key}
         )
         assert response.status_code == 200
 

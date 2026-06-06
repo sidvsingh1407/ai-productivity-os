@@ -1,24 +1,28 @@
 from fastapi import Request, Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import APIKeyHeader
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 
 from .service import ApiKeyService, RateLimitService
 from models.api_platform import ApiKey
 
-security = HTTPBearer()
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 async def verify_api_key(
     request: Request,
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    raw_key: str = Depends(api_key_header),
     db: AsyncSession = Depends(get_db)
 ) -> ApiKey:
     """
-    Dependency to verify the API key from the Authorization header.
+    Dependency to verify the API key from the X-API-Key header.
     Rejects invalid, expired, or revoked keys.
     Enforces rate limiting.
     """
-    raw_key = credentials.credentials
+    if not raw_key:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing API Key",
+        )
 
     # 1. Validate key
     api_key = await ApiKeyService.validate_key(db, raw_key)
@@ -27,14 +31,12 @@ async def verify_api_key(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired API Key",
-            headers={"WWW-Authenticate": "Bearer"},
         )
 
     if not api_key.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Revoked API Key",
-            headers={"WWW-Authenticate": "Bearer"},
         )
 
     # 2. Check Rate Limit
