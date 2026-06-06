@@ -41,14 +41,25 @@ class OrgMember(Base):
     user = relationship("User")
     organization = relationship("Organization", back_populates="members")
 
+class InvitationStatus(str, enum.Enum):
+    pending = "pending"
+    accepted = "accepted"
+    expired = "expired"
+    revoked = "revoked"
+
 class Invitation(Base):
     __tablename__ = "invitations"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     org_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id"), nullable=False)
+    invited_by_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
     email: Mapped[str] = mapped_column(String, nullable=False)
+    role: Mapped[OrgRole] = mapped_column(Enum(OrgRole), default=OrgRole.member, nullable=False)
+    status: Mapped[InvitationStatus] = mapped_column(Enum(InvitationStatus), default=InvitationStatus.pending, nullable=False)
     token: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     accepted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     organization = relationship("Organization")
+    invited_by = relationship("User")
