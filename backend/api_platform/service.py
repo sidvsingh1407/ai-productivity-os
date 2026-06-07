@@ -8,6 +8,11 @@ from sqlalchemy import select
 
 from models.api_platform import ApiKey, ApiTier
 
+from .schemas import WorkflowApiRequest
+from workflows.workflow_intelligence_engine import generate_workflow_intelligence
+from workflows.schemas import WorkflowIntelligence
+import json
+
 # Redis integration for rate limiting
 import redis.asyncio as redis
 from config import settings
@@ -150,3 +155,26 @@ class RateLimitService:
             # We allow it to prevent total outage if redis drops.
             print(f"Redis rate limiting error: {e}")
             return True
+
+class WorkflowApiService:
+    @staticmethod
+    def process_workflow_diagnostic(request: WorkflowApiRequest) -> WorkflowIntelligence:
+        """
+        Maps the API request to the internal input config for workflow intelligence engine,
+        generates intelligence, and returns the result.
+        """
+        serialized_steps = json.dumps([step.model_dump() for step in request.steps], indent=2)
+
+        workflow_description = f"Workflow: {request.workflow_name}\n\nDescription:\n{request.description}\n\nSteps:\n{serialized_steps}"
+
+        input_config = {
+            "workflowDescription": workflow_description,
+            "currentChallenges": "",
+            "currentToolsUsed": "",
+            "teamSize": "",
+            "department": ""
+        }
+
+        intelligence_payload = generate_workflow_intelligence(input_config)
+
+        return WorkflowIntelligence(**intelligence_payload)
