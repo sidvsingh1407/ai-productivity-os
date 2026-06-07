@@ -37,14 +37,22 @@ export default function PromptImprover() {
         setResult({
            ...err.response.data,
            // fill missing parts to satisfy type if only validation is returned
-           context: { category: 'Unknown', confidence: 0 },
-           diagnosis: { strength: 'N/A', missing: [], execution_risks: [] },
-           scores: { original_score: 0, improved_score: 0 },
+           operational_context: { detected_context: 'Unknown', purpose: '', operational_environment: '' },
+           diagnosis: { strength: 'N/A', missing_elements: [], execution_risks: [] },
+           intelligence_scores: { original_score: 0, improved_score: 0 },
            improved_prompt: '',
-           rationale: { changes_made: [], failure_modes_addressed: [] }
+           improvement_rationale: { context_reasoning: '', changes_made: [], failure_modes_addressed: [], expected_improvements: '' }
         });
       } else {
-        setError(err.response?.data?.detail || 'An error occurred during analysis.');
+        // Fallback for API errors without a validation block to avoid UI crash
+        setResult({
+           validation: { passed: false, validation_errors: [err.response?.data?.detail || 'An error occurred during analysis.'] },
+           operational_context: { detected_context: 'Unknown', purpose: '', operational_environment: '' },
+           diagnosis: { strength: 'N/A', missing_elements: [], execution_risks: [] },
+           intelligence_scores: { original_score: 0, improved_score: 0 },
+           improved_prompt: '',
+           improvement_rationale: { context_reasoning: '', changes_made: [], failure_modes_addressed: [], expected_improvements: '' }
+        });
       }
     } finally {
       setIsLoading(false);
@@ -120,9 +128,9 @@ export default function PromptImprover() {
                            <h3 className="font-semibold text-lg">{result.validation.passed ? 'Validation Passed' : 'Validation Failed'}</h3>
                        </div>
                    </div>
-                   {!result.validation.passed && result.validation.errors.length > 0 && (
+                   {!result.validation.passed && result.validation.validation_errors && result.validation.validation_errors.length > 0 && (
                        <ul className="mt-4 space-y-2">
-                           {result.validation.errors.map((err, i) => (
+                           {result.validation.validation_errors.map((err, i) => (
                                <li key={i} className="text-sm text-red-600 flex items-start gap-2">
                                   <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
                                   <span>{err}</span>
@@ -143,12 +151,12 @@ export default function PromptImprover() {
                 <CardContent>
                     <div className="flex items-center justify-between">
                     <div className="text-center">
-                        <div className="text-3xl font-bold text-text-secondary">{result.scores.original_score}</div>
+                        <div className="text-3xl font-bold text-text-secondary">{result.intelligence_scores.original_score}</div>
                         <div className="text-xs text-text-secondary uppercase mt-1">Original</div>
                     </div>
                     <ChevronRight className="w-6 h-6 text-border-strong" />
                     <div className="text-center">
-                        <div className="text-3xl font-bold text-primary">{result.scores.improved_score}</div>
+                        <div className="text-3xl font-bold text-primary">{result.intelligence_scores.improved_score}</div>
                         <div className="text-xs text-text-secondary uppercase mt-1">Improved</div>
                     </div>
                     </div>
@@ -163,11 +171,15 @@ export default function PromptImprover() {
                     <div className="space-y-4">
                         <div>
                             <div className="text-sm text-text-secondary mb-1">Detected Context</div>
-                            <div className="font-medium">{result.context.category}</div>
+                            <div className="font-medium">{result.operational_context.detected_context}</div>
                         </div>
                         <div>
-                            <div className="text-sm text-text-secondary mb-1">Confidence Score</div>
-                            <div className="font-medium">{(result.context.confidence * 100).toFixed(0)}%</div>
+                            <div className="text-sm text-text-secondary mb-1">Operational Environment</div>
+                            <div className="font-medium">{result.operational_context.operational_environment}</div>
+                        </div>
+                        <div>
+                            <div className="text-sm text-text-secondary mb-1">Current Intelligence Score</div>
+                            <div className="font-medium text-primary">{result.intelligence_scores.improved_score}</div>
                         </div>
                     </div>
                 </CardContent>
@@ -185,11 +197,11 @@ export default function PromptImprover() {
                                 {result.diagnosis.strength}
                             </Badge>
                         </div>
-                        {result.diagnosis.missing.length > 0 && (
+                        {result.diagnosis.missing_elements.length > 0 && (
                             <div>
                                 <div className="text-sm text-text-secondary mb-2">Missing Elements</div>
                                 <div className="flex flex-wrap gap-2">
-                                    {result.diagnosis.missing.map((item, i) => (
+                                    {result.diagnosis.missing_elements.map((item, i) => (
                                         <Badge key={i} variant="outline" className="text-xs">{item}</Badge>
                                     ))}
                                 </div>
@@ -199,16 +211,19 @@ export default function PromptImprover() {
                 </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="border-red-500/30 bg-red-50/30 dark:bg-red-950/20">
                 <CardHeader className="pb-3">
-                    <CardTitle className="text-base">Top Risks</CardTitle>
+                    <CardTitle className="text-base flex items-center gap-2 text-red-700 dark:text-red-400">
+                        <AlertCircle className="w-5 h-5" />
+                        Top Risks
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     {result.diagnosis.execution_risks.length > 0 ? (
                         <ul className="space-y-2">
                             {result.diagnosis.execution_risks.map((risk, i) => (
-                                <li key={i} className="text-sm flex items-start gap-2 text-text-secondary">
-                                    <AlertCircle className="w-4 h-4 text-accent-red shrink-0 mt-0.5" />
+                                <li key={i} className="text-sm flex items-start gap-2 text-red-900/80 dark:text-red-200/80 font-medium">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
                                     {risk}
                                 </li>
                             ))}
@@ -250,10 +265,17 @@ export default function PromptImprover() {
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="md:col-span-2">
+                            <div className="text-sm font-medium mb-1">Why This Context Was Selected</div>
+                            <div className="text-sm text-text-secondary leading-relaxed">
+                                {result.improvement_rationale.context_reasoning}
+                            </div>
+                        </div>
+
                         <div>
                             <div className="text-sm font-medium mb-3">Changes Made</div>
                             <ul className="space-y-2">
-                                {result.rationale.changes_made.map((change, i) => (
+                                {result.improvement_rationale.changes_made.map((change, i) => (
                                     <li key={i} className="text-sm text-text-secondary flex gap-2">
                                         <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
                                         <span>{change}</span>
@@ -264,13 +286,20 @@ export default function PromptImprover() {
                         <div>
                             <div className="text-sm font-medium mb-3">Failure Modes Addressed</div>
                             <ul className="space-y-2">
-                                {result.rationale.failure_modes_addressed.map((mode, i) => (
+                                {result.improvement_rationale.failure_modes_addressed.map((mode, i) => (
                                     <li key={i} className="text-sm text-text-secondary flex gap-2">
                                         <CheckCircle2 className="w-4 h-4 text-accent-blue shrink-0 mt-0.5" />
                                         <span>{mode}</span>
                                     </li>
                                 ))}
                             </ul>
+                        </div>
+
+                        <div className="md:col-span-2 mt-2 pt-4 border-t border-border-light">
+                            <div className="text-sm font-medium mb-1">Expected Improvement</div>
+                            <div className="text-sm text-text-secondary leading-relaxed">
+                                {result.improvement_rationale.expected_improvements}
+                            </div>
                         </div>
                     </div>
                 </CardContent>
