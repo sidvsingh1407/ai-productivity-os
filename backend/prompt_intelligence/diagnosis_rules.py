@@ -1,21 +1,17 @@
 ELEMENT_RULES = {
-    "Objective": ["create", "build", "generate", "analyze", "evaluate"],
-    "Audience": ["manager", "executive", "consultant", "stakeholder", "customer", "team", "audience"],
-    "Output Format": ["table", "json", "bullet", "report", "markdown", "format", "csv"],
-    "Constraints": ["must", "should", "limit", "budget", "timeframe", "max", "min", "constraint", "only"],
-    "Success Criteria": ["success", "kpi", "metric", "outcome", "goal", "target"],
-    "Exception Handling": ["if", "when", "exception", "fallback", "escalation", "error", "fail"],
-    "Decision Criteria": ["criteria", "basis", "factor", "reason", "condition"]
+    "Context": ["context", "background", "situation", "scenario", "environment", "setting"],
+    "Constraints": ["must", "should", "limit", "budget", "timeframe", "max", "min", "constraint", "only", "requirements", "limitations"],
+    "Ownership": ["owner", "responsible", "role", "team", "assignee", "manager", "accountable"],
+    "Outputs": ["table", "json", "report", "summary", "bullet", "format", "csv", "output", "markdown", "deliverable"],
+    "Escalation Paths": ["escalation", "fallback", "exception", "review", "error", "fail", "issue", "blocker"]
 }
 
 ELEMENT_PENALTIES = {
-    "Objective": 25,
-    "Output Format": 20,
-    "Audience": 15,
-    "Success Criteria": 15,
-    "Exception Handling": 15,
-    "Constraints": 10,
-    "Decision Criteria": 10  # Added to ensure complete coverage, will cap deduction anyway
+    "Context": 20,
+    "Constraints": 20,
+    "Ownership": 20,
+    "Outputs": 20,
+    "Escalation Paths": 20
 }
 
 STRENGTH_THRESHOLDS = {
@@ -26,11 +22,9 @@ STRENGTH_THRESHOLDS = {
 }
 
 EXECUTION_RISKS_MAPPING = {
-    "Output Format": "Ambiguous Output",
-    "Audience": "Misaligned Recommendations",
-    "Success Criteria": "Unmeasurable Outcome",
-    "Exception Handling": "Failure During Edge Cases",
+    "Context": "Lack of Clear Purpose",
     "Constraints": "Inconsistent Responses",
-    "Decision Criteria": "Subjective Recommendations",
-    "Objective": "Lack of Clear Purpose"
+    "Ownership": "Misaligned Recommendations",
+    "Outputs": "Ambiguous Output",
+    "Escalation Paths": "Failure During Edge Cases"
 }

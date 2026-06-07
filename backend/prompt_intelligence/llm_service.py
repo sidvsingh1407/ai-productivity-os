@@ -49,7 +49,25 @@ class LLMService:
             improved_prompt += "Output Expectations: Provide specific actions, findings, and a structured summary.\n\n"
             improved_prompt += "Success Criteria: The operation completes with required quality standards.\n"
 
+        # Generate rationale
+        rationale_changes = '[\"Added structural elements based on context\", \"Optimized instructions for clarity and objective focus.\"]'
+        rationale_risks = '[\"Addressed Ambiguous Output\", \"Mitigated Execution Failure During Edge Cases\"]'
+
+        # Construct final output format
+        final_output = f"""SECTION 3 — IMPROVED PROMPT
+
+{improved_prompt}
+
+SECTION 4 — IMPROVEMENT RATIONALE
+
+{{
+  "context_classification_reasoning": "Matched operational keywords to '{context}'.",
+  "specific_changes_made": {rationale_changes},
+  "failure_modes_addressed": {rationale_risks},
+  "added_value": "The improved prompt produces a structured, predictable outcome."
+}}"""
+
         # Note: A real LLM would be instructed by the system prompt to mitigate risks and incorporate diagnosis.
         # Here we assume the system prompt asked to include necessary structural elements, which our template fulfills.
 
-        return improved_prompt
+        return final_output

@@ -23,7 +23,7 @@ def test_context_classifier_fallback():
     assert result["confidence"] == 1.0
 
 def test_diagnosis_engine_strong():
-    prompt = "Create a report for the manager. Output format should be JSON. Ensure it meets the success KPI. Exception handling is fallback to defaults. Must be under budget. Criteria for decision is cost."
+    prompt = "Here is the context. Must adhere to constraints. The owner is the manager. Output should be JSON. If error, use fallback escalation."
     result = DiagnosisEngine.diagnose(prompt)
     assert result["strength"] == "Strong"
     assert len(result["missing_elements"]) == 0
@@ -33,19 +33,20 @@ def test_diagnosis_engine_broken():
     prompt = "just do something"
     result = DiagnosisEngine.diagnose(prompt)
     assert result["strength"] == "Broken"
-    assert "no objective" in result["missing_elements"]
-    assert "no audience" in result["missing_elements"]
-    assert "no output format" in result["missing_elements"]
+    assert "Context" in result["missing_elements"]
+    assert "Constraints" in result["missing_elements"]
+    assert "Ownership" in result["missing_elements"]
+    assert "Outputs" in result["missing_elements"]
+    assert "Escalation Paths" in result["missing_elements"]
     assert "Lack of Clear Purpose" in result["execution_risks"]
     assert "Misaligned Recommendations" in result["execution_risks"]
     assert "Ambiguous Output" in result["execution_risks"]
 
 def test_diagnosis_engine_partial():
-    # Only objective and audience
-    prompt = "Build a solution for the executive"
+    prompt = "Here is the context. The owner is the executive"
     result = DiagnosisEngine.diagnose(prompt)
-    assert result["strength"] == "Broken"
-    assert "no output format" in result["missing_elements"]
+    assert result["strength"] == "Weak"
+    assert "Outputs" in result["missing_elements"]
 
 def test_context_classifier_confidence_calculation():
     # Process Automation: 'workflow', 'automation', 'trigger' (3 matches)
