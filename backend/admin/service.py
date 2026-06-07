@@ -7,7 +7,8 @@ from models.user import User
 from models.organization import Organization
 from models.audit import Audit
 from models.workflow import Workflow
-from admin.schemas import UserResponse, OrgResponse
+from models.contact import ContactLead
+from admin.schemas import UserResponse, OrgResponse, LeadPaginatedResponse, LeadResponse
 
 async def list_all_users(db: AsyncSession, skip: int = 0, limit: int = 100) -> list[UserResponse]:
     result = await db.execute(select(User).offset(skip).limit(limit))
@@ -45,3 +46,17 @@ async def get_system_stats(db: AsyncSession) -> dict:
         "total_workflows": total_workflows or 0,
         "audits_this_month": audits_this_month or 0
     }
+
+async def list_all_leads(db: AsyncSession, skip: int = 0, limit: int = 100) -> LeadPaginatedResponse:
+    total_count = await db.scalar(select(func.count(ContactLead.id)))
+    result = await db.execute(
+        select(ContactLead)
+        .order_by(ContactLead.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+    )
+    leads = result.scalars().all()
+    return LeadPaginatedResponse(
+        items=[LeadResponse.model_validate(lead) for lead in leads],
+        total_count=total_count or 0
+    )

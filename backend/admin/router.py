@@ -5,7 +5,7 @@ import uuid
 from database import get_db
 from dependencies import require_superadmin
 from admin import service
-from admin.schemas import UserResponse, OrgResponse, SystemStatsResponse
+from admin.schemas import UserResponse, OrgResponse, SystemStatsResponse, LeadPaginatedResponse
 
 router = APIRouter()
 
@@ -45,3 +45,12 @@ async def system_stats(
 ):
     stats = await service.get_system_stats(db)
     return stats
+
+@router.get("/leads", response_model=LeadPaginatedResponse)
+async def list_leads(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    db: AsyncSession = Depends(get_db),
+    _=Depends(require_superadmin)
+):
+    return await service.list_all_leads(db, skip=skip, limit=limit)

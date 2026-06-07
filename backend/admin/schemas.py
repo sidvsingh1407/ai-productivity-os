@@ -27,3 +27,19 @@ class SystemStatsResponse(BaseModel):
     total_audits: int
     total_workflows: int
     audits_this_month: int
+
+class LeadResponse(BaseModel):
+    id: uuid.UUID
+    name: str
+    email: str
+    company: Optional[str] = None
+    interest: Optional[str] = None
+    status: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class LeadPaginatedResponse(BaseModel):
+    items: list[LeadResponse]
+    total_count: int
