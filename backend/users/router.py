@@ -5,6 +5,7 @@ from database import get_db
 from dependencies import get_current_user
 from models.user import User
 from users.schemas import UserResponse
+from users.service import UserService
 
 router = APIRouter(prefix="/users", tags=["users"])
 
