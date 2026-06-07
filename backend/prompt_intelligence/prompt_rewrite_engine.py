@@ -1,7 +1,7 @@
 from typing import Dict, Any, List
 import os
 import json
-from backend.prompt_intelligence.llm_service import LLMService
+from prompt_intelligence.llm_service import LLMService
 
 class PromptRewriteEngine:
     """

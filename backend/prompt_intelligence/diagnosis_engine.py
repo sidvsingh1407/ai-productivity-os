@@ -1,6 +1,6 @@
 import re
 from typing import Dict, Any, List
-from backend.prompt_intelligence.diagnosis_rules import (
+from prompt_intelligence.diagnosis_rules import (
     ELEMENT_RULES,
     ELEMENT_PENALTIES,
     STRENGTH_THRESHOLDS,

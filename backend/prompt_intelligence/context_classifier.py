@@ -1,6 +1,6 @@
 import re
 from typing import Dict, Any
-from backend.prompt_intelligence.context_rules import CONTEXT_RULES, FALLBACK_CONTEXT
+from prompt_intelligence.context_rules import CONTEXT_RULES, FALLBACK_CONTEXT
 
 class ContextClassifier:
     """

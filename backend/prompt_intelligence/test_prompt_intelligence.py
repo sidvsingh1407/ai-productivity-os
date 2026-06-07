@@ -1,7 +1,7 @@
 import pytest
-from backend.prompt_intelligence.context_classifier import ContextClassifier
-from backend.prompt_intelligence.diagnosis_engine import DiagnosisEngine
-from backend.prompt_intelligence.context_rules import FALLBACK_CONTEXT
+from prompt_intelligence.context_classifier import ContextClassifier
+from prompt_intelligence.diagnosis_engine import DiagnosisEngine
+from prompt_intelligence.context_rules import FALLBACK_CONTEXT
 
 def test_context_classifier_process_automation():
     prompt = "automate the workflow using a trigger"
