@@ -1,6 +1,6 @@
 import json
-from backend.prompt_intelligence.context_classifier import ContextClassifier
-from backend.prompt_intelligence.diagnosis_engine import DiagnosisEngine
+from prompt_intelligence.context_classifier import ContextClassifier
+from prompt_intelligence.diagnosis_engine import DiagnosisEngine
 
 def run_tests():
     test_prompts = {

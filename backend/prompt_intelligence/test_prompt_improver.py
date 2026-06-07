@@ -1,10 +1,10 @@
 import pytest
-from backend.prompt_intelligence.prompt_rewrite_engine import PromptRewriteEngine
-from backend.prompt_intelligence.validation_gate import ValidationGate
-from backend.prompt_intelligence.prompt_intelligence_score import PromptIntelligenceScore
-from backend.prompt_intelligence.context_classifier import ContextClassifier
-from backend.prompt_intelligence.diagnosis_engine import DiagnosisEngine
-from backend.prompt_intelligence.llm_service import LLMService
+from prompt_intelligence.prompt_rewrite_engine import PromptRewriteEngine
+from prompt_intelligence.validation_gate import ValidationGate
+from prompt_intelligence.prompt_intelligence_score import PromptIntelligenceScore
+from prompt_intelligence.context_classifier import ContextClassifier
+from prompt_intelligence.diagnosis_engine import DiagnosisEngine
+from prompt_intelligence.llm_service import LLMService
 
 @pytest.fixture
 def rewrite_engine():
