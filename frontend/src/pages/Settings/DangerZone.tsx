@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/components/ui/modal';
+import apiClient from '@/lib/api';
+import { useAuthStore } from '@/store/authStore';
 
 export default function DangerZone() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const { clearAuth } = useAuthStore();
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const [hasAcknowledged, setHasAcknowledged] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -16,19 +21,15 @@ export default function DangerZone() {
     setIsDeleting(true);
 
     try {
-      // TODO: Backend implementation pending Task 2.
-      // Simulated API call for frontend stub
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await apiClient.delete('/api/account/delete');
 
-      // Do not redirect. Stay on Settings page as per requirements.
-      toast.success('Account deletion request submitted. Backend implementation pending.');
+      toast.success('Account successfully deleted.');
       setIsModalOpen(false);
-
-      // Reset form state
-      setDeleteConfirmation('');
-      setHasAcknowledged(false);
-    } catch (error) {
-      toast.error('Failed to submit deletion request. Please try again.');
+      clearAuth();
+      navigate('/');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.detail?.message || error.response?.data?.detail || 'Failed to submit deletion request. Please try again.';
+      toast.error(typeof errorMessage === 'string' ? errorMessage : 'Failed to submit deletion request.');
     } finally {
       setIsDeleting(false);
     }
