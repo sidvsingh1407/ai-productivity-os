@@ -19,7 +19,7 @@ export function AdminRoute() {
   }
 
   if (!user?.is_superadmin) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/app/dashboard" replace />;
   }
 
   return <Outlet />;

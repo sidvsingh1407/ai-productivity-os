@@ -31,6 +31,10 @@ import IntegrationResults from "./pages/IntegrationResults";
 import { DeveloperDashboard } from "./pages/DeveloperDashboard";
 import PromptImprover from './pages/PromptImprover';
 import SettingsPage from './pages/Settings/SettingsPage';
+import { AdminRoute } from './components/admin/AdminRoute';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminUsers from './pages/admin/AdminUsers';
+import AdminOrgs from './pages/admin/AdminOrgs';
 
 function App() {
   return (
@@ -77,6 +81,13 @@ function App() {
           <Route path="developers" element={<DeveloperDashboard />} />
           <Route path="prompt-improver" element={<PromptImprover />} />
           <Route path="settings" element={<SettingsPage />} />
+
+          {/* Admin Routes */}
+          <Route path="admin" element={<AdminRoute />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="orgs" element={<AdminOrgs />} />
+          </Route>
         </Route>
 
         {/* Redirect old dashboard to new app dashboard */}
