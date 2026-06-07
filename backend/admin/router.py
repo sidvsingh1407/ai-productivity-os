@@ -5,27 +5,27 @@ import uuid
 from database import get_db
 from dependencies import require_superadmin
 from admin import service
-from admin.schemas import UserResponse, OrgResponse, SystemStatsResponse, LeadPaginatedResponse
+from admin.schemas import UserResponse, OrgResponse, SystemStatsResponse, LeadPaginatedResponse, UserPaginatedResponse, OrgPaginatedResponse
 
 router = APIRouter()
 
-@router.get("/users", response_model=list[UserResponse])
+@router.get("/users", response_model=UserPaginatedResponse)
 async def list_users(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=1000),
     db: AsyncSession = Depends(get_db),
     _=Depends(require_superadmin)
 ):
-    return await service.list_all_users(db, skip=skip, limit=limit)
+    return await service.list_all_users(db, page=page, limit=limit)
 
-@router.get("/orgs", response_model=list[OrgResponse])
+@router.get("/orgs", response_model=OrgPaginatedResponse)
 async def list_orgs(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=1000),
     db: AsyncSession = Depends(get_db),
     _=Depends(require_superadmin)
 ):
-    return await service.list_all_orgs(db, skip=skip, limit=limit)
+    return await service.list_all_orgs(db, page=page, limit=limit)
 
 @router.put("/users/{id}/deactivate", response_model=UserResponse)
 async def deactivate_user(
