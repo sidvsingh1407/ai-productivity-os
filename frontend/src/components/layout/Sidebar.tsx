@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
-import { LayoutDashboard, Target, GitBranch, Sparkles, FileText, Settings, LogOut, Code2 } from "lucide-react";
+import { LayoutDashboard, Target, GitBranch, Sparkles, FileText, Settings, LogOut, Code2, Shield } from "lucide-react";
 import { Button } from '../ui/button';
 
 export function Sidebar() {
-  const { clearAuth } = useAuthStore();
+  const { clearAuth, user } = useAuthStore();
 
   return (
     <aside className="w-64 border-r bg-card flex flex-col justify-between">
@@ -62,6 +62,20 @@ export function Sidebar() {
               Settings
             </Button>
           </Link>
+
+          {user?.is_superadmin && (
+            <>
+              <div className="pt-4 pb-2 px-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">
+                System
+              </div>
+              <Link to="/app/admin">
+                <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
+                  <Shield className="w-4 h-4" />
+                  Admin Panel
+                </Button>
+              </Link>
+            </>
+          )}
         </nav>
       </div>
 
