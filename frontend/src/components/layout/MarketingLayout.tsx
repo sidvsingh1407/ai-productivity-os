@@ -31,18 +31,14 @@ export function MarketingLayout() {
               <Link to="/app/prompt-improver" className="text-body text-text-secondary hover:text-accent-blue font-medium transition-colors">
                 Prompt Improver
               </Link>
-              <Link to="/contact?interest=Forecasting Framework" className="text-body text-text-secondary hover:text-accent-blue font-medium transition-colors">
-                Forecasting
+              <Link to="/sample-report" className="text-body text-text-secondary hover:text-accent-blue font-medium transition-colors">
+                Sample Report
               </Link>
               <Link to="/about" className="text-body text-text-secondary hover:text-accent-blue font-medium transition-colors">
                 About
               </Link>
-              <Link to="/contact?interest=Methodology" className="text-body font-medium text-text-secondary hover:text-accent-blue transition-colors flex items-center gap-2">
-                Methodology
-                <span className="text-[10px] bg-bg-secondary border border-border-light text-text-secondary px-1.5 py-0.5 rounded uppercase tracking-wider font-mono">Coming Soon</span>
-              </Link>
-              <Link to="/blog" className="text-body text-text-secondary hover:text-accent-blue font-medium transition-colors">
-                Blog
+              <Link to="/contact" className="text-body text-text-secondary hover:text-accent-blue font-medium transition-colors">
+                Contact
               </Link>
             </div>
 
@@ -78,13 +74,9 @@ export function MarketingLayout() {
               <Link to="/ai-audit" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">AI Audit</Link>
               <Link to="/workflow-diagnostic" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Workflow Diagnostic</Link>
               <Link to="/app/prompt-improver" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Prompt Improver</Link>
-              <Link to="/contact?interest=Forecasting Framework" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Forecasting</Link>
+              <Link to="/sample-report" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Sample Report</Link>
               <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">About</Link>
-              <Link to="/contact?interest=Methodology" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md flex items-center justify-between">
-                Methodology
-                <span className="text-[10px] bg-bg-secondary border border-border-light text-text-secondary px-1.5 py-0.5 rounded uppercase tracking-wider font-mono">Coming Soon</span>
-              </Link>
-              <Link to="/blog" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Blog</Link>
+              <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Contact</Link>
               <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Sign In</Link>
               <div className="pt-4 mt-4 border-t border-border-light">
                 <p className="px-3 text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2">Legal</p>
@@ -129,8 +121,8 @@ export function MarketingLayout() {
                 <li><Link to="/ai-audit" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">AI Audit</Link></li>
                 <li><Link to="/workflow-diagnostic" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Workflow Diagnostic</Link></li>
                 <li><Link to="/app/prompt-improver" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Prompt Improver</Link></li>
+                <li><Link to="/sample-report" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Sample Report</Link></li>
                 <li><Link to="/developers" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Developers</Link></li>
-                <li><Link to="/contact?interest=Forecasting Framework" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors flex items-center gap-2">Forecasting <span className="text-label bg-text-inverse/10 text-text-inverse px-1.5 py-0.5 rounded">Soon</span></Link></li>
               </ul>
             </div>
 

@@ -55,11 +55,22 @@ export function DeveloperPortal() {
                <p className="text-body text-text-secondary mb-4">
                   The TarkaX API is currently under active development. Soon you will be able to integrate TarkaX operational intelligence and diagnostic capabilities directly into your workflows.
                </p>
-               <p className="text-body text-text-secondary mb-6">
-                  Expected capabilities include programmatic access to AI Audits, Workflow Diagnostics, Risk Projections, and Prompt Intelligence.
+               <p className="text-body text-text-secondary mb-4">
+                  Developers will be able to evaluate structural readiness, identify workflow bottlenecks, and continuously score prompts without manual intervention.
                </p>
-               <a href="/contact?interest=API Platform Early Access" className="inline-block px-4 py-2 bg-accent-blue hover:bg-accent-blue/90 text-text-inverse rounded-md transition-colors font-medium">
-                  Request Early Access
+               <div className="text-left mb-6">
+                 <h3 className="font-semibold text-text-primary mb-2">Planned APIs:</h3>
+                 <ul className="list-disc pl-5 text-body text-text-secondary space-y-1">
+                   <li>AI Audit API</li>
+                   <li>Workflow Diagnostic API</li>
+                   <li>Prompt Intelligence API</li>
+                 </ul>
+               </div>
+               <a
+                 href="/contact"
+                 className="inline-block px-4 py-2 bg-text-primary text-text-inverse text-sm font-medium rounded-md hover:bg-text-primary/90 transition-colors"
+               >
+                 Contact Us to Learn More
                </a>
             </div>
 
