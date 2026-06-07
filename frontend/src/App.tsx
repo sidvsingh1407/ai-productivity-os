@@ -30,6 +30,7 @@ import WorkflowDetail from './pages/WorkflowDetail';
 import IntegrationResults from "./pages/IntegrationResults";
 import { DeveloperDashboard } from "./pages/DeveloperDashboard";
 import PromptImprover from './pages/PromptImprover';
+import SettingsPage from './pages/Settings/SettingsPage';
 
 function App() {
   return (
@@ -75,6 +76,7 @@ function App() {
           <Route path="integrations/:id" element={<IntegrationResults />} />
           <Route path="developers" element={<DeveloperDashboard />} />
           <Route path="prompt-improver" element={<PromptImprover />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
 
         {/* Redirect old dashboard to new app dashboard */}
