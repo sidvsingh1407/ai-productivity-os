@@ -180,12 +180,18 @@ export function Dashboard() {
                   <span className="text-body font-medium text-text-primary">{immediateAction.expected_impact}</span>
                 </div>
               )}
-              <div className="mt-8">
+              <div className="mt-8 flex flex-wrap gap-4">
                 <button
                   onClick={() => navigate(`/workflows/new${lastAudit ? `?auditId=${lastAudit.id}` : ''}`)}
                   className="px-6 py-3 border border-border-strong bg-bg-primary text-text-primary text-body font-medium transition-colors hover:bg-bg-secondary"
                 >
                   Run Workflow Diagnostic
+                </button>
+                <button
+                  onClick={() => navigate(`/app/prompt-improver`)}
+                  className="px-6 py-3 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90"
+                >
+                  Use Prompt Improver
                 </button>
               </div>
             </div>

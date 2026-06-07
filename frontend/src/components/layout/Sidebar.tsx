@@ -50,12 +50,13 @@ export function Sidebar() {
               Reports
             </Button>
           </Link>
-          <Link to="/app/developers">
+          {/* Developer Dashboard route kept protected but hidden from sidebar as API Platform is incomplete */}
+          {/* <Link to="/app/developers">
             <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
               <Code2 className="w-4 h-4" />
               API Access
             </Button>
-          </Link>
+          </Link> */}
           <Link to="/app/settings">
             <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
               <Settings className="w-4 h-4" />
