@@ -12,10 +12,10 @@ class ValidationGate:
         "Reporting and Analytics",
         "Decision Support",
         "Governance & Compliance",
+        "Governance and Compliance",
         "Client Diagnostics",
         "Workflow Design",
-        "General Operations",
-        "Unclassified"  # Added this as fallback context from existing code might use it
+        "General Operations"
     ]
 
     @staticmethod

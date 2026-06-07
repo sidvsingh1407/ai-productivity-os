@@ -61,10 +61,10 @@ class LLMService:
 SECTION 4 — IMPROVEMENT RATIONALE
 
 {{
-  "context_classification_reasoning": "Matched operational keywords to '{context}'.",
-  "specific_changes_made": {rationale_changes},
+  "context_reasoning": "Matched operational keywords to '{context}'.",
+  "changes_made": {rationale_changes},
   "failure_modes_addressed": {rationale_risks},
-  "added_value": "The improved prompt produces a structured, predictable outcome."
+  "expected_improvements": "The improved prompt produces a structured, predictable outcome."
 }}"""
 
         # Note: A real LLM would be instructed by the system prompt to mitigate risks and incorporate diagnosis.
