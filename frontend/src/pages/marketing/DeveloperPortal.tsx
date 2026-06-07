@@ -49,6 +49,20 @@ export function DeveloperPortal() {
 
           <section id="overview" className="mb-16 pt-8 scroll-mt-32">
             <h1 className="text-4xl font-bold mb-4">TarkaX Developer Portal</h1>
+
+            <div className="bg-bg-secondary border border-border-strong rounded-lg p-6 mb-8 text-center sm:text-left">
+               <h2 className="text-2xl font-bold mb-2">API Platform Coming Soon</h2>
+               <p className="text-body text-text-secondary mb-4">
+                  The TarkaX API is currently under active development. Soon you will be able to integrate TarkaX operational intelligence and diagnostic capabilities directly into your workflows.
+               </p>
+               <p className="text-body text-text-secondary mb-6">
+                  Expected capabilities include programmatic access to AI Audits, Workflow Diagnostics, Risk Projections, and Prompt Intelligence.
+               </p>
+               <a href="/contact?interest=API Platform Early Access" className="inline-block px-4 py-2 bg-accent-blue hover:bg-accent-blue/90 text-text-inverse rounded-md transition-colors font-medium">
+                  Request Early Access
+               </a>
+            </div>
+
             <p className="text-xl text-text-secondary mb-8">
               Integrate TarkaX operational intelligence and diagnostic capabilities directly into your workflows.
             </p>
@@ -65,8 +79,8 @@ export function DeveloperPortal() {
           <section id="authentication" className="mb-16 pt-8 scroll-mt-32">
             <h2 className="text-3xl font-bold border-b border-border-light pb-2 mb-6">Authentication</h2>
             <p>
-              The TarkaX API uses API keys to authenticate requests. You can view and manage your API keys
-              in the <a href="/app/developers" className="text-accent-blue hover:underline">Developer Dashboard</a>.
+              The TarkaX API uses API keys to authenticate requests. You will be able to view and manage your API keys
+              in the <span className="text-text-secondary font-medium italic">Developer Dashboard (Coming Soon)</span>.
             </p>
             <p>
               Authentication to the API is performed via the <code>X-API-Key</code> header. Do not use Bearer tokens for these product APIs.
@@ -118,7 +132,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
               <div>
                 <h3 className="text-2xl font-bold mb-4">AI Audit Quick Start</h3>
                 <ol className="list-decimal pl-6 space-y-4">
-                  <li><strong>Obtain API Key:</strong> Navigate to the <a href="/app/developers" className="text-accent-blue hover:underline">Developer Dashboard</a> and create a new key.</li>
+                  <li><strong>Obtain API Key:</strong> Navigate to the Developer Dashboard and create a new key.</li>
                   <li>
                     <strong>Example Request:</strong> Send a basic compliance payload.
                     <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2">

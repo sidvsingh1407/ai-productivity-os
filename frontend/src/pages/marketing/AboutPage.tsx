@@ -102,7 +102,7 @@ export default function AboutPage() {
             </div>
 
             <div className="mt-space-md text-sm">
-              <Link to="#" className="text-accent-blue font-medium hover:underline inline-flex items-center gap-1">
+              <Link to="/contact?interest=Methodology" className="text-accent-blue font-medium hover:underline inline-flex items-center gap-1">
                 Read our full Methodology <span className="text-[10px] bg-bg-secondary border border-border-light text-text-secondary px-1.5 py-0.5 rounded uppercase tracking-wider font-mono ml-1">Coming Soon</span>
               </Link>
             </div>

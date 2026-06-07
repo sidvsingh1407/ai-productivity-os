@@ -28,6 +28,9 @@ export function MarketingLayout() {
               <Link to="/workflow-diagnostic" className="text-body text-text-secondary hover:text-accent-blue font-medium transition-colors">
                 Workflow Diagnostic
               </Link>
+              <Link to="/app/prompt-improver" className="text-body text-text-secondary hover:text-accent-blue font-medium transition-colors">
+                Prompt Improver
+              </Link>
               <Link to="/contact?interest=Forecasting Framework" className="text-body text-text-secondary hover:text-accent-blue font-medium transition-colors">
                 Forecasting
               </Link>
@@ -74,6 +77,7 @@ export function MarketingLayout() {
             <div className="px-4 pt-2 pb-6 space-y-1">
               <Link to="/ai-audit" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">AI Audit</Link>
               <Link to="/workflow-diagnostic" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Workflow Diagnostic</Link>
+              <Link to="/app/prompt-improver" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Prompt Improver</Link>
               <Link to="/contact?interest=Forecasting Framework" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Forecasting</Link>
               <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">About</Link>
               <Link to="/contact?interest=Methodology" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-body font-medium text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md flex items-center justify-between">
@@ -124,6 +128,8 @@ export function MarketingLayout() {
               <ul className="space-y-3">
                 <li><Link to="/ai-audit" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">AI Audit</Link></li>
                 <li><Link to="/workflow-diagnostic" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Workflow Diagnostic</Link></li>
+                <li><Link to="/app/prompt-improver" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Prompt Improver</Link></li>
+                <li><Link to="/developers" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Developers</Link></li>
                 <li><Link to="/contact?interest=Forecasting Framework" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors flex items-center gap-2">Forecasting <span className="text-label bg-text-inverse/10 text-text-inverse px-1.5 py-0.5 rounded">Soon</span></Link></li>
               </ul>
             </div>
