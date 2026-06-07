@@ -3,12 +3,18 @@ from typing import Optional
 import uuid
 from datetime import datetime
 
+class OrgInfo(BaseModel):
+    name: str
+
 class UserResponse(BaseModel):
     id: uuid.UUID
     email: str
-    full_name: str
+    first_name: str
+    last_name: str
     is_superadmin: bool
     is_active: bool
+    organization: Optional[OrgInfo] = None
+    role: str
 
     class Config:
         from_attributes = True
@@ -17,6 +23,8 @@ class OrgResponse(BaseModel):
     id: uuid.UUID
     name: str
     slug: str
+    member_count: int
+    created_at: datetime
 
     class Config:
         from_attributes = True
@@ -43,3 +51,16 @@ class LeadResponse(BaseModel):
 class LeadPaginatedResponse(BaseModel):
     items: list[LeadResponse]
     total_count: int
+
+
+class UserPaginatedResponse(BaseModel):
+    items: list[UserResponse]
+    total: int
+    page: int
+    pages: int
+
+class OrgPaginatedResponse(BaseModel):
+    items: list[OrgResponse]
+    total: int
+    page: int
+    pages: int
