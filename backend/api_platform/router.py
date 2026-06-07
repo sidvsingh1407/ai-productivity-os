@@ -9,6 +9,9 @@ from .schemas import AuditApiRequest, RiskApiRequest
 from models.api_platform import ApiKey
 from models.organization import OrgRole
 from organizations.repository import OrganizationRepository
+from audits.repository import get_audit, AuditStatus
+from audits.scoring_engine import score_response
+from audits.intelligence_engine import generate_intelligence
 
 from audits.service import run_audit
 from audits.schemas import AuditResponse, RiskProjection
@@ -63,17 +66,24 @@ async def create_audit_api(
 @router.post("/risk", response_model=RiskProjection)
 async def generate_risk_api(
     request: RiskApiRequest,
-    api_key: ApiKey = Depends(verify_api_key)
+    api_key: ApiKey = Depends(verify_api_key),
+    db: AsyncSession = Depends(get_db)
 ):
     """
     Generate future-state risk projections.
     """
-    # Note: request.scores is a Pydantic model (RiskApiScores), we need to pass a dict to the engine
-    scores_dict = request.scores.model_dump()
+    audit = await get_audit(db, request.audit_id, api_key.organization_id)
 
-    risk_projection = generate_risk_projection(
-        scores=scores_dict,
-        findings=request.findings
-    )
+    if audit.status != AuditStatus.complete:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Risk projection requires a completed audit."
+        )
 
-    return risk_projection
+    scores_dict = score_response(audit.form_response, audit.evidence_response)
+
+    industry_type_str = audit.industry_type.value if hasattr(audit.industry_type, 'value') else audit.industry_type
+
+    intelligence = generate_intelligence(scores_dict, industry_type_str)
+
+    return intelligence["risk_projection"]

@@ -13,9 +13,9 @@ def generate_roadmap(
 
     # Roadmap actions buckets
     roadmap = {
-        "30_days": [],
-        "60_days": [],
-        "90_days": []
+        "day_30": [],
+        "day_60": [],
+        "day_90": []
     }
 
     # Internal mappings for action generation
@@ -25,87 +25,87 @@ def generate_roadmap(
     DIMENSION_RULES = {
         "governance": {
             "low": {
-                "30_days": ("Establish AI Governance Committee and designate ownership", "Governance maturity is critically low, requiring immediate leadership alignment.", "Critical"),
-                "60_days": ("Draft and publish foundational AI usage policies", "Clear guidelines are needed to prevent unauthorized or risky AI adoption.", "High"),
-                "90_days": ("Implement mandatory compliance and risk review process", "Long-term risk mitigation requires formal approval workflows.", "High")
+                "day_30": ("Establish AI Governance Committee and designate ownership", "Governance maturity is critically low, requiring immediate leadership alignment.", "Critical"),
+                "day_60": ("Draft and publish foundational AI usage policies", "Clear guidelines are needed to prevent unauthorized or risky AI adoption.", "High"),
+                "day_90": ("Implement mandatory compliance and risk review process", "Long-term risk mitigation requires formal approval workflows.", "High")
             },
             "moderate": {
-                "30_days": ("Review and refine existing AI governance framework", "Current governance exists but needs structural improvement.", "Medium"),
-                "60_days": ("Formalize AI tool request and approval workflows", "Standardizing the intake process reduces friction and shadow IT.", "Medium"),
-                "90_days": ("Conduct audit of current AI deployments against policy", "Ensuring alignment between policy and actual usage.", "Medium")
+                "day_30": ("Review and refine existing AI governance framework", "Current governance exists but needs structural improvement.", "Medium"),
+                "day_60": ("Formalize AI tool request and approval workflows", "Standardizing the intake process reduces friction and shadow IT.", "Medium"),
+                "day_90": ("Conduct audit of current AI deployments against policy", "Ensuring alignment between policy and actual usage.", "Medium")
             },
             "high": {
-                "30_days": ("Evaluate governance structure for scalability", "Mature governance should be assessed for friction and speed.", "Low"),
-                "60_days": ("Automate compliance and security monitoring", "Scaling governance requires automated oversight mechanisms.", "Low"),
-                "90_days": ("Benchmark governance practices against industry leaders", "Continuous improvement through external validation.", "Low")
+                "day_30": ("Evaluate governance structure for scalability", "Mature governance should be assessed for friction and speed.", "Low"),
+                "day_60": ("Automate compliance and security monitoring", "Scaling governance requires automated oversight mechanisms.", "Low"),
+                "day_90": ("Benchmark governance practices against industry leaders", "Continuous improvement through external validation.", "Low")
             }
         },
         "adoption": {
             "low": {
-                "30_days": ("Identify current AI usage and shadow IT instances", "Visibility into informal adoption is required to establish control.", "Critical"),
-                "60_days": ("Select 1-2 high-value, low-risk pilot use cases", "Demonstrating controlled value builds momentum and trust.", "High"),
-                "90_days": ("Develop standardized playbooks for approved tools", "Users need formal guidance to maximize tool effectiveness.", "High")
+                "day_30": ("Identify current AI usage and shadow IT instances", "Visibility into informal adoption is required to establish control.", "Critical"),
+                "day_60": ("Select 1-2 high-value, low-risk pilot use cases", "Demonstrating controlled value builds momentum and trust.", "High"),
+                "day_90": ("Develop standardized playbooks for approved tools", "Users need formal guidance to maximize tool effectiveness.", "High")
             },
             "moderate": {
-                "30_days": ("Map successful AI usage patterns across departments", "Identifying internal best practices for broader distribution.", "Medium"),
-                "60_days": ("Expand AI pilots to adjacent teams and workflows", "Scaling adoption beyond initial successful pockets.", "Medium"),
-                "90_days": ("Establish an internal AI center of excellence or community", "Peer-led knowledge sharing accelerates organic adoption.", "Medium")
+                "day_30": ("Map successful AI usage patterns across departments", "Identifying internal best practices for broader distribution.", "Medium"),
+                "day_60": ("Expand AI pilots to adjacent teams and workflows", "Scaling adoption beyond initial successful pockets.", "Medium"),
+                "day_90": ("Establish an internal AI center of excellence or community", "Peer-led knowledge sharing accelerates organic adoption.", "Medium")
             },
             "high": {
-                "30_days": ("Audit advanced AI use cases for enterprise expansion", "Identifying opportunities for organization-wide transformation.", "Low"),
-                "60_days": ("Integrate AI enablement into standard onboarding", "Institutionalizing AI competency for all new hires.", "Low"),
-                "90_days": ("Develop custom AI capabilities for specialized workflows", "Moving beyond off-the-shelf tools to proprietary advantage.", "Low")
+                "day_30": ("Audit advanced AI use cases for enterprise expansion", "Identifying opportunities for organization-wide transformation.", "Low"),
+                "day_60": ("Integrate AI enablement into standard onboarding", "Institutionalizing AI competency for all new hires.", "Low"),
+                "day_90": ("Develop custom AI capabilities for specialized workflows", "Moving beyond off-the-shelf tools to proprietary advantage.", "Low")
             }
         },
         "integration": {
             "low": {
-                "30_days": ("Map core operational workflows and data dependencies", "Understanding the current state is necessary before integration.", "High"),
-                "60_days": ("Identify systems causing major workflow bottlenecks", "Pinpointing friction areas where integration yields the highest ROI.", "High"),
-                "90_days": ("Implement targeted API integrations for critical workflows", "Connecting disjointed systems to reduce manual intervention.", "High")
+                "day_30": ("Map core operational workflows and data dependencies", "Understanding the current state is necessary before integration.", "High"),
+                "day_60": ("Identify systems causing major workflow bottlenecks", "Pinpointing friction areas where integration yields the highest ROI.", "High"),
+                "day_90": ("Implement targeted API integrations for critical workflows", "Connecting disjointed systems to reduce manual intervention.", "High")
             },
             "moderate": {
-                "30_days": ("Audit existing system integrations for efficiency", "Assessing current automation to identify optimization areas.", "Medium"),
-                "60_days": ("Automate repetitive cross-platform data transfers", "Reducing manual data entry and improving data consistency.", "Medium"),
-                "90_days": ("Establish continuous monitoring for integrated workflows", "Ensuring reliability and performance of automated processes.", "Medium")
+                "day_30": ("Audit existing system integrations for efficiency", "Assessing current automation to identify optimization areas.", "Medium"),
+                "day_60": ("Automate repetitive cross-platform data transfers", "Reducing manual data entry and improving data consistency.", "Medium"),
+                "day_90": ("Establish continuous monitoring for integrated workflows", "Ensuring reliability and performance of automated processes.", "Medium")
             },
             "high": {
-                "30_days": ("Evaluate architecture for advanced AI integration readiness", "Preparing systems for deep, predictive, or generative AI layers.", "Low"),
-                "60_days": ("Implement intelligent workflow routing and orchestration", "Moving from basic automation to dynamic process management.", "Low"),
-                "90_days": ("Scale integrated AI solutions across the enterprise ecosystem", "Maximizing the leverage of a mature, connected architecture.", "Low")
+                "day_30": ("Evaluate architecture for advanced AI integration readiness", "Preparing systems for deep, predictive, or generative AI layers.", "Low"),
+                "day_60": ("Implement intelligent workflow routing and orchestration", "Moving from basic automation to dynamic process management.", "Low"),
+                "day_90": ("Scale integrated AI solutions across the enterprise ecosystem", "Maximizing the leverage of a mature, connected architecture.", "Low")
             }
         },
         "awareness": {
             "low": {
-                "30_days": ("Conduct baseline AI literacy assessment across organization", "Understanding the knowledge gap is the first step to closing it.", "High"),
-                "60_days": ("Launch foundational AI awareness communication campaign", "Aligning the organization on AI capabilities and strategic intent.", "Medium"),
-                "90_days": ("Deliver role-specific AI training for key departments", "Targeted education translates general awareness into practical skill.", "Medium")
+                "day_30": ("Conduct baseline AI literacy assessment across organization", "Understanding the knowledge gap is the first step to closing it.", "High"),
+                "day_60": ("Launch foundational AI awareness communication campaign", "Aligning the organization on AI capabilities and strategic intent.", "Medium"),
+                "day_90": ("Deliver role-specific AI training for key departments", "Targeted education translates general awareness into practical skill.", "Medium")
             },
             "moderate": {
-                "30_days": ("Assess effectiveness of current AI training programs", "Evaluating what educational initiatives are working.", "Medium"),
-                "60_days": ("Develop advanced training modules for power users", "Cultivating internal experts to drive departmental innovation.", "Medium"),
-                "90_days": ("Implement continuous learning program for AI advancements", "Keeping the workforce updated on rapidly evolving technology.", "Medium")
+                "day_30": ("Assess effectiveness of current AI training programs", "Evaluating what educational initiatives are working.", "Medium"),
+                "day_60": ("Develop advanced training modules for power users", "Cultivating internal experts to drive departmental innovation.", "Medium"),
+                "day_90": ("Implement continuous learning program for AI advancements", "Keeping the workforce updated on rapidly evolving technology.", "Medium")
             },
             "high": {
-                "30_days": ("Review external knowledge sharing and industry presence", "Leveraging internal expertise for external thought leadership.", "Low"),
-                "60_days": ("Host internal AI innovation showcases or hackathons", "Fostering a culture of continuous AI-driven innovation.", "Low"),
-                "90_days": ("Establish partnerships with academic or industry AI bodies", "Maintaining a leading edge in AI developments and talent.", "Low")
+                "day_30": ("Review external knowledge sharing and industry presence", "Leveraging internal expertise for external thought leadership.", "Low"),
+                "day_60": ("Host internal AI innovation showcases or hackathons", "Fostering a culture of continuous AI-driven innovation.", "Low"),
+                "day_90": ("Establish partnerships with academic or industry AI bodies", "Maintaining a leading edge in AI developments and talent.", "Low")
             }
         },
         "roi": {
             "low": {
-                "30_days": ("Define clear business objectives and success criteria for AI", "Without defined goals, value measurement is impossible.", "Critical"),
-                "60_days": ("Establish baseline metrics for workflows pre-AI adoption", "A baseline is required to measure subsequent improvements.", "High"),
-                "90_days": ("Implement a standardized ROI tracking framework", "Formalizing how AI investments are evaluated against outcomes.", "High")
+                "day_30": ("Define clear business objectives and success criteria for AI", "Without defined goals, value measurement is impossible.", "Critical"),
+                "day_60": ("Establish baseline metrics for workflows pre-AI adoption", "A baseline is required to measure subsequent improvements.", "High"),
+                "day_90": ("Implement a standardized ROI tracking framework", "Formalizing how AI investments are evaluated against outcomes.", "High")
             },
             "moderate": {
-                "30_days": ("Review current ROI tracking for accuracy and completeness", "Ensuring value measurement captures both hard and soft costs.", "Medium"),
-                "60_days": ("Refine metrics to capture operational quality and speed", "Moving beyond simple cost savings to value generation metrics.", "Medium"),
-                "90_days": ("Create executive dashboards for AI portfolio performance", "Providing leadership with visibility into AI investment returns.", "Medium")
+                "day_30": ("Review current ROI tracking for accuracy and completeness", "Ensuring value measurement captures both hard and soft costs.", "Medium"),
+                "day_60": ("Refine metrics to capture operational quality and speed", "Moving beyond simple cost savings to value generation metrics.", "Medium"),
+                "day_90": ("Create executive dashboards for AI portfolio performance", "Providing leadership with visibility into AI investment returns.", "Medium")
             },
             "high": {
-                "30_days": ("Conduct advanced attribution modeling for AI impact", "Precisely isolating the financial impact of AI initiatives.", "Low"),
-                "60_days": ("Optimize AI portfolio allocation based on historical ROI", "Directing resources to the most efficient and effective initiatives.", "Low"),
-                "90_days": ("Publish comprehensive internal report on AI value realization", "Demonstrating transparent value delivery to stakeholders.", "Low")
+                "day_30": ("Conduct advanced attribution modeling for AI impact", "Precisely isolating the financial impact of AI initiatives.", "Low"),
+                "day_60": ("Optimize AI portfolio allocation based on historical ROI", "Directing resources to the most efficient and effective initiatives.", "Low"),
+                "day_90": ("Publish comprehensive internal report on AI value realization", "Demonstrating transparent value delivery to stakeholders.", "Low")
             }
         }
     }
@@ -140,15 +140,15 @@ def generate_roadmap(
         rules = DIMENSION_RULES[dim_lower][band]
 
         # 30 days
-        act_30, reason_30, prio_30 = rules["30_days"]
+        act_30, reason_30, prio_30 = rules["day_30"]
         all_actions_30.append({"action": act_30, "reason": reason_30, "priority": prio_30})
 
         # 60 days
-        act_60, reason_60, prio_60 = rules["60_days"]
+        act_60, reason_60, prio_60 = rules["day_60"]
         all_actions_60.append({"action": act_60, "reason": reason_60, "priority": prio_60})
 
         # 90 days
-        act_90, reason_90, prio_90 = rules["90_days"]
+        act_90, reason_90, prio_90 = rules["day_90"]
         all_actions_90.append({"action": act_90, "reason": reason_90, "priority": prio_90})
 
     # Sort actions by priority (Critical > High > Medium > Low)
@@ -164,8 +164,8 @@ def generate_roadmap(
     # We will pick the top 4 actions across dimensions.
     # The max dimensions is 5, so picking top 4 will drop the lowest priority one.
 
-    roadmap["30_days"] = all_actions_30[:4]
-    roadmap["60_days"] = all_actions_60[:4]
-    roadmap["90_days"] = all_actions_90[:4]
+    roadmap["day_30"] = all_actions_30[:4]
+    roadmap["day_60"] = all_actions_60[:4]
+    roadmap["day_90"] = all_actions_90[:4]
 
     return {"roadmap": roadmap}
