@@ -10,3 +10,12 @@ class AuditApiRequest(BaseModel):
 
 class RiskApiRequest(BaseModel):
     audit_id: uuid.UUID
+
+class WorkflowStep(BaseModel):
+    role: str
+    action: str
+
+class WorkflowApiRequest(BaseModel):
+    workflow_name: str
+    description: str
+    steps: List[WorkflowStep]

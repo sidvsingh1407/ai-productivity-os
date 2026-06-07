@@ -5,7 +5,9 @@ import uuid
 
 from .dependencies import verify_api_key
 from .middleware import APIKeyRoute
-from .schemas import AuditApiRequest, RiskApiRequest
+from .schemas import AuditApiRequest, RiskApiRequest, WorkflowApiRequest
+from .service import WorkflowApiService
+from workflows.schemas import WorkflowIntelligence
 from models.api_platform import ApiKey
 from models.organization import OrgRole
 from organizations.repository import OrganizationRepository
@@ -87,3 +89,14 @@ async def generate_risk_api(
     intelligence = generate_intelligence(scores_dict, industry_type_str)
 
     return intelligence["risk_projection"]
+
+@router.post("/workflow", response_model=WorkflowIntelligence)
+async def generate_workflow_diagnostic_api(
+    request: WorkflowApiRequest,
+    api_key: ApiKey = Depends(verify_api_key)
+):
+    """
+    Generate workflow diagnostic intelligence (stateless).
+    """
+    intelligence = WorkflowApiService.process_workflow_diagnostic(request)
+    return intelligence
