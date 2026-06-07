@@ -4,13 +4,14 @@ from typing import List, Dict, Any
 class PromptRequest(BaseModel):
     prompt: str
 
-class ContextResponse(BaseModel):
-    category: str
-    confidence: float
+class OperationalContext(BaseModel):
+    detected_context: str
+    purpose: str
+    operational_environment: str
 
 class DiagnosisResponse(BaseModel):
     strength: str
-    missing: List[str]
+    missing_elements: List[str]
     execution_risks: List[str]
 
 class ScoresResponse(BaseModel):
@@ -19,19 +20,21 @@ class ScoresResponse(BaseModel):
 
 class ValidationResponse(BaseModel):
     passed: bool
-    errors: List[str]
+    validation_errors: List[str]
 
 class RationaleResponse(BaseModel):
+    context_reasoning: str
     changes_made: List[str]
     failure_modes_addressed: List[str]
+    expected_improvements: str
 
 class PromptResponse(BaseModel):
-    context: ContextResponse
+    operational_context: OperationalContext
     diagnosis: DiagnosisResponse
-    scores: ScoresResponse
+    improved_prompt: str
+    improvement_rationale: RationaleResponse
+    intelligence_scores: ScoresResponse
     validation: ValidationResponse
-    improved_prompt: str = ""
-    rationale: RationaleResponse
 
 class ValidationFailureResponse(BaseModel):
     validation: ValidationResponse

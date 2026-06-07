@@ -3,8 +3,8 @@ from typing import Dict, Any
 class PromptIntelligenceScore:
     """
     Deterministic Intelligence Scoring Engine for quantifying prompt quality.
-    Scores range from 0 to 100 based on Objective Clarity, Context Completeness,
-    Output Definition, Operational Usability, and Risk Mitigation.
+    Scores range from 0 to 100 based on Clarity, Structure, Output Requirements,
+    Operational Usability, Exception Handling, and Decision Criteria.
     """
 
     @staticmethod
@@ -12,45 +12,35 @@ class PromptIntelligenceScore:
         score = 0
         prompt_lower = prompt.lower()
 
-        # 1. Objective Clarity (0-20)
-        objective_keywords = ["objective:", "goal", "purpose", "aim", "to effectively execute"]
-        objective_score = 0
-        for kw in objective_keywords:
-            if kw in prompt_lower:
-                objective_score += 10
-        score += min(20, objective_score)
+        # 1. Clarity (0-16)
+        clarity_keywords = ["objective:", "goal", "purpose", "aim", "to effectively execute", "context:"]
+        clarity_score = sum(8 for kw in clarity_keywords if kw in prompt_lower)
+        score += min(16, clarity_score)
 
-        # 2. Context Completeness (0-20)
-        context_keywords = ["context:", "background", "situation", "this task is related to"]
-        context_score = 0
-        for kw in context_keywords:
-            if kw in prompt_lower:
-                context_score += 10
-        score += min(20, context_score)
+        # 2. Structure (0-16)
+        structure_keywords = ["section", "step 1", "step 2", "first", "then", "finally", "format:"]
+        structure_score = sum(8 for kw in structure_keywords if kw in prompt_lower)
+        score += min(16, structure_score)
 
-        # 3. Output Definition (0-20)
-        output_keywords = ["output expectations:", "output format:", "deliverable", "report format", "json format"]
-        output_score = 0
-        for kw in output_keywords:
-            if kw in prompt_lower:
-                output_score += 10
-        score += min(20, output_score)
+        # 3. Output Requirements (0-17)
+        output_keywords = ["output expectations:", "output format:", "deliverable", "report format", "json format", "markdown"]
+        output_score = sum(8 for kw in output_keywords if kw in prompt_lower)
+        score += min(17, output_score)
 
-        # 4. Operational Usability (0-20)
+        # 4. Operational Usability (0-17)
         operational_keywords = ["findings", "recommendations", "actionable steps", "owners", "business impact", "dependencies", "tasks:"]
-        op_score = 0
-        for kw in operational_keywords:
-            if kw in prompt_lower:
-                op_score += 5
-        score += min(20, op_score)
+        op_score = sum(8 for kw in operational_keywords if kw in prompt_lower)
+        score += min(17, op_score)
 
-        # 5. Risk Mitigation / Constraints / Success Criteria (0-20)
-        risk_keywords = ["success criteria:", "constraints", "trade-offs", "risk mitigation", "quality standards"]
-        risk_score = 0
-        for kw in risk_keywords:
-            if kw in prompt_lower:
-                risk_score += 10
-        score += min(20, risk_score)
+        # 5. Exception Handling (0-17)
+        exception_keywords = ["fallback", "if missing", "if error", "escalation", "exception", "if unclear"]
+        exception_score = sum(8 for kw in exception_keywords if kw in prompt_lower)
+        score += min(17, exception_score)
+
+        # 6. Decision Criteria (0-17)
+        decision_keywords = ["criteria", "trade-offs", "success criteria", "if", "evaluate", "threshold", "rule"]
+        decision_score = sum(8 for kw in decision_keywords if kw in prompt_lower)
+        score += min(17, decision_score)
 
         return min(100, score)
 
