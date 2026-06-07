@@ -8,8 +8,31 @@ class ContextClassifier:
     """
 
     @staticmethod
+    def _derive_environment(prompt_lower: str) -> str:
+        consulting_keywords = ["consultant", "client", "engagement", "deliverable"]
+        internal_ops_keywords = ["workflow", "operations", "process", "automation", "team"]
+        governance_keywords = ["governance", "compliance", "policy", "audit", "regulation"]
+
+        def count_matches(keywords: list[str]) -> int:
+            return sum(1 for kw in keywords if re.search(r'\b' + re.escape(kw) + r'\b', prompt_lower))
+
+        scores = {
+            "Consulting": count_matches(consulting_keywords),
+            "Internal Operations": count_matches(internal_ops_keywords),
+            "Governance": count_matches(governance_keywords)
+        }
+
+        best_env = max(scores, key=scores.get)
+        if scores[best_env] > 0:
+            return best_env
+
+        return "General Business Operations"
+
+    @staticmethod
     def classify(prompt: str) -> Dict[str, Any]:
         prompt_lower = prompt.lower()
+
+        environment = ContextClassifier._derive_environment(prompt_lower)
 
         category_scores = {category: 0 for category in CONTEXT_RULES}
         category_matches = {category: [] for category in CONTEXT_RULES}
@@ -29,6 +52,7 @@ class ContextClassifier:
         if total_matches == 0:
             return {
                 "context": FALLBACK_CONTEXT,
+                "environment": environment,
                 "confidence": 1.0, # Complete confidence that it's fallback since no rules matched
                 "reasoning": ["No matching keywords found for primary categories."]
             }
@@ -54,6 +78,7 @@ class ContextClassifier:
 
         return {
             "context": best_category,
+            "environment": environment,
             "confidence": round(confidence, 2),
             "reasoning": reasoning
         }

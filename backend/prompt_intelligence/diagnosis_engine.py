@@ -37,7 +37,7 @@ class DiagnosisEngine:
                     break
 
             if not element_found:
-                missing_elements.append(f"no {element_type.lower()}")
+                missing_elements.append(element_type)
                 score -= ELEMENT_PENALTIES.get(element_type, 0)
 
                 # Add corresponding risk
