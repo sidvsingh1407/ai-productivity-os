@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
-import { LayoutDashboard, Target, GitBranch, Sparkles, FileText, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Target, GitBranch, Sparkles, FileText, Settings, LogOut, Code2 } from "lucide-react";
 import { Button } from '../ui/button';
 
 export function Sidebar() {
@@ -48,6 +48,12 @@ export function Sidebar() {
             <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
               <FileText className="w-4 h-4" />
               Reports
+            </Button>
+          </Link>
+          <Link to="/app/developers">
+            <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
+              <Code2 className="w-4 h-4" />
+              API Access
             </Button>
           </Link>
           <Link to="/app/settings">

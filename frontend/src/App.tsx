@@ -17,7 +17,8 @@ import AiDisclaimerPage from './pages/marketing/AiDisclaimerPage';
 import DataRetentionPage from './pages/marketing/DataRetentionPage';
 import SecurityPage from './pages/marketing/SecurityPage';
 import BlogPage from './pages/marketing/BlogPage';
-import ContactPage from './pages/marketing/ContactPage';
+import ContactPage from "./pages/marketing/ContactPage";
+import { DeveloperPortal } from "./pages/marketing/DeveloperPortal";
 
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
@@ -26,7 +27,8 @@ import NewAudit from './pages/NewAudit';
 import AuditDetail from './pages/AuditDetail';
 import NewWorkflow from './pages/NewWorkflow';
 import WorkflowDetail from './pages/WorkflowDetail';
-import IntegrationResults from './pages/IntegrationResults';
+import IntegrationResults from "./pages/IntegrationResults";
+import { DeveloperDashboard } from "./pages/DeveloperDashboard";
 import PromptImprover from './pages/PromptImprover';
 
 function App() {
@@ -51,6 +53,7 @@ function App() {
           <Route path="/data-retention" element={<DataRetentionPage />} />
           <Route path="/security" element={<SecurityPage />} />
           <Route path="/sample-report" element={<SampleReportPage />} />
+          <Route path="/developers" element={<DeveloperPortal />} />
         </Route>
 
         {/* Auth Routes */}
@@ -70,6 +73,7 @@ function App() {
           <Route path="workflows/new" element={<NewWorkflow />} />
           <Route path="workflows/:id" element={<WorkflowDetail />} />
           <Route path="integrations/:id" element={<IntegrationResults />} />
+          <Route path="developers" element={<DeveloperDashboard />} />
           <Route path="prompt-improver" element={<PromptImprover />} />
         </Route>
 
