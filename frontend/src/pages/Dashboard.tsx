@@ -182,7 +182,7 @@ export function Dashboard() {
               )}
               <div className="mt-8 flex flex-wrap gap-4">
                 <button
-                  onClick={() => navigate(`/workflows/new${lastAudit ? `?auditId=${lastAudit.id}` : ''}`)}
+                  onClick={() => navigate(`/app/workflows/new${lastAudit ? `?auditId=${lastAudit.id}` : ''}`)}
                   className="px-6 py-3 border border-border-strong bg-bg-primary text-text-primary text-body font-medium transition-colors hover:bg-bg-secondary"
                 >
                   Run Workflow Diagnostic

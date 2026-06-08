@@ -43,7 +43,7 @@ export default function NewWorkflow() {
       return response.data;
     },
     onSuccess: (data) => {
-      navigate(`/workflows/${data.id}`);
+      navigate(`/app/workflows/${data.id}`);
     },
   });
 

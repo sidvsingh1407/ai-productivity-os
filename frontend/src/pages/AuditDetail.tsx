@@ -336,7 +336,7 @@ export default function AuditDetail() {
 
       <div className="mt-8 pt-8 border-t border-border-strong text-center">
         <button
-          onClick={() => navigate(`/workflows/new?auditId=${id}`)}
+          onClick={() => navigate(`/app/workflows/new?auditId=${id}`)}
           className="px-8 py-4 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90"
         >
           Run Workflow Diagnostic
