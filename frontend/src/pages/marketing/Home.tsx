@@ -86,63 +86,9 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Visual: Business Reality Dashboard with Constellation Background */}
-            <div className="relative h-[480px] rounded-xl overflow-hidden border border-border-strong shadow-lg bg-bg-dark">
-              {/* Background Map */}
-              <div className="absolute inset-0 z-0 opacity-60">
-                <ConstellationMap variant="hero" height={480} />
-              </div>
-
-              {/* Foreground Dashboard Overlay */}
-              <div className="absolute inset-0 z-10 flex items-end justify-center p-6 bg-gradient-to-t from-bg-dark via-transparent to-transparent">
-                <div className="w-full bg-bg-primary border border-border-strong rounded-xl p-6 shadow-xl relative mt-32">
-                  <div className="flex items-center justify-between mb-4 border-b border-border-light pb-4">
-                    <h3 className="font-semibold text-text-primary">Business Reality Dashboard</h3>
-                    <span className="text-xs font-mono text-accent-blue px-2 py-1 bg-accent-blue/10 rounded">LIVE SCAN</span>
-                  </div>
-
-                <div className="space-y-6">
-                  {/* Metric Row 1 */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-bg-secondary rounded-lg border border-border-light">
-                      <div className="text-xs text-text-secondary mb-1">AI Adoption Gaps</div>
-                      <div className="text-2xl font-bold text-text-primary">42%</div>
-                      <div className="text-xs text-accent-amber mt-1 flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> High Risk</div>
-                    </div>
-                    <div className="p-4 bg-bg-secondary rounded-lg border border-border-light">
-                      <div className="text-xs text-text-secondary mb-1">Workflow Bottlenecks</div>
-                      <div className="text-2xl font-bold text-text-primary">4</div>
-                      <div className="text-xs text-accent-red mt-1 flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> Critical</div>
-                    </div>
-                  </div>
-
-                  {/* List Items */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-primary">
-                      <div className="flex items-center gap-3">
-                        <Clock className="w-4 h-4 text-text-secondary" />
-                        <span className="text-sm font-medium">Process Delays</span>
-                      </div>
-                      <span className="text-sm text-accent-red font-medium">Elevated</span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-primary">
-                      <div className="flex items-center gap-3">
-                        <AlertTriangle className="w-4 h-4 text-text-secondary" />
-                        <span className="text-sm font-medium">Manual Tasks Identified</span>
-                      </div>
-                      <span className="text-sm text-text-primary font-medium">17</span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-primary">
-                      <div className="flex items-center gap-3">
-                        <Zap className="w-4 h-4 text-text-secondary" />
-                        <span className="text-sm font-medium">Recommended Priority</span>
-                      </div>
-                      <span className="text-sm text-accent-blue font-medium">Workflow Handoff</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              </div>
+            {/* Right Visual: Constellation Map */}
+            <div className="relative h-[480px] rounded-xl overflow-hidden border border-border-strong shadow-lg bg-[#0B1F3A]">
+              <ConstellationMap variant="hero" height={480} />
             </div>
 
           </div>
