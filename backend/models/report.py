@@ -31,6 +31,8 @@ class ExportJob(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    audit_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("audits.id"), nullable=True)
+    org_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("organizations.id"), nullable=True)
     job_type: Mapped[ExportJobType] = mapped_column(Enum(ExportJobType), nullable=False)
     status: Mapped[ExportJobStatus] = mapped_column(Enum(ExportJobStatus), default=ExportJobStatus.pending, nullable=False)
     result_path: Mapped[str | None] = mapped_column(String, nullable=True)

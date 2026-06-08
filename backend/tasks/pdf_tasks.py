@@ -1,5 +1,7 @@
 import asyncio
 import os
+import uuid
+from datetime import timedelta, datetime, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
@@ -14,7 +16,8 @@ from audits.intelligence_engine import generate_intelligence
 async def _generate_pdf_async(audit_id: str, org_id: str):
     async with async_session_maker() as session:
         # 1. Load audit from DB
-        audit = await session.get(Audit, audit_id)
+        # Cast to UUID to prevent "str object has no attribute hex"
+        audit = await session.get(Audit, uuid.UUID(audit_id))
         if not audit:
             raise ValueError(f"Audit {audit_id} not found")
 
@@ -56,15 +59,16 @@ async def _generate_pdf_async(audit_id: str, org_id: str):
         # 5. Create report record in DB
         file_size = os.path.getsize(file_path)
         report = Report(
-            audit_id=audit_id,
+            audit_id=uuid.UUID(audit_id),
             file_path=file_path,
-            file_size=file_size
+            file_size=file_size,
+            expires_at=datetime.now(timezone.utc) + timedelta(days=30)
         )
         session.add(report)
 
         # 6. Update export_job status to complete
         stmt_job = select(ExportJob).where(
-            ExportJob.audit_id == audit_id,
+            ExportJob.audit_id == uuid.UUID(audit_id),
             ExportJob.status == ExportJobStatus.pending
         )
         job_result = await session.execute(stmt_job)
