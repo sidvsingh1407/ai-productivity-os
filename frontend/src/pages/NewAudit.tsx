@@ -150,7 +150,7 @@ export default function NewAudit() {
         form_response: formResponse,
         evidence_response: evidence
       });
-      navigate(`/audits/${res.data.id}`);
+      navigate(`/app/audits/${res.data.id}`);
     } catch (err: any) {
       console.error('Failed to submit audit:', err);
       setError(err.response?.data?.detail || 'Failed to submit audit. Please verify input and try again.');
