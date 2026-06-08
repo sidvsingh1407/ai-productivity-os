@@ -1,0 +1,17 @@
+
+> ai-productivity-os-frontend@0.0.0 dev
+> vite
+
+INFO:     Will watch for changes in these directories: ['/app/backend']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [9268] using StatReload
+
+  VITE v5.4.21  ready in 278 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+INFO:     Started server process [9414]
+INFO:     Waiting for application startup.
+SYSTEM LOG: Scanning models and verifying tables on Supabase...
+SYSTEM LOG: Database schema sync complete.
+INFO:     Application startup complete.
