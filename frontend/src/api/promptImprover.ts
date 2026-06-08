@@ -44,7 +44,7 @@ export interface ValidationFailureResponse {
 
 export const promptImproverApi = {
   analyzePrompt: async (prompt: string): Promise<PromptIntelligenceResponse> => {
-    const { data } = await apiClient.post('/prompt-improver', { prompt });
+    const { data } = await apiClient.post('/api/prompt-improver', { prompt });
     return data;
   },
 };
