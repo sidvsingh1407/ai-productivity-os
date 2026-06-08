@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from database import get_db
 from auth.service import AuthService
 from users.schemas import UserCreate
+from auth.schemas import AuthResponse
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -15,7 +16,7 @@ class LoginRequest(BaseModel):
 class RefreshRequest(BaseModel):
     refresh_token: str
 
-@router.post("/register", status_code=status.HTTP_201_CREATED)
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=AuthResponse)
 async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
     auth_service = AuthService(db)
     result = await auth_service.register_user(
@@ -26,7 +27,7 @@ async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
     )
     return result
 
-@router.post("/login")
+@router.post("/login", response_model=AuthResponse)
 async def login(login_data: LoginRequest, db: AsyncSession = Depends(get_db)):
     auth_service = AuthService(db)
     return await auth_service.login_user(login_data.email, login_data.password)
