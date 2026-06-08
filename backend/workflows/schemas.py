@@ -5,10 +5,12 @@ from datetime import datetime
 class WorkflowCreate(BaseModel):
     input_config: Dict[str, Any]
 
+from uuid import UUID
+
 class WorkflowResponse(BaseModel):
-    id: str
-    org_id: str
-    user_id: str
+    id: UUID
+    org_id: UUID
+    user_id: UUID
     status: str
     input_config: Dict[str, Any]
     created_at: datetime
@@ -16,8 +18,8 @@ class WorkflowResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class BlueprintResponse(BaseModel):
-    id: str
-    workflow_id: str
+    id: UUID
+    workflow_id: UUID
     process_id: str
     automation_tier: str
     industry_variant: Optional[str] = None
