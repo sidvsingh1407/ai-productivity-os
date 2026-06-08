@@ -10,9 +10,27 @@ import AiAuditPage from './pages/marketing/AiAuditPage';
 import WorkflowDiagnosticPage from './pages/marketing/WorkflowDiagnosticPage';
 import AboutPage from './pages/marketing/AboutPage';
 import PrivacyPage from './pages/marketing/PrivacyPage';
-import SampleReportPage from './pages/marketing/SampleReportPage';
+import ExampleFindingsPage from './pages/marketing/resources/ExampleFindingsPage';
 import TermsPage from './pages/marketing/TermsPage';
 import CookiesPage from './pages/marketing/CookiesPage';
+
+import AiRoiPage from './pages/marketing/problems/AiRoiPage';
+import TeamProductivityPage from './pages/marketing/problems/TeamProductivityPage';
+import OperationsChaoticPage from './pages/marketing/problems/OperationsChaoticPage';
+import InconsistentAiPage from './pages/marketing/problems/InconsistentAiPage';
+import ScaleWithoutHiringPage from './pages/marketing/problems/ScaleWithoutHiringPage';
+
+import DiscoverBottlenecksPage from './pages/marketing/solutions/DiscoverBottlenecksPage';
+import ImproveAiAdoptionPage from './pages/marketing/solutions/ImproveAiAdoptionPage';
+import StandardizeAiOutputsPage from './pages/marketing/solutions/StandardizeAiOutputsPage';
+import ReduceManualWorkPage from './pages/marketing/solutions/ReduceManualWorkPage';
+import ImproveVisibilityPage from './pages/marketing/solutions/ImproveVisibilityPage';
+
+import GuidesPage from './pages/marketing/resources/GuidesPage';
+import CaseStudiesPage from './pages/marketing/resources/CaseStudiesPage';
+import FaqPage from './pages/marketing/resources/FaqPage';
+import PricingPage from './pages/marketing/PricingPage';
+
 import AiDisclaimerPage from './pages/marketing/AiDisclaimerPage';
 import DataRetentionPage from './pages/marketing/DataRetentionPage';
 import SecurityPage from './pages/marketing/SecurityPage';
@@ -45,6 +63,22 @@ function App() {
           {/* Public Marketing Routes */}
         <Route element={<MarketingLayout />}>
           <Route path="/" element={<Home />} />
+
+          {/* Problem Pages */}
+          <Route path="/problems/ai-roi" element={<AiRoiPage />} />
+          <Route path="/problems/team-productivity" element={<TeamProductivityPage />} />
+          <Route path="/problems/operations-chaotic" element={<OperationsChaoticPage />} />
+          <Route path="/problems/inconsistent-ai" element={<InconsistentAiPage />} />
+          <Route path="/problems/scale-without-hiring" element={<ScaleWithoutHiringPage />} />
+
+          {/* Solutions Pages */}
+          <Route path="/solutions/discover-bottlenecks" element={<DiscoverBottlenecksPage />} />
+          <Route path="/solutions/improve-ai-adoption" element={<ImproveAiAdoptionPage />} />
+          <Route path="/solutions/standardize-ai-outputs" element={<StandardizeAiOutputsPage />} />
+          <Route path="/solutions/reduce-manual-work" element={<ReduceManualWorkPage />} />
+          <Route path="/solutions/improve-visibility" element={<ImproveVisibilityPage />} />
+
+          {/* Legacy Marketing Routes */}
           <Route path="/ai-audit" element={<AiAuditPage />} />
           <Route path="/workflow-diagnostic" element={<WorkflowDiagnosticPage />} />
           <Route path="/forecasting" element={<Navigate to="/contact?interest=Forecasting Framework" replace />} />
@@ -57,7 +91,16 @@ function App() {
           <Route path="/ai-disclaimer" element={<AiDisclaimerPage />} />
           <Route path="/data-retention" element={<DataRetentionPage />} />
           <Route path="/security" element={<SecurityPage />} />
-          <Route path="/sample-report" element={<SampleReportPage />} />
+
+          {/* Resources & Pricing */}
+          <Route path="/example-findings" element={<ExampleFindingsPage />} />
+          <Route path="/resources/guides" element={<GuidesPage />} />
+          <Route path="/resources/case-studies" element={<CaseStudiesPage />} />
+          <Route path="/resources/faq" element={<FaqPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
+
+          {/* Legacy route catch-all */}
+          <Route path="/sample-report" element={<Navigate to="/example-findings" replace />} />
           <Route path="/developers" element={<DeveloperPortal />} />
         </Route>
 
