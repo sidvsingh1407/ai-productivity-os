@@ -1,6 +1,7 @@
 import asyncio
 import os
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 from database import async_session_maker
 from models.audit import Audit
