@@ -16,9 +16,11 @@ export function Topbar() {
       <div className="flex items-center gap-4">
         {user && (
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium">{user.full_name}</span>
+            <span className="text-sm font-medium">
+              {user.full_name || user.name || "User"}
+            </span>
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
-              {user.full_name.charAt(0).toUpperCase()}
+              {(user.full_name || user.name || "U").charAt(0).toUpperCase()}
             </div>
           </div>
         )}
