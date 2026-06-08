@@ -1,26 +1,25 @@
 import { Link } from 'react-router-dom';
-import { ShieldAlert, ArrowRight } from 'lucide-react';
+import { ArrowRight, AlertTriangle, CheckCircle2, Clock, Zap, Target } from 'lucide-react';
 import { SeoHead } from '../../components/geo/SeoHead';
-import ConstellationMap from '../../components/ConstellationMap';
 import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
 
 export default function Home() {
   const faqItems = [
     {
-      question: "What is Operational Intelligence?",
-      answer: "Operational Intelligence is the practice of identifying operational risks, governance gaps, workflow weaknesses, and execution issues before they become larger organizational problems. It shifts the focus from backward-looking metrics to forward-looking operational realities."
+      question: "How is TarkaX different from an AI consulting firm?",
+      answer: "We focus on uncovering hidden operational realities through structured diagnostic analysis, not selling you expensive transformation projects or unneeded tools. We provide the truth about where your business is slowing down so you can make informed decisions."
     },
     {
-      question: "What is Failure Intelligence?",
-      answer: "Failure Intelligence is a systematic approach to identifying the specific, recurring patterns that cause initiatives, projects, or adoptions to fail within an organization. It focuses on structural barriers rather than individual performance."
+      question: "Does TarkaX help with automation?",
+      answer: "We help you determine *what* to automate. By revealing manual handoffs, repetitive tasks, and workflow bottlenecks, we ensure your automation investments target the actual root causes of operational friction."
     },
     {
-      question: "What does an AI Audit measure?",
-      answer: "An AI Audit measures an organization's structural readiness to adopt and scale artificial intelligence. It evaluates governance frameworks, knowledge silos, technology infrastructure, and cultural alignment to identify where AI initiatives are most likely to break down."
+      question: "How long does a diagnostic take?",
+      answer: "Our assessments are designed to be fast and self-serve. You can establish a baseline for your team or organization's friction points in days, not the months typical of traditional discovery processes."
     },
     {
-      question: "How is TarkaX different from traditional assessments?",
-      answer: "Traditional assessments rely on point-in-time snapshots and stated sentiment to generate generic scores. TarkaX focuses on structural reality, using diagnostic frameworks to identify underlying failure patterns and provide actionable decision intelligence."
+      question: "Who typically uses TarkaX?",
+      answer: "Founders, COOs, Operations Leaders, and executives who suspect their business is moving slower than it should and want empirical evidence of the bottlenecks before investing in new headcount or software."
     }
   ];
 
@@ -49,268 +48,336 @@ export default function Home() {
   return (
     <div className="bg-bg-primary">
       <SeoHead
-        title="TarkaX | Operational Intelligence Platform"
-        description="TarkaX is an Operational Intelligence Platform built on Failure Intelligence principles. We help organizations identify AI adoption gaps, workflow weaknesses, and execution risks."
+        title="TarkaX | Business Clarity for the AI Era"
+        description="The fastest way to discover what's really holding your business back. TarkaX reveals hidden bottlenecks, manual work, and wasted AI investments."
         canonical="https://tarkax.com/"
         schema={[organizationSchema, websiteSchema, faqSchema]}
       />
+
       {/* 1. Hero Section */}
-      <section className="border-b border-border-strong bg-bg-primary">
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '44% 56%',
-          minHeight: 420,
-          overflow: 'hidden',
-        }}>
-          {/* LEFT — keep all existing hero content here, untouched */}
-          <div style={{ padding: '44px 28px 44px 36px', display: 'flex', flexDirection: 'column', justifyItems: 'start' }}>
-            <div className="flex flex-col items-start text-left w-full h-full justify-center">
-              <h1 className="text-display text-text-primary mb-6">
-                Operational Intelligence Platform
+      <section className="border-b border-border-strong bg-bg-primary overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+            {/* Left Content */}
+            <div className="flex flex-col items-start text-left">
+              <h1 className="text-display text-text-primary mb-6 leading-tight">
+                Find What's Really Holding Your Business Back
               </h1>
-              <p className="text-h3 font-normal text-text-secondary mb-12">
-                TarkaX identifies structural failures, governance gaps, and execution risks before they become institutional problems.
-              </p>
-              <Link
-                to="/contact"
-                className="px-8 py-4 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90 inline-flex items-center justify-center gap-2"
-              >
-                Request a Demo
-              </Link>
-            </div>
-          </div>
-
-          {/* RIGHT — constellation */}
-          <div style={{ background: '#0B1F3A', overflow: 'hidden' }}>
-            <ConstellationMap variant="hero" height={420} />
-          </div>
-        </div>
-
-        <div style={{ overflow: 'hidden', background: '#0B1F3A', padding: '10px 0' }}>
-          <div style={{
-            display: 'flex',
-            whiteSpace: 'nowrap',
-            animation: 'tx-tick 22s linear infinite',
-          }}>
-            {[
-              'AI AUDIT','GOVERNANCE SCORING','FAILURE INTELLIGENCE',
-              'WORKFLOW DIAGNOSTIC','OPERATIONAL INTELLIGENCE',
-              'RISK INDICATORS','AI MATURITY INDEX','FORECASTING ENGINE',
-              'AI AUDIT','GOVERNANCE SCORING','FAILURE INTELLIGENCE',
-              'WORKFLOW DIAGNOSTIC','OPERATIONAL INTELLIGENCE',
-              'RISK INDICATORS','AI MATURITY INDEX','FORECASTING ENGINE',
-            ].map((item, i) => (
-              <span key={i} style={{
-                fontFamily: 'IBM Plex Mono, monospace',
-                fontSize: 10,
-                color: '#2563EB',
-                padding: '0 28px',
-                letterSpacing: '0.06em',
-              }}>
-                {item} <span style={{ color: '#1E3A5F' }}>·</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 2. Problem Frame */}
-      <section className="py-[80px] bg-bg-primary border-b border-border-strong">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-space-xl">
-            <div>
-              <h2 className="text-h2 text-text-primary mb-space-md">
-                The Reality of Operational Execution
-              </h2>
-              <p className="text-body text-text-secondary">
-                Most operational failures are visible before they become obvious. The signal often exists long before the problem is acknowledged by leadership.
-              </p>
-            </div>
-            <div className="space-y-8">
-              <div className="border-l-2 border-border-strong pl-6">
-                <p className="text-body text-text-primary font-medium">Strategic initiatives fail not due to lack of vision, but due to structural misalignment in execution.</p>
+              <div className="text-h3 font-normal text-text-secondary mb-10 space-y-4">
+                <p>Most businesses don't have an AI problem.</p>
+                <p>They have a visibility problem.</p>
+                <p className="text-body mt-4 text-text-secondary/80">TarkaX reveals where time, money, operational effort, and AI investments are being wasted so you know exactly what to fix next.</p>
               </div>
-              <div className="border-l-2 border-border-strong pl-6">
-                <p className="text-body text-text-primary font-medium">Traditional assessments measure stated sentiment. TarkaX measures operational reality.</p>
+              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <Link
+                  to="/register"
+                  className="px-8 py-4 bg-accent-blue text-text-inverse text-body font-medium transition-colors hover:bg-accent-blue/90 inline-flex items-center justify-center rounded-md shadow-sm"
+                >
+                  Start Free Analysis
+                </Link>
+                <Link
+                  to="/example-findings"
+                  className="px-8 py-4 bg-bg-secondary text-text-primary border border-border-strong text-body font-medium transition-colors hover:bg-bg-tertiary inline-flex items-center justify-center rounded-md shadow-sm"
+                >
+                  See Example Findings
+                </Link>
               </div>
             </div>
+
+            {/* Right Visual: Business Reality Dashboard */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-tr from-accent-blue/5 to-transparent rounded-xl" />
+              <div className="bg-bg-primary border border-border-strong rounded-xl shadow-lg p-6 relative z-10 overflow-hidden">
+                <div className="flex items-center justify-between mb-6 border-b border-border-light pb-4">
+                  <h3 className="font-semibold text-text-primary">Business Reality Dashboard</h3>
+                  <span className="text-xs font-mono text-text-secondary px-2 py-1 bg-bg-secondary rounded">LIVE</span>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Metric Row 1 */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 bg-bg-secondary rounded-lg border border-border-light">
+                      <div className="text-xs text-text-secondary mb-1">AI Adoption Gaps</div>
+                      <div className="text-2xl font-bold text-text-primary">42%</div>
+                      <div className="text-xs text-accent-amber mt-1 flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> High Risk</div>
+                    </div>
+                    <div className="p-4 bg-bg-secondary rounded-lg border border-border-light">
+                      <div className="text-xs text-text-secondary mb-1">Workflow Bottlenecks</div>
+                      <div className="text-2xl font-bold text-text-primary">4</div>
+                      <div className="text-xs text-accent-red mt-1 flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> Critical</div>
+                    </div>
+                  </div>
+
+                  {/* List Items */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-primary">
+                      <div className="flex items-center gap-3">
+                        <Clock className="w-4 h-4 text-text-secondary" />
+                        <span className="text-sm font-medium">Process Delays</span>
+                      </div>
+                      <span className="text-sm text-accent-red font-medium">Elevated</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-primary">
+                      <div className="flex items-center gap-3">
+                        <AlertTriangle className="w-4 h-4 text-text-secondary" />
+                        <span className="text-sm font-medium">Manual Tasks Identified</span>
+                      </div>
+                      <span className="text-sm text-text-primary font-medium">17</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-primary">
+                      <div className="flex items-center gap-3">
+                        <Zap className="w-4 h-4 text-text-secondary" />
+                        <span className="text-sm font-medium">Recommended Priority</span>
+                      </div>
+                      <span className="text-sm text-accent-blue font-medium">Workflow Handoff</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* 3. Methodology Section */}
-      <section className="py-[80px] bg-bg-secondary border-b border-border-strong">
+      {/* 2. Reality Gap Section */}
+      <section className="py-24 bg-bg-secondary border-b border-border-strong">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
+          <h2 className="text-h2 text-text-primary mb-16">
+            Everyone Sees a Different Version of the Business
+          </h2>
+
+          <div className="space-y-4 max-w-2xl mx-auto">
+            {/* The Hierarchy Flow */}
+            <div className="bg-bg-primary border border-border-strong p-6 rounded-lg shadow-sm transform transition-all hover:scale-[1.02]">
+              <div className="text-sm font-semibold text-accent-blue uppercase tracking-wider mb-2">Executives See</div>
+              <div className="text-h3 text-text-primary">"Green Dashboards"</div>
+            </div>
+
+            <div className="flex justify-center"><ArrowRight className="w-6 h-6 text-text-secondary rotate-90" /></div>
+
+            <div className="bg-bg-primary border border-border-strong p-6 rounded-lg shadow-sm transform transition-all hover:scale-[1.02]">
+              <div className="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-2">Managers See</div>
+              <div className="text-h3 text-text-primary">"Delayed Reports"</div>
+            </div>
+
+            <div className="flex justify-center"><ArrowRight className="w-6 h-6 text-text-secondary rotate-90" /></div>
+
+            <div className="bg-bg-primary border border-border-strong p-6 rounded-lg shadow-sm transform transition-all hover:scale-[1.02]">
+              <div className="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-2">Employees See</div>
+              <div className="text-h3 text-text-primary">"Manual Workarounds"</div>
+            </div>
+
+            <div className="flex justify-center"><ArrowRight className="w-6 h-6 text-text-secondary rotate-90" /></div>
+
+            <div className="bg-bg-primary border border-accent-red/30 bg-accent-red/5 p-6 rounded-lg shadow-sm transform transition-all hover:scale-[1.02]">
+              <div className="text-sm font-semibold text-accent-red uppercase tracking-wider mb-2">Customers See</div>
+              <div className="text-h3 text-text-primary">"Slow Delivery"</div>
+            </div>
+          </div>
+
+          <div className="mt-16 text-xl font-medium text-text-primary">
+            Nobody sees the full picture. <span className="text-accent-blue">TarkaX connects the dots.</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. What We Help You Discover (Problem Cards) */}
+      <section className="py-24 bg-bg-primary border-b border-border-strong">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h2 className="text-h2 text-text-primary mb-12 text-center">Diagnostic Methodology</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 bg-bg-primary border border-border-strong">
-            <div className="p-8 border-b md:border-b-0 md:border-r border-border-strong">
-              <div className="text-label text-text-secondary mb-4">Phase 01</div>
-              <h3 className="text-h3 text-text-primary mb-4">Assess</h3>
-              <p className="text-body text-text-secondary">
-                Gather structural evidence across the organization using targeted diagnostic instruments designed to bypass perception bias.
-              </p>
-            </div>
-            <div className="p-8 border-b md:border-b-0 md:border-r border-border-strong">
-              <div className="text-label text-text-secondary mb-4">Phase 02</div>
-              <h3 className="text-h3 text-text-primary mb-4">Diagnose</h3>
-              <p className="text-body text-text-secondary">
-                Identify recurring failure patterns, map capability gaps, and establish a quantitative baseline for organizational reality.
-              </p>
-            </div>
-            <div className="p-8">
-              <div className="text-label text-text-secondary mb-4">Phase 03</div>
-              <h3 className="text-h3 text-text-primary mb-4">Improve</h3>
-              <p className="text-body text-text-secondary">
-                Deploy precise, targeted interventions based on diagnostic evidence to resolve structural blockers and execution risks.
-              </p>
-            </div>
+          <div className="text-center mb-16">
+            <h2 className="text-h2 text-text-primary mb-4">Discover What's Broken</h2>
+            <p className="text-body text-text-secondary max-w-2xl mx-auto">We look past the symptoms to find the hidden causes dragging down your operational efficiency.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Card 1 */}
+            <Link to="/problems/ai-roi" className="group block bg-bg-secondary border border-border-strong p-6 rounded-lg hover:border-accent-blue transition-colors">
+              <h3 className="text-lg font-bold text-text-primary mb-4 group-hover:text-accent-blue transition-colors">AI Investments Not Delivering ROI</h3>
+              <ul className="space-y-2 text-sm text-text-secondary">
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Unused licenses</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Low adoption rates</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Workflow disconnects</li>
+              </ul>
+            </Link>
+
+            {/* Card 2 */}
+            <Link to="/solutions/discover-bottlenecks" className="group block bg-bg-secondary border border-border-strong p-6 rounded-lg hover:border-accent-blue transition-colors">
+              <h3 className="text-lg font-bold text-text-primary mb-4 group-hover:text-accent-blue transition-colors">Hidden Operational Bottlenecks</h3>
+              <ul className="space-y-2 text-sm text-text-secondary">
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Approval delays</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Manual handoffs</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Process friction</li>
+              </ul>
+            </Link>
+
+            {/* Card 3 */}
+            <Link to="/problems/inconsistent-ai" className="group block bg-bg-secondary border border-border-strong p-6 rounded-lg hover:border-accent-blue transition-colors">
+              <h3 className="text-lg font-bold text-text-primary mb-4 group-hover:text-accent-blue transition-colors">Inconsistent AI Outputs</h3>
+              <ul className="space-y-2 text-sm text-text-secondary">
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Off-brand responses</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Poor prompt structures</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Unpredictable results</li>
+              </ul>
+            </Link>
+
+            {/* Card 4 */}
+            <Link to="/solutions/reduce-manual-work" className="group block bg-bg-secondary border border-border-strong p-6 rounded-lg hover:border-accent-blue transition-colors">
+              <h3 className="text-lg font-bold text-text-primary mb-4 group-hover:text-accent-blue transition-colors">Manual Work Holding You Back</h3>
+              <ul className="space-y-2 text-sm text-text-secondary">
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Repetitive tasks</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Duplicate data entry</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Spreadsheet dependency</li>
+              </ul>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* 4. AI Maturity Score Preview */}
-      <section className="py-[120px] bg-bg-primary border-b border-border-strong">
+      {/* 4. How TarkaX Works (Journey) */}
+      <section className="py-24 bg-bg-dark text-text-inverse border-b border-border-strong">
         <div className="max-w-5xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-h2 text-text-primary mb-4">Consulting-Grade Output</h2>
-            <p className="text-body text-text-secondary">Our assessments generate executive intelligence, not generic dashboard widgets.</p>
+          <div className="text-center mb-16">
+            <h2 className="text-h2 text-text-inverse mb-4">How We Find the Truth</h2>
+            <p className="text-body text-text-inverse/70">A structured process to move from symptom to solution.</p>
           </div>
 
-          <div className="border border-border-strong bg-bg-primary p-8 md:p-12 shadow-sm">
-            <div className="border-b border-border-strong pb-6 mb-8 flex justify-between items-end">
+          <div className="relative border-l border-text-inverse/20 ml-6 md:ml-0 md:border-none">
+            <div className="md:grid md:grid-cols-5 md:gap-4 md:items-start text-center hidden mb-4">
+              <div className="col-span-1"><div className="w-8 h-8 rounded-full bg-accent-blue text-text-inverse flex items-center justify-center mx-auto mb-2 font-bold">1</div><div className="text-sm font-semibold">Identify Symptom</div></div>
+              <div className="col-span-1"><div className="w-8 h-8 rounded-full bg-accent-blue text-text-inverse flex items-center justify-center mx-auto mb-2 font-bold">2</div><div className="text-sm font-semibold">Run Analysis</div></div>
+              <div className="col-span-1"><div className="w-8 h-8 rounded-full bg-accent-blue text-text-inverse flex items-center justify-center mx-auto mb-2 font-bold">3</div><div className="text-sm font-semibold">Reveal Causes</div></div>
+              <div className="col-span-1"><div className="w-8 h-8 rounded-full bg-accent-blue text-text-inverse flex items-center justify-center mx-auto mb-2 font-bold">4</div><div className="text-sm font-semibold">Prioritize Actions</div></div>
+              <div className="col-span-1"><div className="w-8 h-8 rounded-full bg-accent-blue text-text-inverse flex items-center justify-center mx-auto mb-2 font-bold">5</div><div className="text-sm font-semibold">Implement</div></div>
+            </div>
+
+            <div className="md:grid md:grid-cols-5 md:gap-4 hidden text-sm text-text-inverse/70 text-center">
+               <div className="col-span-1 p-2 bg-text-inverse/5 rounded border border-text-inverse/10">e.g., "Team is slow"</div>
+               <div className="col-span-1 p-2 bg-text-inverse/5 rounded border border-text-inverse/10">Deploy diagnostic survey</div>
+               <div className="col-span-1 p-2 bg-text-inverse/5 rounded border border-text-inverse/10">Find workflow bottlenecks</div>
+               <div className="col-span-1 p-2 bg-text-inverse/5 rounded border border-text-inverse/10">Rank by cost/impact</div>
+               <div className="col-span-1 p-2 bg-text-inverse/5 rounded border border-text-inverse/10">Fix structural issues</div>
+            </div>
+
+            {/* Mobile View */}
+            <div className="md:hidden space-y-8 pl-8 relative">
+              {[
+                { step: 1, title: 'Identify the symptom.', desc: 'Examples: AI isn\'t working, Team is slow, Operations are chaotic.' },
+                { step: 2, title: 'Run analysis.', desc: 'Deploy targeted diagnostic instruments across your team.' },
+                { step: 3, title: 'Reveal root causes.', desc: 'Uncover the hidden structural reality behind the symptom.' },
+                { step: 4, title: 'Receive prioritized recommendations.', desc: 'Get actionable findings based on business impact.' },
+                { step: 5, title: 'Implement improvements.', desc: 'Fix what is actually broken, instead of guessing.' },
+              ].map((item) => (
+                <div key={item.step} className="relative">
+                  <div className="absolute -left-[44px] w-8 h-8 rounded-full bg-accent-blue text-text-inverse flex items-center justify-center font-bold">{item.step}</div>
+                  <h4 className="text-lg font-semibold text-text-inverse mb-1">{item.title}</h4>
+                  <p className="text-sm text-text-inverse/70">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Example Findings */}
+      <section className="py-24 bg-bg-primary border-b border-border-strong">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-h2 text-text-primary mb-4">Stop Guessing. Start Knowing.</h2>
+            <p className="text-body text-text-secondary">We sell clarity and evidence, not tools.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="border border-border-strong bg-bg-secondary p-8 rounded-lg">
+              <div className="text-xs font-mono text-accent-red mb-4">FINDING 01</div>
+              <h3 className="text-xl font-bold text-text-primary mb-2">73% of AI licenses unused.</h3>
+              <p className="text-sm text-text-secondary mb-6 border-b border-border-light pb-6">Licenses were purchased for 100 employees, but only 27 use them weekly.</p>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-xs text-text-secondary uppercase">Impact</div>
+                  <div className="font-medium text-text-primary">$18,000 annual waste.</div>
+                </div>
+                <div>
+                  <div className="text-xs text-text-secondary uppercase">Recommendation</div>
+                  <div className="font-medium text-text-primary">Focus onboarding on 3 high-impact workflows instead of general rollout.</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border border-border-strong bg-bg-secondary p-8 rounded-lg">
+              <div className="text-xs font-mono text-accent-red mb-4">FINDING 02</div>
+              <h3 className="text-xl font-bold text-text-primary mb-2">14 hour delay in approval loop.</h3>
+              <p className="text-sm text-text-secondary mb-6 border-b border-border-light pb-6">Client onboarding is bottlenecked because of a manual PDF handoff.</p>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-xs text-text-secondary uppercase">Impact</div>
+                  <div className="font-medium text-text-primary">Reduced client satisfaction, slow revenue recognition.</div>
+                </div>
+                <div>
+                  <div className="text-xs text-text-secondary uppercase">Recommendation</div>
+                  <div className="font-medium text-text-primary">Automate PDF data extraction and route directly to compliance system.</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border border-border-strong bg-bg-secondary p-8 rounded-lg">
+              <div className="text-xs font-mono text-accent-red mb-4">FINDING 03</div>
+              <h3 className="text-xl font-bold text-text-primary mb-2">Inconsistent Prompt Quality.</h3>
+              <p className="text-sm text-text-secondary mb-6 border-b border-border-light pb-6">Support team is generating answers using varied, unstandardized prompts.</p>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-xs text-text-secondary uppercase">Impact</div>
+                  <div className="font-medium text-text-primary">Off-brand responses, compliance risk, and rework.</div>
+                </div>
+                <div>
+                  <div className="text-xs text-text-secondary uppercase">Recommendation</div>
+                  <div className="font-medium text-text-primary">Implement global prompt templates and operational guidelines.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Product Lenses (Investigations) */}
+      <section className="py-24 bg-bg-secondary border-b border-border-strong">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="mb-16">
+            <h2 className="text-h2 text-text-primary mb-4">Investigate Your Business</h2>
+            <p className="text-body text-text-secondary">Choose an area to analyze.</p>
+          </div>
+
+          <div className="space-y-6">
+            <Link to="/problems/ai-roi" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
               <div>
-                <h3 className="text-h2 font-medium text-text-primary">AI Readiness Diagnostic</h3>
-                <p className="text-body text-text-secondary mt-1">Executive Summary</p>
+                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">Why Isn't AI Working?</h3>
+                <p className="text-text-secondary">Discover where your AI investments are breaking down across awareness, adoption, and governance.</p>
               </div>
-              <div className="text-right">
-                <div className="text-data text-text-secondary">CONFIDENTIAL</div>
+              <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
+                Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </div>
-            </div>
+            </Link>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              <div className="col-span-1">
-                <div className="text-label text-text-secondary mb-2">Overall AI Maturity Score</div>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-[72px] font-bold leading-none font-mono text-text-primary">72</span>
-                  <span className="text-h3 font-mono text-text-secondary">/ 100</span>
-                </div>
-                <div className="inline-flex items-center px-2.5 py-0.5 border border-accent-amber/30 bg-accent-amber/10 text-accent-amber text-data font-medium">
-                  Developing Capability
-                </div>
+            <Link to="/problems/team-productivity" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
+              <div>
+                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">What's Slowing Your Team Down?</h3>
+                <p className="text-text-secondary">Identify the hidden bottlenecks, tool bloat, and manual tasks dragging down productivity.</p>
               </div>
-
-              <div className="col-span-2 space-y-4">
-                <div className="flex justify-between items-center py-2 border-b border-border-light">
-                  <span className="text-body font-medium text-text-primary">Awareness</span>
-                  <span className="text-data text-text-primary">82 / 100</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-border-light">
-                  <span className="text-body font-medium text-text-primary">Adoption</span>
-                  <span className="text-data text-text-primary">75 / 100</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-border-light">
-                  <span className="text-body font-medium text-text-primary">Integration</span>
-                  <span className="text-data text-text-primary">68 / 100</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-border-light">
-                  <span className="text-body font-medium text-text-primary">ROI</span>
-                  <span className="text-data text-text-primary">71 / 100</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-border-light bg-accent-red/5 px-3 -mx-3">
-                  <span className="text-body font-medium text-accent-red flex items-center gap-2">
-                    <ShieldAlert className="w-4 h-4" />
-                    Governance
-                  </span>
-                  <span className="text-data text-accent-red">42 / 100</span>
-                </div>
+              <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
+                Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
+            </Link>
 
-      {/* 5. Why Traditional Assessments Miss The Signal */}
-      <section className="py-[80px] bg-bg-dark text-text-inverse">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="mb-12">
-            <h2 className="text-h2 text-text-inverse mb-4">
-              Why Traditional Assessments Miss The Signal
-            </h2>
-            <p className="text-body text-text-inverse/70 max-w-3xl">
-              Conventional approaches measure surface compliance. TarkaX evaluates structural reality.
-            </p>
-          </div>
-
-          <div className="border border-text-inverse/20 overflow-hidden">
-            <div className="grid grid-cols-1 md:grid-cols-2 border-b border-text-inverse/20">
-              <div className="p-6 bg-text-inverse/5">
-                <h3 className="text-h3 text-text-inverse">Traditional Assessments</h3>
+            <Link to="/problems/inconsistent-ai" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
+              <div>
+                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">Why Are AI Outputs Inconsistent?</h3>
+                <p className="text-text-secondary">Diagnose and standardize the prompt structures being used by your team.</p>
               </div>
-              <div className="p-6 bg-text-inverse/10 border-t md:border-t-0 md:border-l border-text-inverse/20">
-                <h3 className="text-h3 text-text-inverse flex items-center gap-2">
-                  <div className="w-2 h-2 bg-text-inverse"></div>
-                  TarkaX Methodology
-                </h3>
+              <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
+                Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </div>
-            </div>
-
-            {[
-              ['Point-in-time snapshots that age instantly.', 'Continuous diagnostic evaluation of underlying systems.'],
-              ['Static, checklist-driven compliance exercises.', 'Pattern-oriented intelligence identifying recurring failure structures.'],
-              ['Over-reliance on stated sentiment over actual practice.', 'Focused on operational signals and evidence-based reality.'],
-              ['Focused on generating an arbitrary score.', 'Designed exclusively to answer: What decision should we make?']
-            ].map(([traditional, tarkax], idx) => (
-              <div key={idx} className="grid grid-cols-1 md:grid-cols-2 border-b border-text-inverse/20 last:border-0">
-                <div className="p-6 text-body text-text-inverse/70">
-                  {traditional}
-                </div>
-                <div className="p-6 text-body text-text-inverse border-t md:border-t-0 md:border-l border-text-inverse/20 bg-text-inverse/5">
-                  {tarkax}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. Product Modules */}
-      <section className="py-[80px] bg-bg-primary border-b border-border-strong">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h2 className="text-h2 text-text-primary mb-12">Diagnostic Instruments</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="border border-border-strong p-8 flex flex-col">
-              <h3 className="text-h3 text-text-primary mb-4">AI Audit</h3>
-              <p className="text-body text-text-secondary mb-8 flex-grow">
-                Evaluate organizational readiness for AI deployment across awareness, adoption, integration, governance, and ROI.
-              </p>
-              <div className="flex flex-col space-y-3">
-                <Link to="/ai-audit" className="text-body font-medium text-text-primary hover:underline inline-flex items-center gap-2">
-                  View Instrument Details <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link to="/sample-report" className="text-body font-medium text-text-secondary hover:text-accent-blue inline-flex items-center gap-2">
-                  View Sample Report
-                </Link>
-              </div>
-            </div>
-            <div className="border border-border-strong p-8 flex flex-col">
-              <h3 className="text-h3 text-text-primary mb-4">Workflow Diagnostic</h3>
-              <p className="text-body text-text-secondary mb-8 flex-grow">
-                Identify operational weaknesses, tool bloat, and execution bottlenecks in specific departmental workflows.
-              </p>
-              <Link to="/workflow-diagnostic" className="text-body font-medium text-text-primary hover:underline inline-flex items-center gap-2">
-                View Instrument Details <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Trust Layer */}
-      <section className="py-[60px] bg-bg-secondary border-b border-border-strong">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <p className="text-label text-text-secondary mb-4">Platform Application Focus</p>
-          <div className="text-body text-text-primary max-w-2xl mx-auto">
-            Currently developed and validated specifically for management consulting engagements and public sector programmatic oversight.
+            </Link>
           </div>
         </div>
       </section>
@@ -322,16 +389,19 @@ export default function Home() {
       />
 
       {/* 9. Final CTA */}
-      <section className="py-[120px] bg-bg-primary text-center">
+      <section className="py-32 bg-bg-primary text-center">
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
-          <h2 className="text-h2 text-text-primary mb-8">
-            Establish your operational baseline.
+          <h2 className="text-display text-text-primary mb-6">
+            Stop Guessing. Start Knowing.
           </h2>
+          <p className="text-h3 font-normal text-text-secondary mb-12">
+            Discover what's actually slowing growth before you spend more money on tools, consultants, or hiring.
+          </p>
           <Link
-            to="/contact"
-            className="inline-flex items-center justify-center px-8 py-4 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90 gap-2"
+            to="/register"
+            className="inline-flex items-center justify-center px-8 py-4 bg-accent-blue text-text-inverse text-body font-medium transition-colors hover:bg-accent-blue/90 rounded-md shadow-sm gap-2"
           >
-            Request a Demo
+            Start Free Analysis
           </Link>
         </div>
       </section>

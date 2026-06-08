@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '@/api/client';
-import { SeoHead } from '../../components/geo/SeoHead';
+import { SeoHead } from '../../../components/geo/SeoHead';
 import { ReportHeader, ExecutiveSummaryCard, ScoreBreakdown } from '@/components/report';
 import { ShieldAlert, Loader2 } from 'lucide-react';
 
-export default function SampleReportPage() {
+export default function ExampleFindingsPage() {
   const navigate = useNavigate();
   const [auditData, setAuditData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -56,14 +56,14 @@ export default function SampleReportPage() {
   return (
     <div className="bg-bg-primary min-h-screen">
       <SeoHead
-        title="Sample AI Audit Report | TarkaX"
-        description="View a generated sample AI Audit report produced dynamically by the TarkaX diagnostic engine."
-        canonical="https://tarkax.com/sample-report"
+        title="Example Findings | TarkaX"
+        description="View an example of the hidden insights TarkaX reveals about business operations."
+        canonical="https://tarkax.com/example-findings"
       />
 
       <div className="bg-bg-secondary border-b border-border-light py-8 px-6 text-center mb-8">
-        <h1 className="text-h2 font-bold text-text-primary mb-2">Sample Report</h1>
-        <p className="text-body text-text-secondary">This report was dynamically generated using the deterministic scoring engine.</p>
+        <h1 className="text-h2 font-bold text-text-primary mb-2">Example Findings</h1>
+        <p className="text-body text-text-secondary">This is a simulated example of the hidden insights TarkaX reveals about your business operations.</p>
       </div>
 
       <div className="max-w-5xl mx-auto py-4 px-6 pb-24">
@@ -81,7 +81,7 @@ export default function SampleReportPage() {
         )}
 
         <ReportHeader
-          organizationName="Acme Corp (Sample)"
+          organizationName="Acme Corp (Example)"
           reportTitle="AI Readiness Diagnostic"
           date={date}
           version="1.0"
