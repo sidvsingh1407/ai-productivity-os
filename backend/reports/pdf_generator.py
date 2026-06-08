@@ -652,8 +652,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-# Alias for compatibility with newer code expecting 2 arguments
-def generate_report(audit_data: dict, output_path: str) -> str:
-    return generate_audit_pdf(audit_data, output_path)
