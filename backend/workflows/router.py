@@ -26,8 +26,8 @@ async def create_and_run_workflow(
     """
     return await service.run_workflow(
         db=db,
-        org_id=org["id"],
-        user_id=user["id"],
+        org_id=org.id,
+        user_id=user.id,
         input_config=payload.input_config
     )
 

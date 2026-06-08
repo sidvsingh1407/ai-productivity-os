@@ -19,11 +19,14 @@ async def create_workflow(db: AsyncSession, org_id: str, user_id: str, input_con
 async def save_blueprints(db: AsyncSession, workflow_id: str, blueprints: List[Dict[str, Any]]) -> List[Blueprint]:
     saved_blueprints = []
     for bp_data in blueprints:
+        variant = bp_data.get("industry_variant")
+        if not variant:
+            variant = "general"
         blueprint = Blueprint(
             workflow_id=workflow_id,
             process_id=bp_data["process_id"],
             automation_tier=bp_data["automation_tier"],
-            industry_variant=bp_data.get("industry_variant"),
+            industry_variant=variant,
             confidence=bp_data["confidence"],
             merged=bp_data.get("merged", False),
             blueprint_data=bp_data["blueprint_data"]
@@ -38,17 +41,27 @@ async def save_blueprints(db: AsyncSession, workflow_id: str, blueprints: List[D
 
     return saved_blueprints
 
-async def get_workflow(db: AsyncSession, workflow_id: str, org_id: str) -> Optional[Workflow]:
+import uuid
+
+async def get_workflow(db: AsyncSession, workflow_id: str | uuid.UUID, org_id: str | uuid.UUID) -> Optional[Workflow]:
+    if isinstance(workflow_id, str):
+        workflow_id = uuid.UUID(workflow_id)
+    if isinstance(org_id, str):
+        org_id = uuid.UUID(org_id)
     query = select(Workflow).where(Workflow.id == workflow_id, Workflow.org_id == org_id)
     result = await db.execute(query)
     return result.scalars().first()
 
-async def get_workflow_blueprints(db: AsyncSession, workflow_id: str) -> List[Blueprint]:
+async def get_workflow_blueprints(db: AsyncSession, workflow_id: str | uuid.UUID) -> List[Blueprint]:
+    if isinstance(workflow_id, str):
+        workflow_id = uuid.UUID(workflow_id)
     query = select(Blueprint).where(Blueprint.workflow_id == workflow_id)
     result = await db.execute(query)
     return list(result.scalars().all())
 
-async def list_workflows(db: AsyncSession, org_id: str, skip: int = 0, limit: int = 20) -> List[Workflow]:
+async def list_workflows(db: AsyncSession, org_id: str | uuid.UUID, skip: int = 0, limit: int = 20) -> List[Workflow]:
+    if isinstance(org_id, str):
+        org_id = uuid.UUID(org_id)
     query = select(Workflow).where(Workflow.org_id == org_id).offset(skip).limit(limit)
     result = await db.execute(query)
     return list(result.scalars().all())
