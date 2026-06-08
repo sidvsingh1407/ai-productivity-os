@@ -4,7 +4,8 @@ import { persist } from 'zustand/middleware';
 export interface User {
   id: string;
   email: string;
-  full_name: string;
+  full_name?: string;
+  name?: string;
   is_superadmin?: boolean;
 }
 
