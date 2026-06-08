@@ -83,7 +83,7 @@ export function DeveloperPortal() {
             </p>
             <div className="bg-bg-secondary border border-border-strong rounded-lg p-6 my-8">
               <h3 className="text-lg font-semibold mt-0">Base URL</h3>
-              <code className="text-accent-blue bg-white px-2 py-1 rounded">https://api.tarkax.com</code>
+              <code className="text-accent-blue px-2 py-1 rounded" style={{ background: 'var(--tx-bg-card)' }}>https://api.tarkax.com</code>
             </div>
           </section>
 
@@ -98,7 +98,7 @@ export function DeveloperPortal() {
             </p>
 
             <h3 className="text-xl font-semibold mt-6 mb-2">cURL Example</h3>
-            <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+            <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto" style={{ background: 'var(--tx-bg-dark)' }}>
               <pre><code>curl -X POST https://api.tarkax.com/api/v1/audit \
   -H "X-API-Key: tkx_live_your_api_key_here" \
   -H "Content-Type: application/json" \
@@ -106,7 +106,7 @@ export function DeveloperPortal() {
             </div>
 
             <h3 className="text-xl font-semibold mt-6 mb-2">JavaScript Example</h3>
-            <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+            <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto" style={{ background: 'var(--tx-bg-dark)' }}>
               <pre><code>fetch('https://api.tarkax.com/api/v1/audit', &#123;
   method: 'POST',
   headers: &#123;
@@ -118,7 +118,7 @@ export function DeveloperPortal() {
             </div>
 
             <h3 className="text-xl font-semibold mt-6 mb-2">Python Example</h3>
-            <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+            <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto" style={{ background: 'var(--tx-bg-dark)' }}>
               <pre><code>import requests
 
 headers = &#123;
@@ -146,7 +146,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
                   <li><strong>Obtain API Key:</strong> Navigate to the Developer Dashboard and create a new key.</li>
                   <li>
                     <strong>Example Request:</strong> Send a basic compliance payload.
-                    <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2">
+                    <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2" style={{ background: 'var(--tx-bg-dark)' }}>
                       <pre><code>curl -X POST https://api.tarkax.com/api/v1/audit \
   -H "X-API-Key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -155,7 +155,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
                   </li>
                   <li>
                     <strong>Example Response:</strong>
-                    <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2">
+                    <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2" style={{ background: 'var(--tx-bg-dark)' }}>
                       <pre><code>&#123;
   "id": "123e4567-e89b-12d3-a456-426614174000",
   "total_score": 75,
@@ -174,7 +174,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
                   <li><strong>Obtain API Key:</strong> Get your key from the Dashboard.</li>
                   <li>
                     <strong>Example Request:</strong> Provide process details.
-                    <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2">
+                    <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2" style={{ background: 'var(--tx-bg-dark)' }}>
                       <pre><code>curl -X POST https://api.tarkax.com/workflows/ \
   -H "X-API-Key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -183,7 +183,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
                   </li>
                   <li>
                     <strong>Example Response:</strong>
-                    <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2">
+                    <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2" style={{ background: 'var(--tx-bg-dark)' }}>
                       <pre><code>&#123;
   "id": "workflow-id",
   "status": "completed",
@@ -201,7 +201,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
                   <li><strong>Obtain API Key:</strong> Copy a valid API key.</li>
                   <li>
                     <strong>Example Request:</strong> Send scores.
-                    <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2">
+                    <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2" style={{ background: 'var(--tx-bg-dark)' }}>
                       <pre><code>curl -X POST https://api.tarkax.com/api/v1/risk \
   -H "X-API-Key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -210,7 +210,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
                   </li>
                   <li>
                     <strong>Example Response:</strong>
-                    <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2">
+                    <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2" style={{ background: 'var(--tx-bg-dark)' }}>
                       <pre><code>&#123;
   "risk_level": "Medium",
   "risk_score": 65,
@@ -228,7 +228,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
                   <li><strong>Obtain API Key:</strong> Retrieve an API key.</li>
                   <li>
                     <strong>Example Request:</strong> Pass a basic prompt.
-                    <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2">
+                    <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2" style={{ background: 'var(--tx-bg-dark)' }}>
                       <pre><code>curl -X POST https://api.tarkax.com/api/prompt-improver \
   -H "X-API-Key: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -237,7 +237,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
                   </li>
                   <li>
                     <strong>Example Response:</strong>
-                    <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2">
+                    <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mt-2" style={{ background: 'var(--tx-bg-dark)' }}>
                       <pre><code>&#123;
   "improved_prompt": "Draft an update email detailing progress on the current sprint...",
   "scores": &#123;"original_score": 20, "improved_score": 85&#125;
@@ -319,7 +319,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
             </p>
 
             <h3 className="text-xl font-semibold mt-6 mb-2">Request Example</h3>
-            <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mb-6">
+            <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mb-6" style={{ background: 'var(--tx-bg-dark)' }}>
               <pre><code>&#123;
   "form_response": &#123;
     "has_documented_processes": true,
@@ -333,7 +333,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
             </div>
 
             <h3 className="text-xl font-semibold mt-6 mb-2">Response Example</h3>
-            <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+            <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto" style={{ background: 'var(--tx-bg-dark)' }}>
               <pre><code>&#123;
   "id": "uuid",
   "total_score": 75,
@@ -358,7 +358,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
             </p>
 
             <h3 className="text-xl font-semibold mt-6 mb-2">Request Example</h3>
-            <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mb-6">
+            <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mb-6" style={{ background: 'var(--tx-bg-dark)' }}>
               <pre><code>&#123;
   "input_config": &#123;
     "process_name": "Employee Onboarding",
@@ -368,7 +368,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
             </div>
 
             <h3 className="text-xl font-semibold mt-6 mb-2">Response Example</h3>
-            <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+            <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto" style={{ background: 'var(--tx-bg-dark)' }}>
               <pre><code>&#123;
   "id": "uuid",
   "status": "completed",
@@ -392,7 +392,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
             </p>
 
             <h3 className="text-xl font-semibold mt-6 mb-2">Request Example</h3>
-            <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mb-6">
+            <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mb-6" style={{ background: 'var(--tx-bg-dark)' }}>
               <pre><code>&#123;
   "scores": &#123;
     "dimensions": &#123; "ops": 60, "sec": 45 &#125;,
@@ -403,7 +403,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
             </div>
 
             <h3 className="text-xl font-semibold mt-6 mb-2">Response Example</h3>
-            <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+            <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto" style={{ background: 'var(--tx-bg-dark)' }}>
               <pre><code>&#123;
   "risk_level": "High",
   "risk_score": 82,
@@ -425,14 +425,14 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
             </p>
 
             <h3 className="text-xl font-semibold mt-6 mb-2">Request Example</h3>
-            <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mb-6">
+            <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto mb-6" style={{ background: 'var(--tx-bg-dark)' }}>
               <pre><code>&#123;
   "prompt": "Write an email to the client about the delay."
 &#125;</code></pre>
             </div>
 
             <h3 className="text-xl font-semibold mt-6 mb-2">Response Example</h3>
-            <div className="bg-slate-900 text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+            <div className="text-slate-200 rounded-lg p-4 font-mono text-sm overflow-x-auto" style={{ background: 'var(--tx-bg-dark)' }}>
               <pre><code>&#123;
   "improved_prompt": "Draft a formal email to the client regarding the Q3 delivery delay, including root cause and revised timeline.",
   "scores": &#123;

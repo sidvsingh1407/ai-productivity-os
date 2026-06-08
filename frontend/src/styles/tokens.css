@@ -1,0 +1,26 @@
+:root {
+  --tx-bg-canvas:      #e8eaed;
+  --tx-bg-card:        #ffffff;
+  --tx-bg-subtle:      #f8fafc;
+  --tx-bg-dark:        #0B1F3A;
+  --tx-bg-darker:      #060F1C;
+  --tx-text-primary:   #0F172A;
+  --tx-text-secondary: #475569;
+  --tx-text-muted:     #94A3B8;
+  --tx-text-inverse:   #fffdf9;
+  --tx-text-label:     #64748B;
+  --tx-accent-blue:    #2563EB;
+  --tx-accent-amber:   #D97706;
+  --tx-accent-green:   #059669;
+  --tx-accent-red:     #DC2626;
+  --tx-border:         #E2E8F0;
+  --tx-border-strong:  #CBD5E1;
+  --tx-font-sans:      'Inter', ui-sans-serif, sans-serif;
+  --tx-font-mono:      'IBM Plex Mono', ui-monospace, monospace;
+  --tx-font-display:   'Barlow Condensed', sans-serif;
+}
+
+@keyframes tx-tick {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}

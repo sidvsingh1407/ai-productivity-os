@@ -32,7 +32,7 @@ export default function AuditHistory() {
         <Button onClick={() => navigate('/app/audits/new')}>New Audit</Button>
       </div>
 
-      <div className="rounded-md border bg-white">
+      <div className="rounded-md border" style={{ background: 'var(--tx-bg-card)' }}>
         <Table>
           <TableHeader>
             <TableRow>

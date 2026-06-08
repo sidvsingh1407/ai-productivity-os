@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 
 export default function MethodologyPage() {
   return (
-    <div className="bg-white">
+    <div style={{ background: 'var(--tx-bg-card)' }}>
       {/* Hero Section */}
-      <section className="bg-slate-900 text-white py-20">
+      <section className="text-white py-20" style={{ background: 'var(--tx-bg-dark)' }}>
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">The TarkaX Methodology</h1>
           <p className="text-xl text-slate-300 mb-8">
@@ -84,14 +84,14 @@ export default function MethodologyPage() {
           </div>
 
           {/* CTA */}
-          <div className="text-center bg-slate-900 text-white rounded-xl p-12">
+          <div className="text-center text-white rounded-xl p-12" style={{ background: 'var(--tx-bg-dark)' }}>
             <h2 className="text-2xl font-bold mb-4">See the Methodology in Action</h2>
             <p className="text-slate-300 mb-8 max-w-2xl mx-auto">
               Run an assessment to see exactly how our intelligence engine maps capability gaps to business risks.
             </p>
             <Link
               to="/ai-audit"
-              className="inline-flex items-center justify-center bg-white text-slate-900 px-6 py-3 rounded-md font-medium hover:bg-slate-100 transition-colors"
+              className="inline-flex items-center justify-center text-slate-900 px-6 py-3 rounded-md font-medium hover:bg-slate-100 transition-colors" style={{ background: 'var(--tx-bg-card)' }}
             >
               Start Free Assessment <ArrowRight className="ml-2 w-4 h-4" />
             </Link>

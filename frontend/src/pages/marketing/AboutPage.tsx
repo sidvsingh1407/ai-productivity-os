@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { SeoHead } from '../../components/geo/SeoHead';
+import ConstellationMap from '../../components/ConstellationMap';
 import { DefinitionBlock } from '../../components/geo/DefinitionBlock';
 
 export default function AboutPage() {
@@ -119,6 +120,73 @@ export default function AboutPage() {
                 Despite having the data, the intelligence required to interpret that data into diagnostic insights was missing. TarkaX was developed to bridge this gap, translating operational noise into clear, actionable intelligence.
               </p>
             </div>
+          </div>
+
+          <div style={{
+            background: '#0B1F3A',
+            borderRadius: 18,
+            overflow: 'hidden',
+            margin: '48px 0',
+          }}>
+            <div style={{
+              padding: '28px 28px 0',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}>
+              <div>
+                <div style={{
+                  fontFamily: 'Barlow Condensed, sans-serif',
+                  fontWeight: 700,
+                  fontSize: 36,
+                  lineHeight: 0.90,
+                  letterSpacing: '-0.03em',
+                  color: '#fffdf9',
+                  marginBottom: 10,
+                }}>
+                  YOUR OPERATIONAL<br />
+                  INTELLIGENCE <span style={{ color: '#2563EB' }}>MAP</span>
+                </div>
+                <div style={{
+                  fontSize: 11,
+                  color: '#475569',
+                  maxWidth: 200,
+                  lineHeight: 1.6,
+                  marginBottom: 16,
+                }}>
+                  Every node is a live signal. Distance from
+                  center reflects severity. TarkaX maps what
+                  audits miss.
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {[
+                  { color: '#DC2626', label: 'CRITICAL — immediate action' },
+                  { color: '#D97706', label: 'REVIEW — monitor closely' },
+                  { color: '#059669', label: 'STABLE — passing' },
+                  { color: '#2563EB', label: 'CORE — TarkaX engine' },
+                ].map((item, i) => (
+                  <div key={i} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 7,
+                    fontFamily: 'IBM Plex Mono, monospace',
+                    fontSize: 9,
+                    color: '#475569',
+                    letterSpacing: '0.03em',
+                  }}>
+                    <div style={{
+                      width: 7, height: 7,
+                      borderRadius: '50%',
+                      background: item.color,
+                      flexShrink: 0,
+                    }} />
+                    {item.label}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <ConstellationMap variant="about" height={320} />
           </div>
 
           {/* What Comes Next */}

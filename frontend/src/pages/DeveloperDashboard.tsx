@@ -104,7 +104,7 @@ export function DeveloperDashboard() {
           <p className="text-green-700 text-sm mb-4">
             Please copy your API key now. You will not be able to see it again!
           </p>
-          <div className="flex items-center gap-2 bg-white p-3 border border-green-200 rounded">
+          <div className="flex items-center gap-2 p-3 border border-green-200 rounded" style={{ background: 'var(--tx-bg-card)' }}>
             <code className="flex-1 text-slate-800">{newlyCreatedKey.raw_key}</code>
             <button
               onClick={() => copyToClipboard(newlyCreatedKey.raw_key)}
@@ -124,7 +124,7 @@ export function DeveloperDashboard() {
 
       {/* Metrics Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 border border-slate-200 rounded-lg shadow-sm">
+        <div className="p-6 border border-slate-200 rounded-lg shadow-sm" style={{ background: 'var(--tx-bg-card)' }}>
           <div className="flex items-center gap-3 text-slate-500 mb-2">
             <Key className="w-5 h-5" />
             <span className="font-medium">Active Keys</span>
@@ -134,7 +134,7 @@ export function DeveloperDashboard() {
           </p>
         </div>
 
-        <div className="bg-white p-6 border border-slate-200 rounded-lg shadow-sm">
+        <div className="p-6 border border-slate-200 rounded-lg shadow-sm" style={{ background: 'var(--tx-bg-card)' }}>
           <div className="flex items-center gap-3 text-slate-500 mb-2">
             <Activity className="w-5 h-5" />
             <span className="font-medium">Recent Requests</span>
@@ -144,7 +144,7 @@ export function DeveloperDashboard() {
           </p>
         </div>
 
-        <div className="bg-white p-6 border border-slate-200 rounded-lg shadow-sm">
+        <div className="p-6 border border-slate-200 rounded-lg shadow-sm" style={{ background: 'var(--tx-bg-card)' }}>
           <div className="flex items-center gap-3 text-slate-500 mb-2">
             <Clock className="w-5 h-5" />
             <span className="font-medium">Avg Latency</span>
@@ -158,7 +158,7 @@ export function DeveloperDashboard() {
       </div>
 
       {/* API Keys Table */}
-      <div className="bg-white border border-slate-200 rounded-lg shadow-sm mb-8 overflow-hidden">
+      <div className="border border-slate-200 rounded-lg shadow-sm mb-8 overflow-hidden" style={{ background: 'var(--tx-bg-card)' }}>
         <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50">
           <div>
             <h2 className="text-lg font-bold text-slate-900">API Keys</h2>
@@ -166,7 +166,7 @@ export function DeveloperDashboard() {
           </div>
           <button
             onClick={() => setShowNewKeyModal(true)}
-            className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-md font-medium hover:bg-slate-800 transition-colors"
+            className="flex items-center gap-2 text-white px-4 py-2 rounded-md font-medium hover:bg-slate-800 transition-colors" style={{ background: 'var(--tx-bg-dark)' }}
           >
             <Plus className="w-4 h-4" />
             Create Key
@@ -175,7 +175,7 @@ export function DeveloperDashboard() {
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-600">
-            <thead className="bg-white border-b border-slate-200">
+            <thead className="border-b border-slate-200" style={{ background: 'var(--tx-bg-card)' }}>
               <tr>
                 <th className="px-6 py-4 font-medium text-slate-900">Name</th>
                 <th className="px-6 py-4 font-medium text-slate-900">Tier</th>
@@ -224,7 +224,7 @@ export function DeveloperDashboard() {
       </div>
 
       {/* Usage Logs Table */}
-      <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+      <div className="border border-slate-200 rounded-lg shadow-sm overflow-hidden" style={{ background: 'var(--tx-bg-card)' }}>
         <div className="p-6 border-b border-slate-200 bg-slate-50">
           <h2 className="text-lg font-bold text-slate-900">Recent API Requests</h2>
           <p className="text-sm text-slate-500">Log of the last 100 API requests made using your active keys.</p>
@@ -232,7 +232,7 @@ export function DeveloperDashboard() {
 
         <div className="overflow-x-auto max-h-96">
           <table className="w-full text-left text-sm text-slate-600 relative">
-            <thead className="bg-white border-b border-slate-200 sticky top-0">
+            <thead className="border-b border-slate-200 sticky top-0" style={{ background: 'var(--tx-bg-card)' }}>
               <tr>
                 <th className="px-6 py-4 font-medium text-slate-900">Timestamp</th>
                 <th className="px-6 py-4 font-medium text-slate-900">Method</th>
@@ -279,7 +279,7 @@ export function DeveloperDashboard() {
       {/* New Key Modal */}
       {showNewKeyModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
+          <div className="rounded-lg shadow-xl w-full max-w-md overflow-hidden" style={{ background: 'var(--tx-bg-card)' }}>
             <div className="p-6 border-b border-slate-200">
               <h3 className="text-xl font-bold text-slate-900">Create new API key</h3>
             </div>
@@ -312,7 +312,7 @@ export function DeveloperDashboard() {
                 <button
                   type="submit"
                   disabled={createKeyMutation.isPending || !newKeyName.trim()}
-                  className="px-4 py-2 text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-md transition-colors disabled:opacity-50"
+                  className="px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 rounded-md transition-colors disabled:opacity-50" style={{ background: 'var(--tx-bg-dark)' }}
                 >
                   {createKeyMutation.isPending ? 'Creating...' : 'Create Key'}
                 </button>
