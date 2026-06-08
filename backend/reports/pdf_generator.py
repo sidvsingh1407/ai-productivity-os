@@ -276,7 +276,7 @@ def create_cost_of_inaction_table(coi_data):
     ]]
 
     for item in coi_data:
-        risk_area_text = f"<b>{item.get('risk_category', '')}</b><br/><font color='{COLOR_HIGHLIGHT if item.get('risk_level') in ['Critical', 'High'] else COLOR_PRIMARY}'>{item.get('risk_level', '')} Exposure</font>"
+        risk_area_text = f"<b>{item.get('risk_category', '')}</b><br/><font color='{COLOR_HIGHLIGHT if item.get('risk_level') in ['Critical', 'High'] else COLOR_PRIMARY}'>{item.get('risk_level', 'Unknown')}</font>"
 
         data.append([
             Paragraph(risk_area_text, get_styles()['BodyText']),
@@ -354,7 +354,7 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
     # Assessment Limitations
     story.append(Paragraph("Assessment Limitations", styles['SectionHeading']))
     # Use exact approved wording required by spec
-    limitations_text = "This assessment is based on self-reported organizational responses and should be used as a directional decision-support tool rather than a substitute for a full organizational review."
+    limitations_text = "This assessment is based on self-reported organizational responses and should be used as a directional decision-support tool rather than a substitute for a full organizational audit by qualified professionals."
     story.append(Paragraph(limitations_text, styles['Normal']))
     story.append(Spacer(1, 20))
 
@@ -602,6 +602,7 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
     return output_path
 
 def generate_report(audit_data: dict, output_path: str) -> str:
+    """Public API for PDF generation - wraps generate_audit_pdf."""
     return generate_audit_pdf(audit_data, output_path)
 
 def main():
