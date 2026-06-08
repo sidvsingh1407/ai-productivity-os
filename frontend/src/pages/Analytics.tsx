@@ -83,7 +83,7 @@ export default function Analytics() {
             </div>
 
             {/* Dimension Averages */}
-            <div className="rounded-lg border border-slate-200 bg-white p-4">
+            <div className="rounded-lg border border-slate-200 p-4" style={{ background: 'var(--tx-bg-card)' }}>
               <h3 className="mb-4 text-sm font-medium text-slate-800">Dimension Averages</h3>
               <div className="space-y-4">
                 {dimensionsData && Object.entries(dimensionsData).map(([key, val]) => (
@@ -103,7 +103,7 @@ export default function Analytics() {
 
 function StatCard({ title, value, icon }: { title: string; value: string | number; icon: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-lg border border-slate-200 p-6 shadow-sm" style={{ background: 'var(--tx-bg-card)' }}>
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-slate-500">{title}</h3>
         {icon}

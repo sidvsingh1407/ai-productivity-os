@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ShieldAlert, ArrowRight } from 'lucide-react';
 import { SeoHead } from '../../components/geo/SeoHead';
+import ConstellationMap from '../../components/ConstellationMap';
 import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
 
 export default function Home() {
@@ -54,20 +55,62 @@ export default function Home() {
         schema={[organizationSchema, websiteSchema, faqSchema]}
       />
       {/* 1. Hero Section */}
-      <section className="py-[120px] border-b border-border-strong bg-bg-primary">
-        <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center flex flex-col items-center">
-          <h1 className="text-display text-text-primary mb-6">
-            Operational Intelligence Platform
-          </h1>
-          <p className="text-h3 font-normal text-text-secondary max-w-3xl mb-12">
-            TarkaX identifies structural failures, governance gaps, and execution risks before they become institutional problems.
-          </p>
-          <Link
-            to="/contact"
-            className="px-8 py-4 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90 flex items-center justify-center gap-2"
-          >
-            Request a Demo
-          </Link>
+      <section className="border-b border-border-strong bg-bg-primary">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '44% 56%',
+          minHeight: 420,
+          overflow: 'hidden',
+        }}>
+          {/* LEFT — keep all existing hero content here, untouched */}
+          <div style={{ padding: '44px 28px 44px 36px', display: 'flex', flexDirection: 'column', justifyItems: 'start' }}>
+            <div className="flex flex-col items-start text-left w-full h-full justify-center">
+              <h1 className="text-display text-text-primary mb-6">
+                Operational Intelligence Platform
+              </h1>
+              <p className="text-h3 font-normal text-text-secondary mb-12">
+                TarkaX identifies structural failures, governance gaps, and execution risks before they become institutional problems.
+              </p>
+              <Link
+                to="/contact"
+                className="px-8 py-4 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90 inline-flex items-center justify-center gap-2"
+              >
+                Request a Demo
+              </Link>
+            </div>
+          </div>
+
+          {/* RIGHT — constellation */}
+          <div style={{ background: '#0B1F3A', overflow: 'hidden' }}>
+            <ConstellationMap variant="hero" height={420} />
+          </div>
+        </div>
+
+        <div style={{ overflow: 'hidden', background: '#0B1F3A', padding: '10px 0' }}>
+          <div style={{
+            display: 'flex',
+            whiteSpace: 'nowrap',
+            animation: 'tx-tick 22s linear infinite',
+          }}>
+            {[
+              'AI AUDIT','GOVERNANCE SCORING','FAILURE INTELLIGENCE',
+              'WORKFLOW DIAGNOSTIC','OPERATIONAL INTELLIGENCE',
+              'RISK INDICATORS','AI MATURITY INDEX','FORECASTING ENGINE',
+              'AI AUDIT','GOVERNANCE SCORING','FAILURE INTELLIGENCE',
+              'WORKFLOW DIAGNOSTIC','OPERATIONAL INTELLIGENCE',
+              'RISK INDICATORS','AI MATURITY INDEX','FORECASTING ENGINE',
+            ].map((item, i) => (
+              <span key={i} style={{
+                fontFamily: 'IBM Plex Mono, monospace',
+                fontSize: 10,
+                color: '#2563EB',
+                padding: '0 28px',
+                letterSpacing: '0.06em',
+              }}>
+                {item} <span style={{ color: '#1E3A5F' }}>·</span>
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 

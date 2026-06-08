@@ -123,7 +123,7 @@ export default function WorkflowDetail() {
             {workflow.blueprints && workflow.blueprints.length > 0 ? (
               <div className="space-y-4">
                 {workflow.blueprints.map((bp: any, idx: number) => (
-                  <div key={idx} className="flex justify-between items-center p-4 border rounded-lg bg-white shadow-sm">
+                  <div key={idx} className="flex justify-between items-center p-4 border rounded-lg shadow-sm" style={{ background: 'var(--tx-bg-card)' }}>
                     <div>
                       <div className="font-semibold text-slate-900">{bp.process_id || `Process ${idx + 1}`}</div>
                       <div className="text-sm text-slate-500 mt-1">

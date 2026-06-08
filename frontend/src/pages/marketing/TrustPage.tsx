@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 
 export default function TrustPage() {
   return (
-    <div className="bg-white">
+    <div style={{ background: 'var(--tx-bg-card)' }}>
       {/* Hero Section */}
-      <section className="bg-slate-900 text-white py-20">
+      <section className="text-white py-20" style={{ background: 'var(--tx-bg-dark)' }}>
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Trust & Security Center</h1>
           <p className="text-xl text-slate-300 mb-8">
@@ -80,7 +80,7 @@ export default function TrustPage() {
             <h2 className="text-2xl font-bold text-slate-900 mb-6">Have specific security requirements?</h2>
             <Link
               to="/contact?interest=Security"
-              className="inline-flex items-center justify-center bg-slate-900 text-white px-6 py-3 rounded-md font-medium hover:bg-slate-800 transition-colors"
+              className="inline-flex items-center justify-center text-white px-6 py-3 rounded-md font-medium hover:bg-slate-800 transition-colors" style={{ background: 'var(--tx-bg-dark)' }}
             >
               Contact our Security Team
             </Link>

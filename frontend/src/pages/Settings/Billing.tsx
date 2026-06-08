@@ -25,8 +25,8 @@ export default function Billing() {
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Current Plan */}
-        <div className="relative rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-          <div className="absolute top-0 right-0 -mt-3 mr-6 rounded-full bg-slate-900 px-3 py-1 text-xs font-medium text-white shadow-sm">
+        <div className="relative rounded-2xl border border-slate-200 p-8 shadow-sm" style={{ background: 'var(--tx-bg-card)' }}>
+          <div className="absolute top-0 right-0 -mt-3 mr-6 rounded-full px-3 py-1 text-xs font-medium text-white shadow-sm" style={{ background: 'var(--tx-bg-dark)' }}>
             Active Plan
           </div>
           <h2 className="text-xl font-bold text-slate-900">Free Plan</h2>
@@ -58,7 +58,7 @@ export default function Billing() {
           <div className="mt-6">
             <button
               onClick={handleUpgradeClick}
-              className="inline-flex items-center justify-center rounded-md bg-slate-900 px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
+              className="inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2" style={{ background: 'var(--tx-bg-dark)' }}
             >
               Upgrade to Pro
             </button>

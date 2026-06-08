@@ -69,7 +69,7 @@ export default function OrgSettings() {
       </div>
 
       {/* Org Details */}
-      <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-lg border border-slate-200 p-6 shadow-sm" style={{ background: 'var(--tx-bg-card)' }}>
         <h2 className="mb-4 text-lg font-medium text-slate-900">Organization Details</h2>
         <div className="max-w-md space-y-4">
           <div>
@@ -86,7 +86,7 @@ export default function OrgSettings() {
       </div>
 
       {/* Team Members */}
-      <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="rounded-lg border border-slate-200 shadow-sm" style={{ background: 'var(--tx-bg-card)' }}>
         <div className="border-b border-slate-200 p-6">
           <h2 className="text-lg font-medium text-slate-900">Team Members</h2>
           <p className="mt-1 text-sm text-slate-500">Invite new members or manage existing ones.</p>
@@ -108,7 +108,7 @@ export default function OrgSettings() {
             <button
               type="submit"
               disabled={inviteMutation.isPending || !inviteEmail}
-              className="inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-slate-800 disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-slate-800 disabled:opacity-50" style={{ background: 'var(--tx-bg-dark)' }}
             >
               {inviteMutation.isPending ? 'Inviting...' : 'Invite'}
             </button>
