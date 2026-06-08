@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, AlertTriangle, CheckCircle2, Clock, Zap, Target } from 'lucide-react';
 import { SeoHead } from '../../components/geo/SeoHead';
 import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
+import ConstellationMap from '../../components/ConstellationMap';
 
 export default function Home() {
   const faqItems = [
@@ -85,14 +86,20 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Visual: Business Reality Dashboard */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-accent-blue/5 to-transparent rounded-xl" />
-              <div className="bg-bg-primary border border-border-strong rounded-xl shadow-lg p-6 relative z-10 overflow-hidden">
-                <div className="flex items-center justify-between mb-6 border-b border-border-light pb-4">
-                  <h3 className="font-semibold text-text-primary">Business Reality Dashboard</h3>
-                  <span className="text-xs font-mono text-text-secondary px-2 py-1 bg-bg-secondary rounded">LIVE</span>
-                </div>
+            {/* Right Visual: Business Reality Dashboard with Constellation Background */}
+            <div className="relative h-[480px] rounded-xl overflow-hidden border border-border-strong shadow-lg bg-bg-dark">
+              {/* Background Map */}
+              <div className="absolute inset-0 z-0 opacity-60">
+                <ConstellationMap variant="hero" height={480} />
+              </div>
+
+              {/* Foreground Dashboard Overlay */}
+              <div className="absolute inset-0 z-10 flex items-end justify-center p-6 bg-gradient-to-t from-bg-dark via-transparent to-transparent">
+                <div className="w-full bg-bg-primary border border-border-strong rounded-xl p-6 shadow-xl relative mt-32">
+                  <div className="flex items-center justify-between mb-4 border-b border-border-light pb-4">
+                    <h3 className="font-semibold text-text-primary">Business Reality Dashboard</h3>
+                    <span className="text-xs font-mono text-accent-blue px-2 py-1 bg-accent-blue/10 rounded">LIVE SCAN</span>
+                  </div>
 
                 <div className="space-y-6">
                   {/* Metric Row 1 */}
@@ -134,6 +141,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
+              </div>
               </div>
             </div>
 
