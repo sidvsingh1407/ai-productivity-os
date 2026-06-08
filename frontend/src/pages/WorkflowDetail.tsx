@@ -40,7 +40,7 @@ export default function WorkflowDetail() {
     },
     onSuccess: (data) => {
       // Route removed from customer-facing navigation; originally went to /integrations/${data.id}
-      navigate(`/app/workflows`);
+      navigate(`/app/workflows/${data.id}`);
     },
   });
 
