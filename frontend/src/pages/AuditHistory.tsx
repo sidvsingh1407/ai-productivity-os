@@ -29,7 +29,7 @@ export default function AuditHistory() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">Audit History</h1>
-        <Button onClick={() => navigate('/audits/new')}>New Audit</Button>
+        <Button onClick={() => navigate('/app/audits/new')}>New Audit</Button>
       </div>
 
       <div className="rounded-md border bg-white">
@@ -74,10 +74,10 @@ export default function AuditHistory() {
                       )}
                     </TableCell>
                     <TableCell className="text-right flex justify-end space-x-2">
-                      <Button variant="ghost" size="sm" onClick={() => navigate(`/audits/${audit.id}`)}>
+                      <Button variant="ghost" size="sm" onClick={() => navigate(`/app/audits/${audit.id}`)}>
                         <Eye className="mr-2 h-4 w-4" /> View
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => navigate(`/audits/new?sourceAuditId=${audit.id}`)}>
+                      <Button variant="outline" size="sm" onClick={() => navigate(`/app/audits/new?sourceAuditId=${audit.id}`)}>
                         <RotateCcw className="mr-2 h-4 w-4" /> Re-Run
                       </Button>
                     </TableCell>

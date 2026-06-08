@@ -128,7 +128,7 @@ export function Dashboard() {
             Run your first AI Audit to receive intelligence, recommendations, and risk insights.
           </p>
           <button
-            onClick={() => navigate('/audits/new')}
+            onClick={() => navigate('/app/audits/new')}
             className="px-8 py-4 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90"
           >
             Start AI Audit
@@ -223,7 +223,7 @@ export function Dashboard() {
               </div>
               <div className="p-6 bg-bg-secondary flex justify-end">
                 <button
-                  onClick={() => navigate(`/audits/${lastAudit.id}`)}
+                  onClick={() => navigate(`/app/audits/${lastAudit.id}`)}
                   className="px-6 py-3 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90"
                 >
                   View Full Report
