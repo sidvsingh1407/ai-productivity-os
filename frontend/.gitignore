@@ -2,3 +2,7 @@ node_modules/
 .env
 .env.local
 dist/
+
+# Playwright Test Artifacts
+playwright-report/
+test-results/
