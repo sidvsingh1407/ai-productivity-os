@@ -58,10 +58,10 @@ export default function Home() {
       {/* 1. Hero Section */}
       <section className="border-b border-border-strong bg-bg-primary overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-32">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[600px]">
 
-            {/* Left Content */}
-            <div className="flex flex-col items-start text-left">
+            {/* Left Content (50%) */}
+            <div className="flex flex-col items-start justify-center h-full text-left max-w-[600px]">
               <h1 className="text-display text-text-primary mb-6 leading-tight">
                 Find What's Really Holding Your Business Back
               </h1>
@@ -86,56 +86,59 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Visual: Constellation + Business Reality Snapshot */}
-            <div className="relative w-full aspect-square md:aspect-auto md:h-[500px] flex items-center justify-center rounded-xl overflow-hidden bg-[#0B1F3A]">
-              {/* Background Layer: Constellation Map */}
-              <div className="absolute inset-0 opacity-80 pointer-events-none">
-                <ConstellationMap variant="hero" height={500} />
-              </div>
-
-              {/* Foreground Layer: Business Reality Snapshot Floating Card */}
-              <div className="bg-bg-primary border border-border-strong rounded-xl shadow-lg p-6 relative z-10 overflow-hidden w-full max-w-sm ml-auto mr-4 md:mr-8 translate-y-4 shadow-2xl backdrop-blur-sm bg-bg-primary/95">
-                <div className="flex items-center justify-between mb-6 border-b border-border-light pb-4">
-                  <h3 className="font-semibold text-text-primary text-sm uppercase tracking-wider">Business Reality Snapshot</h3>
-                  <span className="text-xs font-mono text-text-secondary px-2 py-1 bg-bg-secondary rounded">LIVE</span>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-secondary/50">
-                    <div className="flex items-center gap-3">
-                      <AlertTriangle className="w-4 h-4 text-accent-amber" />
-                      <span className="text-sm font-medium text-text-secondary">AI Adoption Gaps</span>
-                    </div>
-                    <span className="text-sm text-text-primary font-bold">42%</span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-secondary/50">
-                    <div className="flex items-center gap-3">
-                      <Clock className="w-4 h-4 text-accent-red" />
-                      <span className="text-sm font-medium text-text-secondary">Workflow Bottlenecks</span>
-                    </div>
-                    <span className="text-sm text-text-primary font-bold">4</span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-secondary/50">
-                    <div className="flex items-center gap-3">
-                      <Target className="w-4 h-4 text-text-secondary" />
-                      <span className="text-sm font-medium text-text-secondary">Manual Tasks Identified</span>
-                    </div>
-                    <span className="text-sm text-text-primary font-bold">17</span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 border border-accent-blue/30 rounded bg-accent-blue/5">
-                    <div className="flex items-center gap-3">
-                      <Zap className="w-4 h-4 text-accent-blue" />
-                      <span className="text-sm font-medium text-accent-blue">Recommended Priority</span>
-                    </div>
-                    <span className="text-sm text-accent-blue font-bold">Workflow Handoff</span>
-                  </div>
-                </div>
+            {/* Right Visual (50%): The TarkaX Intelligence Engine */}
+            <div className="relative w-full aspect-square md:aspect-auto h-[400px] md:h-full min-h-[500px] flex items-center justify-center rounded-xl overflow-hidden bg-[#0B1F3A] shadow-lg">
+              <div className="absolute inset-0 pointer-events-none">
+                <ConstellationMap variant="hero" height={600} />
               </div>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* 1.5 Findings Section */}
+      <section className="py-20 bg-bg-primary border-b border-border-strong relative z-10 -mt-10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="bg-bg-primary border border-border-strong rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-h3 text-text-primary mb-2">Key Findings Businesses Miss</h2>
+              <p className="text-body text-text-secondary">Most problems are symptoms. These are the signals behind them.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="p-4 bg-bg-secondary rounded-lg border border-border-light text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <AlertTriangle className="w-4 h-4 text-accent-amber" />
+                  <span className="text-xs text-text-secondary uppercase tracking-wider font-semibold">AI Adoption Gaps</span>
+                </div>
+                <div className="text-3xl font-bold text-text-primary">42%</div>
+              </div>
+
+              <div className="p-4 bg-bg-secondary rounded-lg border border-border-light text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Clock className="w-4 h-4 text-accent-red" />
+                  <span className="text-xs text-text-secondary uppercase tracking-wider font-semibold">Workflow Bottlenecks</span>
+                </div>
+                <div className="text-3xl font-bold text-text-primary">4</div>
+              </div>
+
+              <div className="p-4 bg-bg-secondary rounded-lg border border-border-light text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Target className="w-4 h-4 text-text-secondary" />
+                  <span className="text-xs text-text-secondary uppercase tracking-wider font-semibold">Manual Tasks</span>
+                </div>
+                <div className="text-3xl font-bold text-text-primary">17</div>
+              </div>
+
+              <div className="p-4 bg-accent-blue/5 rounded-lg border border-accent-blue/30 text-center flex flex-col justify-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Zap className="w-4 h-4 text-accent-blue" />
+                  <span className="text-xs text-accent-blue uppercase tracking-wider font-semibold">Priority</span>
+                </div>
+                <div className="text-lg font-bold text-accent-blue leading-tight">Workflow<br/>Handoff</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
