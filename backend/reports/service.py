@@ -5,6 +5,7 @@ from fastapi import HTTPException
 
 from models.report import ExportJob, ExportJobStatus, ExportJobType, Report
 from tasks.pdf_tasks import generate_pdf_task
+from tasks.dispatch import safe_task_dispatch
 
 async def request_pdf_export(db: AsyncSession, audit_id: str, org_id: str, user_id: str) -> ExportJob:
     # 1. create export_job record (status: pending)
@@ -19,9 +20,9 @@ async def request_pdf_export(db: AsyncSession, audit_id: str, org_id: str, user_
     await db.commit()
     await db.refresh(new_job)
 
-    # 2. dispatch generate_pdf_task.delay(audit_id, org_id)
+    # 2. dispatch generate_pdf_task using safe dispatch
     # Celery tasks require strings or easily serializable types
-    generate_pdf_task.delay(str(audit_id), str(org_id))
+    safe_task_dispatch(generate_pdf_task, str(audit_id), str(org_id))
 
     # 3. return export_job with status=pending
     return new_job
