@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { apiClient } from '../lib/api';
+import { authApi } from '@/api/auth';
 
 export function VerifyEmail() {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -20,7 +20,7 @@ export function VerifyEmail() {
       }
 
       try {
-        await apiClient.post('/api/auth/verify-email', { token });
+        await authApi.verifyEmail({ token });
         setStatus('success');
       } catch (error: any) {
         setStatus('error');

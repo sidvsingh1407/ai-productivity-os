@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { apiClient } from '../lib/api';
+import { authApi } from '@/api/auth';
 
 export function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -41,7 +41,8 @@ export function ResetPassword() {
     setErrorMessage('');
 
     try {
-      await apiClient.post('/api/auth/reset-password', { token, new_password: password });
+      if (!token) throw new Error("No token provided");
+      await authApi.resetPassword({ token, new_password: password });
       setStatus('success');
       setTimeout(() => {
         navigate('/login');
