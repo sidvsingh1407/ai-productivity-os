@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, AlertTriangle, CheckCircle2, Clock, Zap, Target } from 'lucide-react';
 import { SeoHead } from '../../components/geo/SeoHead';
 import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
+import ConstellationMap from '../../components/ConstellationMap';
 
 export default function Home() {
   const faqItems = [
@@ -65,9 +66,9 @@ export default function Home() {
                 Find What's Really Holding Your Business Back
               </h1>
               <div className="text-h3 font-normal text-text-secondary mb-10 space-y-4">
-                <p>Most businesses don't have an AI problem.</p>
-                <p>They have a visibility problem.</p>
-                <p className="text-body mt-4 text-text-secondary/80">TarkaX reveals where time, money, operational effort, and AI investments are being wasted so you know exactly what to fix next.</p>
+                <p>Most businesses don't have a visibility problem.</p>
+                <p>They have a clarity problem.</p>
+                <p className="text-body mt-4 text-text-secondary/80">TarkaX reveals where time, money, operational effort, and technology investments are being wasted so you know exactly what to fix next.</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                 <Link
@@ -85,53 +86,51 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Visual: Business Reality Dashboard */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-accent-blue/5 to-transparent rounded-xl" />
-              <div className="bg-bg-primary border border-border-strong rounded-xl shadow-lg p-6 relative z-10 overflow-hidden">
+            {/* Right Visual: Constellation + Business Reality Snapshot */}
+            <div className="relative w-full aspect-square md:aspect-auto md:h-[500px] flex items-center justify-center rounded-xl overflow-hidden bg-[#0B1F3A]">
+              {/* Background Layer: Constellation Map */}
+              <div className="absolute inset-0 opacity-80 pointer-events-none">
+                <ConstellationMap variant="hero" height={500} />
+              </div>
+
+              {/* Foreground Layer: Business Reality Snapshot Floating Card */}
+              <div className="bg-bg-primary border border-border-strong rounded-xl shadow-lg p-6 relative z-10 overflow-hidden w-full max-w-sm ml-auto mr-4 md:mr-8 translate-y-4 shadow-2xl backdrop-blur-sm bg-bg-primary/95">
                 <div className="flex items-center justify-between mb-6 border-b border-border-light pb-4">
-                  <h3 className="font-semibold text-text-primary">Business Reality Dashboard</h3>
+                  <h3 className="font-semibold text-text-primary text-sm uppercase tracking-wider">Business Reality Snapshot</h3>
                   <span className="text-xs font-mono text-text-secondary px-2 py-1 bg-bg-secondary rounded">LIVE</span>
                 </div>
 
-                <div className="space-y-6">
-                  {/* Metric Row 1 */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-bg-secondary rounded-lg border border-border-light">
-                      <div className="text-xs text-text-secondary mb-1">AI Adoption Gaps</div>
-                      <div className="text-2xl font-bold text-text-primary">42%</div>
-                      <div className="text-xs text-accent-amber mt-1 flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> High Risk</div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-secondary/50">
+                    <div className="flex items-center gap-3">
+                      <AlertTriangle className="w-4 h-4 text-accent-amber" />
+                      <span className="text-sm font-medium text-text-secondary">AI Adoption Gaps</span>
                     </div>
-                    <div className="p-4 bg-bg-secondary rounded-lg border border-border-light">
-                      <div className="text-xs text-text-secondary mb-1">Workflow Bottlenecks</div>
-                      <div className="text-2xl font-bold text-text-primary">4</div>
-                      <div className="text-xs text-accent-red mt-1 flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> Critical</div>
-                    </div>
+                    <span className="text-sm text-text-primary font-bold">42%</span>
                   </div>
 
-                  {/* List Items */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-primary">
-                      <div className="flex items-center gap-3">
-                        <Clock className="w-4 h-4 text-text-secondary" />
-                        <span className="text-sm font-medium">Process Delays</span>
-                      </div>
-                      <span className="text-sm text-accent-red font-medium">Elevated</span>
+                  <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-secondary/50">
+                    <div className="flex items-center gap-3">
+                      <Clock className="w-4 h-4 text-accent-red" />
+                      <span className="text-sm font-medium text-text-secondary">Workflow Bottlenecks</span>
                     </div>
-                    <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-primary">
-                      <div className="flex items-center gap-3">
-                        <AlertTriangle className="w-4 h-4 text-text-secondary" />
-                        <span className="text-sm font-medium">Manual Tasks Identified</span>
-                      </div>
-                      <span className="text-sm text-text-primary font-medium">17</span>
+                    <span className="text-sm text-text-primary font-bold">4</span>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-secondary/50">
+                    <div className="flex items-center gap-3">
+                      <Target className="w-4 h-4 text-text-secondary" />
+                      <span className="text-sm font-medium text-text-secondary">Manual Tasks Identified</span>
                     </div>
-                    <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-primary">
-                      <div className="flex items-center gap-3">
-                        <Zap className="w-4 h-4 text-text-secondary" />
-                        <span className="text-sm font-medium">Recommended Priority</span>
-                      </div>
-                      <span className="text-sm text-accent-blue font-medium">Workflow Handoff</span>
+                    <span className="text-sm text-text-primary font-bold">17</span>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 border border-accent-blue/30 rounded bg-accent-blue/5">
+                    <div className="flex items-center gap-3">
+                      <Zap className="w-4 h-4 text-accent-blue" />
+                      <span className="text-sm font-medium text-accent-blue">Recommended Priority</span>
                     </div>
+                    <span className="text-sm text-accent-blue font-bold">Workflow Handoff</span>
                   </div>
                 </div>
               </div>
@@ -151,34 +150,43 @@ export default function Home() {
           <div className="space-y-4 max-w-2xl mx-auto">
             {/* The Hierarchy Flow */}
             <div className="bg-bg-primary border border-border-strong p-6 rounded-lg shadow-sm transform transition-all hover:scale-[1.02]">
-              <div className="text-sm font-semibold text-accent-blue uppercase tracking-wider mb-2">Executives See</div>
-              <div className="text-h3 text-text-primary">"Green Dashboards"</div>
+              <div className="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-2">Executives See</div>
+              <div className="text-h3 text-text-primary">Reports</div>
             </div>
 
             <div className="flex justify-center"><ArrowRight className="w-6 h-6 text-text-secondary rotate-90" /></div>
 
             <div className="bg-bg-primary border border-border-strong p-6 rounded-lg shadow-sm transform transition-all hover:scale-[1.02]">
               <div className="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-2">Managers See</div>
-              <div className="text-h3 text-text-primary">"Delayed Reports"</div>
+              <div className="text-h3 text-text-primary">Metrics</div>
             </div>
 
             <div className="flex justify-center"><ArrowRight className="w-6 h-6 text-text-secondary rotate-90" /></div>
 
             <div className="bg-bg-primary border border-border-strong p-6 rounded-lg shadow-sm transform transition-all hover:scale-[1.02]">
               <div className="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-2">Employees See</div>
-              <div className="text-h3 text-text-primary">"Manual Workarounds"</div>
+              <div className="text-h3 text-text-primary">Workarounds</div>
             </div>
 
             <div className="flex justify-center"><ArrowRight className="w-6 h-6 text-text-secondary rotate-90" /></div>
 
             <div className="bg-bg-primary border border-accent-red/30 bg-accent-red/5 p-6 rounded-lg shadow-sm transform transition-all hover:scale-[1.02]">
-              <div className="text-sm font-semibold text-accent-red uppercase tracking-wider mb-2">Customers See</div>
-              <div className="text-h3 text-text-primary">"Slow Delivery"</div>
+              <div className="text-sm font-semibold text-accent-red uppercase tracking-wider mb-2">Customers Experience</div>
+              <div className="text-h3 text-text-primary">Delays</div>
             </div>
           </div>
 
-          <div className="mt-16 text-xl font-medium text-text-primary">
-            Nobody sees the full picture. <span className="text-accent-blue">TarkaX connects the dots.</span>
+          <div className="mt-16 p-8 bg-[#0B1F3A] border border-accent-blue/30 rounded-xl shadow-lg transform transition-all hover:scale-[1.02] max-w-2xl mx-auto relative overflow-hidden">
+             <div className="absolute inset-0 opacity-20 pointer-events-none mix-blend-screen">
+                <ConstellationMap variant="hero" height={200} />
+             </div>
+             <div className="relative z-10 flex flex-col items-center justify-center">
+               <div className="w-12 h-12 bg-accent-blue rounded-full flex items-center justify-center mb-4 shadow-[0_0_15px_rgba(37,99,235,0.5)]">
+                  <Target className="w-6 h-6 text-white" />
+               </div>
+               <div className="text-sm font-semibold text-accent-blue uppercase tracking-wider mb-2">TarkaX Reveals</div>
+               <div className="text-h3 text-white">The Underlying Reality</div>
+             </div>
           </div>
         </div>
       </section>
