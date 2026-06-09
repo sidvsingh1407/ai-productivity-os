@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { apiClient } from '../lib/api';
+import { authApi } from '@/api/auth';
 
 export function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -13,7 +13,7 @@ export function ForgotPassword() {
     setErrorMessage('');
 
     try {
-      await apiClient.post('/api/auth/forgot-password', { email });
+      await authApi.forgotPassword({ email });
       setStatus('success');
     } catch (error: any) {
       setStatus('error');

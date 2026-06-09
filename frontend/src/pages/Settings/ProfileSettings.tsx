@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
-import { apiClient } from '../../lib/api';
+import { authApi } from '@/api/auth';
 
 export default function ProfileSettings() {
   const { user } = useAuthStore();
@@ -27,7 +27,7 @@ export default function ProfileSettings() {
     setErrorMessage('');
 
     try {
-      await apiClient.post('/api/auth/change-password', {
+      await authApi.changePassword({
         current_password: currentPassword,
         new_password: newPassword
       });

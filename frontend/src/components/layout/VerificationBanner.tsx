@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
-import { apiClient } from '../../lib/api';
+import { authApi } from '@/api/auth';
 
 export function VerificationBanner() {
   const { user } = useAuthStore();
@@ -18,7 +18,8 @@ export function VerificationBanner() {
   const handleResend = async () => {
     setResendStatus('loading');
     try {
-      await apiClient.post('/api/auth/resend-verification', { email: user?.email });
+      if (!user?.email) throw new Error("No email available");
+      await authApi.resendVerification({ email: user?.email });
       setResendStatus('success');
       setTimeout(() => setResendStatus('idle'), 5000);
     } catch (error) {
