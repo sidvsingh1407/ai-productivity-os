@@ -1,7 +1,5 @@
 import os
 import logging
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
 from tasks.celery_app import celery_app
 from config import settings
 
@@ -41,6 +39,9 @@ def send_email_task(to_email: str, template: str, context: dict):
 
     if sendgrid_api_key:
         try:
+            from sendgrid import SendGridAPIClient
+            from sendgrid.helpers.mail import Mail
+
             from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@example.com")
             message = Mail(
                 from_email=from_email,
