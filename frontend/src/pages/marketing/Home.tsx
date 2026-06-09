@@ -58,12 +58,12 @@ export default function Home() {
       />
 
       {/* 1. Hero Section */}
-      <section className="border-b border-border-strong bg-bg-primary overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-0 lg:min-h-[700px] flex items-center">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
+      <section className="border-b border-border-strong bg-bg-primary overflow-hidden w-full">
+        <div className="w-full flex flex-col md:flex-row min-h-[auto] md:min-h-[70vh] xl:min-h-[80vh]">
 
-            {/* Left Content */}
-            <div className="flex flex-col items-start text-left max-w-[620px]">
+          {/* Left Content */}
+          <div className="w-full md:w-[55vw] xl:w-[50vw] flex items-center justify-center px-6 py-20 md:py-16">
+            <div className="flex flex-col items-start text-left w-full max-w-[650px]">
               <h1 className="text-display text-text-primary mb-6 leading-tight">
                 Find What's Really Holding Your Business Back
               </h1>
@@ -86,22 +86,21 @@ export default function Home() {
                 </Link>
               </div>
             </div>
+          </div>
 
-            {/* Right Visual: Constellation */}
-            <div className="relative w-full flex flex-col justify-center bg-[#0B1F3A] rounded-xl lg:rounded-none lg:bg-transparent">
-              {/* Header inside the right column, above the canvas, not overlaid */}
-              <div className="mb-4 text-left">
-                <h3 className="text-sm font-semibold text-text-primary mb-1">Operational Intelligence Map</h3>
-                <p className="text-xs text-text-secondary">Visualizing hidden bottlenecks, workflow friction, adoption gaps, and operational risks.</p>
-              </div>
-              <div className="relative w-full aspect-square md:aspect-auto md:h-[600px] flex items-center justify-center overflow-hidden bg-[#0B1F3A] rounded-xl lg:rounded-none">
-                <div className="absolute inset-0 pointer-events-none rounded-xl lg:rounded-none overflow-hidden bg-[#0B1F3A]">
-                  <ConstellationMap variant="hero" height={600} />
-                </div>
-              </div>
+          {/* Right Visual: Constellation */}
+          <div className="w-full md:w-[45vw] xl:w-[50vw] relative bg-[#0B1F3A] flex-shrink-0 h-[420px] md:h-auto">
+            {/* Header inside the absolute map container */}
+            <div className="absolute top-6 left-6 z-10 pointer-events-none">
+              <h3 className="text-sm font-semibold text-text-inverse mb-1">Operational Intelligence Map</h3>
+              <p className="text-xs text-text-inverse/70 max-w-[250px]">Visualizing hidden bottlenecks, workflow friction, adoption gaps, and operational risks.</p>
             </div>
 
+            <div className="absolute inset-0 overflow-hidden bg-[#0B1F3A]">
+              <ConstellationMap variant="hero" height="100%" />
+            </div>
           </div>
+
         </div>
       </section>
 
