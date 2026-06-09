@@ -25,7 +25,7 @@ const SEV_COLOR = {
 
 interface ConstellationMapProps {
   variant?: 'hero' | 'about';
-  height?: number;
+  height?: number | string;
 }
 
 export default function ConstellationMap({
