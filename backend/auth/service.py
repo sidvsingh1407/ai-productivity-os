@@ -15,6 +15,7 @@ from models.user import User
 from models.organization import Organization, OrgMember, OrgRole
 from models.user_token import UserToken
 from tasks.email_tasks import send_email_task
+from tasks.dispatch import safe_task_dispatch
 from config import settings
 
 logger = logging.getLogger(__name__)
@@ -90,13 +91,15 @@ class AuthService:
             await self.session.commit()
 
             # Send background tasks
-            send_email_task.delay(
+            safe_task_dispatch(
+                send_email_task,
                 new_user.email,
                 "welcome",
                 {"name": new_user.full_name, "frontend_url": settings.FRONTEND_URL}
             )
 
-            send_email_task.delay(
+            safe_task_dispatch(
+                send_email_task,
                 new_user.email,
                 "verify_email",
                 {"verify_url": f"{settings.FRONTEND_URL}/verify-email?token={verify_token}"}
@@ -177,7 +180,8 @@ class AuthService:
         if user:
             reset_token = await self._create_user_token(user.id, "PASSWORD_RESET", expiry_hours=1)
             await self.session.commit()
-            send_email_task.delay(
+            safe_task_dispatch(
+                send_email_task,
                 user.email,
                 "password_reset",
                 {"reset_url": f"{settings.FRONTEND_URL}/reset-password?token={reset_token}"}
@@ -233,7 +237,8 @@ class AuthService:
         if user and not user.email_verified:
             verify_token = await self._create_user_token(user.id, "EMAIL_VERIFICATION", expiry_hours=24)
             await self.session.commit()
-            send_email_task.delay(
+            safe_task_dispatch(
+                send_email_task,
                 user.email,
                 "verify_email",
                 {"verify_url": f"{settings.FRONTEND_URL}/verify-email?token={verify_token}"}
