@@ -5,14 +5,12 @@ const TICKER_ITEMS = [
   "BOTTLENECK DETECTION",
   "WORKFLOW VISIBILITY",
   "PROCESS INTELLIGENCE",
-  "HIDDEN INEFFICIENCIES",
-  "TEAM PRODUCTIVITY",
-  "OPERATIONAL SIGNALS",
   "BUSINESS REALITY",
   "ROOT CAUSE ANALYSIS",
-  "ADOPTION INSIGHTS",
-  "DECISION SUPPORT",
-  "PROCESS FRICTION"
+  "TEAM PRODUCTIVITY",
+  "OPERATIONAL SIGNALS",
+  "PROCESS FRICTION",
+  "DECISION SUPPORT"
 ];
 
 export function TickerStrip() {
@@ -22,14 +20,14 @@ export function TickerStrip() {
 
       {/* We duplicate the items a few times to create a seamless loop */}
       <div className="flex animate-ticker whitespace-nowrap">
-        {[...Array(3)].map((_, i) => (
+        {[...Array(4)].map((_, i) => (
           <div key={i} className="flex items-center">
             {TICKER_ITEMS.map((item, index) => (
               <React.Fragment key={`${i}-${index}`}>
-                <span className="text-sm font-mono font-medium text-text-inverse/70 mx-8 tracking-wider">
+                <span className="text-sm font-mono font-medium text-text-inverse mx-8 tracking-widest">
                   {item}
                 </span>
-                <span className="text-text-inverse/20 text-xs">◆</span>
+                <span className="text-accent-blue text-xs font-bold">◆</span>
               </React.Fragment>
             ))}
           </div>

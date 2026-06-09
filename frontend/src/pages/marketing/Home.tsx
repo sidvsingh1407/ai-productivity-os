@@ -63,14 +63,13 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
 
             {/* Left Content */}
-            <div className="flex flex-col items-start text-left max-w-[600px]">
+            <div className="flex flex-col items-start text-left max-w-[620px]">
               <h1 className="text-display text-text-primary mb-6 leading-tight">
                 Find What's Really Holding Your Business Back
               </h1>
               <div className="text-h3 font-normal text-text-secondary mb-10 space-y-4">
-                <p>Most businesses don't have a visibility problem.</p>
-                <p>They have a clarity problem.</p>
-                <p className="text-body mt-4 text-text-secondary/80">TarkaX reveals where time, money, operational effort, and technology investments are being wasted so you know exactly what to fix next.</p>
+                <p>Most businesses don't know what's actually slowing them down.</p>
+                <p className="text-body mt-4 text-text-secondary/80">TarkaX helps uncover bottlenecks, workflow friction, adoption gaps, and hidden inefficiencies before you spend time or money fixing the wrong thing.</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                 <Link
@@ -89,12 +88,16 @@ export default function Home() {
             </div>
 
             {/* Right Visual: Constellation */}
-            <div className="relative w-full aspect-square md:aspect-auto md:h-[600px] flex items-center justify-center overflow-hidden bg-[#0B1F3A] rounded-xl lg:rounded-none lg:bg-transparent">
-              <div className="absolute inset-0 opacity-80 pointer-events-none rounded-xl lg:rounded-none overflow-hidden bg-[#0B1F3A]">
-                <ConstellationMap variant="hero" height={600} />
+            <div className="relative w-full flex flex-col justify-center bg-[#0B1F3A] rounded-xl lg:rounded-none lg:bg-transparent">
+              {/* Header inside the right column, above the canvas, not overlaid */}
+              <div className="mb-4 text-left">
+                <h3 className="text-sm font-semibold text-text-primary mb-1">Operational Intelligence Map</h3>
+                <p className="text-xs text-text-secondary">Visualizing hidden bottlenecks, workflow friction, adoption gaps, and operational risks.</p>
               </div>
-              <div className="absolute bottom-4 right-4 text-xs font-mono text-accent-blue/70 bg-[#0B1F3A]/80 px-3 py-1.5 rounded-full border border-accent-blue/20 backdrop-blur-sm z-10">
-                TarkaX Intelligence Engine
+              <div className="relative w-full aspect-square md:aspect-auto md:h-[600px] flex items-center justify-center overflow-hidden bg-[#0B1F3A] rounded-xl lg:rounded-none">
+                <div className="absolute inset-0 pointer-events-none rounded-xl lg:rounded-none overflow-hidden bg-[#0B1F3A]">
+                  <ConstellationMap variant="hero" height={600} />
+                </div>
               </div>
             </div>
 

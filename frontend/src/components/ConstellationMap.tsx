@@ -3,18 +3,18 @@ import React, { useEffect, useRef } from 'react';
 const TAU = Math.PI * 2;
 
 const NODES = [
-  { label: 'AI Governance',      sub: 'No escalation path defined',     angle: 0.30, dist: 112, sev: 'critical', phase: 0.0, size: 7 },
-  { label: 'Workflow Handoffs',  sub: '2.4 day avg delay flagged',       angle: 1.05, dist: 82,  sev: 'warning',  phase: 0.7, size: 5 },
-  { label: 'ROI Tracking',       sub: 'Passing — 78/100',                angle: 2.00, dist: 128, sev: 'ok',       phase: 1.4, size: 4 },
-  { label: 'Adoption Rate',      sub: '34% — below threshold',           angle: 3.00, dist: 94,  sev: 'warning',  phase: 2.1, size: 5 },
-  { label: 'Integration Layer',  sub: 'Stable across all services',      angle: 3.80, dist: 70,  sev: 'ok',       phase: 2.8, size: 4 },
-  { label: 'Escalation Paths',   sub: 'Missing in 2 departments',        angle: 4.70, dist: 118, sev: 'critical', phase: 3.5, size: 7 },
-  { label: 'Data Quality',       sub: 'Passing — clean pipeline',        angle: 5.50, dist: 60,  sev: 'ok',       phase: 4.2, size: 4 },
-  { label: 'Process Docs',       sub: '3 governance gaps found',         angle: 1.75, dist: 142, sev: 'warning',  phase: 4.9, size: 5 },
-  { label: 'AI Stack Audit',     sub: 'Stable — reviewed last cycle',    angle: 0.70, dist: 56,  sev: 'ok',       phase: 0.4, size: 4 },
-  { label: 'Gov Review Cadence', sub: 'Overdue by 6 weeks',              angle: 5.90, dist: 132, sev: 'critical', phase: 1.1, size: 6 },
-  { label: 'Compliance Flags',   sub: '2 active flags',                  angle: 2.30, dist: 155, sev: 'warning',  phase: 1.7, size: 5 },
-  { label: 'AI Stack',           sub: 'Stable — passing',                angle: 0.90, dist: 58,  sev: 'ok',       phase: 0.9, size: 4 },
+  { label: 'Approval Bottlenecks', sub: '3 approval queues exceed SLA',      angle: 0.30, dist: 112, sev: 'critical', phase: 0.0, size: 7 },
+  { label: 'Team Handoffs',        sub: '4 friction points identified',      angle: 1.05, dist: 82,  sev: 'warning',  phase: 0.7, size: 5 },
+  { label: 'Process Visibility',   sub: 'Reporting gaps detected',           angle: 2.00, dist: 128, sev: 'ok',       phase: 1.4, size: 4 },
+  { label: 'Tool Adoption',        sub: 'Usage below expected threshold',    angle: 3.00, dist: 94,  sev: 'warning',  phase: 2.1, size: 5 },
+  { label: 'Duplicate Work',       sub: 'Parallel effort across teams',      angle: 3.80, dist: 70,  sev: 'ok',       phase: 2.8, size: 4 },
+  { label: 'Decision Latency',     sub: 'Escalation cycles slowing execution',angle: 4.70, dist: 118, sev: 'critical', phase: 3.5, size: 7 },
+  { label: 'Knowledge Silos',      sub: 'Information fragmented across teams',angle: 5.50, dist: 60,  sev: 'ok',       phase: 4.2, size: 4 },
+  { label: 'Workflow Friction',    sub: 'Multiple process interruptions',    angle: 1.75, dist: 142, sev: 'warning',  phase: 4.9, size: 5 },
+  { label: 'Reporting Delays',     sub: 'Metrics arriving too late',         angle: 0.70, dist: 56,  sev: 'ok',       phase: 0.4, size: 4 },
+  { label: 'Operational Risk',     sub: 'High dependency on manual intervention',angle: 5.90, dist: 132, sev: 'critical', phase: 1.1, size: 6 },
+  { label: 'Customer Delays',      sub: 'Avg response time increasing',      angle: 2.30, dist: 155, sev: 'warning',  phase: 1.7, size: 5 },
+  { label: 'Manual Work',          sub: '14 repetitive tasks detected',      angle: 0.90, dist: 58,  sev: 'ok',       phase: 0.9, size: 4 },
 ];
 
 const SEV_COLOR = {
