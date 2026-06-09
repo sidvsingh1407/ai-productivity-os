@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, AlertTriangle, CheckCircle2, Clock, Zap, Target } from 'lucide-react';
+import { ArrowRight, AlertTriangle, CheckCircle2, Clock, Zap, Target, AlertCircle, Search } from 'lucide-react';
 import { SeoHead } from '../../components/geo/SeoHead';
 import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
-import ConstellationMap from '../../components/ConstellationMap';
 
 export default function Home() {
   const faqItems = [
@@ -87,8 +86,45 @@ export default function Home() {
             </div>
 
             {/* Right Visual: Constellation Map */}
-            <div className="relative h-[480px] rounded-xl overflow-hidden border border-border-strong shadow-lg bg-[#0B1F3A]">
-              <ConstellationMap variant="hero" height={480} />
+            <div className="relative z-10 w-full h-[480px] bg-bg-secondary rounded-lg border border-border-strong p-6 shadow-xl flex flex-col">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-border-light">
+                <div className="text-sm font-semibold text-text-primary">Business Reality Dashboard</div>
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-accent-red"></div>
+                  <div className="w-3 h-3 rounded-full bg-accent-blue"></div>
+                </div>
+              </div>
+
+              <div className="flex-1 space-y-4">
+                {/* Simulated Findings Row */}
+                <div className="p-4 bg-bg-primary border border-border-light rounded flex justify-between items-center opacity-90 hover:opacity-100 transition-opacity">
+                   <div className="flex items-center gap-3">
+                     <AlertCircle className="w-5 h-5 text-accent-red" />
+                     <span className="font-medium text-text-primary">AI Adoption Gaps</span>
+                   </div>
+                   <span className="text-sm font-mono text-text-secondary">73% Unused Licenses</span>
+                </div>
+
+                <div className="p-4 bg-bg-primary border border-border-light rounded flex justify-between items-center opacity-90 hover:opacity-100 transition-opacity">
+                   <div className="flex items-center gap-3">
+                     <Clock className="w-5 h-5 text-accent-orange" />
+                     <span className="font-medium text-text-primary">Workflow Bottlenecks</span>
+                   </div>
+                   <span className="text-sm font-mono text-text-secondary">14hr Approval Delay</span>
+                </div>
+
+                <div className="p-4 bg-bg-primary border border-border-light rounded flex justify-between items-center opacity-90 hover:opacity-100 transition-opacity">
+                   <div className="flex items-center gap-3">
+                     <Search className="w-5 h-5 text-accent-blue" />
+                     <span className="font-medium text-text-primary">Inconsistent AI Outputs</span>
+                   </div>
+                   <span className="text-sm font-mono text-text-secondary">High Variance Detected</span>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-border-light text-center text-xs text-text-secondary uppercase tracking-wider">
+                Live Diagnostic View
+              </div>
             </div>
 
           </div>
