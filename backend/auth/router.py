@@ -1,11 +1,13 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel
 
 from database import get_db
 from auth.service import AuthService
 from users.schemas import UserCreate
-from auth.schemas import AuthResponse
+from auth.schemas import AuthResponse, ForgotPasswordRequest, ResetPasswordRequest, VerifyEmailRequest, ResendVerificationRequest, ChangePasswordRequest
+from dependencies import get_current_user
+from models.user import User
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -40,3 +42,34 @@ async def refresh(refresh_data: RefreshRequest, db: AsyncSession = Depends(get_d
 @router.post("/logout")
 async def logout():
     return {"message": "Logged out successfully"}
+
+@router.post("/forgot-password", status_code=status.HTTP_200_OK)
+async def forgot_password(request: ForgotPasswordRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db)
+    await auth_service.forgot_password(request.email)
+    # Return success regardless of whether email exists to prevent user enumeration
+    return {"message": "If an account exists, a password reset link has been sent."}
+
+@router.post("/reset-password", status_code=status.HTTP_200_OK)
+async def reset_password(request: ResetPasswordRequest, db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db)
+    await auth_service.reset_password(request.token, request.new_password)
+    return {"message": "Password reset successfully."}
+
+@router.post("/verify-email", status_code=status.HTTP_200_OK)
+async def verify_email(request: VerifyEmailRequest, db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db)
+    await auth_service.verify_email(request.token)
+    return {"message": "Email verified successfully."}
+
+@router.post("/resend-verification", status_code=status.HTTP_200_OK)
+async def resend_verification(request: ResendVerificationRequest, db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db)
+    await auth_service.resend_verification(request.email)
+    return {"message": "Verification email sent if account exists and is unverified."}
+
+@router.post("/change-password", status_code=status.HTTP_200_OK)
+async def change_password(request: ChangePasswordRequest, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    auth_service = AuthService(db)
+    await auth_service.change_password(current_user, request.current_password, request.new_password)
+    return {"message": "Password changed successfully."}

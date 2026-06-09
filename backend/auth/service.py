@@ -1,4 +1,7 @@
 import logging
+import secrets
+import hashlib
+from datetime import datetime, timedelta, timezone
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
@@ -10,6 +13,9 @@ from auth.password_utils import hash_password, verify_password
 from auth.jwt_utils import create_access_token, create_refresh_token, decode_token
 from models.user import User
 from models.organization import Organization, OrgMember, OrgRole
+from models.user_token import UserToken
+from tasks.email_tasks import send_email_task
+from config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +38,24 @@ class AuthService:
                 return slug
             slug = f"{base_slug}-{suffix}"
             suffix += 1
+
+    def _hash_token(self, token: str) -> str:
+        return hashlib.sha256(token.encode()).hexdigest()
+
+    async def _create_user_token(self, user_id, token_type: str, expiry_hours: int = 1) -> str:
+        raw_token = secrets.token_urlsafe(32)
+        token_hash = self._hash_token(raw_token)
+        expires_at = datetime.now(timezone.utc) + timedelta(hours=expiry_hours)
+
+        user_token = UserToken(
+            user_id=user_id,
+            token_hash=token_hash,
+            token_type=token_type,
+            expires_at=expires_at
+        )
+        self.session.add(user_token)
+        await self.session.flush()
+        return raw_token
 
     async def register_user(self, email: str, password: str, full_name: str, org_name: str) -> dict:
         try:
@@ -60,6 +84,23 @@ class AuthService:
             # Refresh to get fully loaded objects if needed, or simply return
             await self.user_repository.session.refresh(new_user)
             await self.org_service.repository.session.refresh(org)
+
+            # Trigger Welcome and Verification Emails
+            verify_token = await self._create_user_token(new_user.id, "EMAIL_VERIFICATION", expiry_hours=24)
+            await self.session.commit()
+
+            # Send background tasks
+            send_email_task.delay(
+                new_user.email,
+                "welcome",
+                {"name": new_user.full_name, "frontend_url": settings.FRONTEND_URL}
+            )
+
+            send_email_task.delay(
+                new_user.email,
+                "verify_email",
+                {"verify_url": f"{settings.FRONTEND_URL}/verify-email?token={verify_token}"}
+            )
 
             access_token = create_access_token(data={"sub": str(new_user.id)})
             refresh_token = create_refresh_token(data={"sub": str(new_user.id)})
@@ -130,3 +171,80 @@ class AuthService:
             "refresh_token": new_refresh_token,
             "token_type": "bearer"
         }
+
+    async def forgot_password(self, email: str):
+        user = await self.user_repository.get_by_email(email)
+        if user:
+            reset_token = await self._create_user_token(user.id, "PASSWORD_RESET", expiry_hours=1)
+            await self.session.commit()
+            send_email_task.delay(
+                user.email,
+                "password_reset",
+                {"reset_url": f"{settings.FRONTEND_URL}/reset-password?token={reset_token}"}
+            )
+
+    async def reset_password(self, token: str, new_password: str):
+        token_hash = self._hash_token(token)
+        result = await self.session.execute(
+            select(UserToken).where(
+                UserToken.token_hash == token_hash,
+                UserToken.token_type == "PASSWORD_RESET",
+                UserToken.used_at.is_(None)
+            )
+        )
+        user_token = result.scalar_one_or_none()
+
+        if not user_token or user_token.expires_at.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired token")
+
+        user = await self.user_repository.get_by_id(user_token.user_id)
+        if not user:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid token")
+
+        user.hashed_password = hash_password(new_password)
+        user_token.used_at = datetime.now(timezone.utc)
+        await self.session.commit()
+
+    async def verify_email(self, token: str):
+        token_hash = self._hash_token(token)
+        result = await self.session.execute(
+            select(UserToken).where(
+                UserToken.token_hash == token_hash,
+                UserToken.token_type == "EMAIL_VERIFICATION",
+                UserToken.used_at.is_(None)
+            )
+        )
+        user_token = result.scalar_one_or_none()
+
+        if not user_token or user_token.expires_at.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired token")
+
+        user = await self.user_repository.get_by_id(user_token.user_id)
+        if not user:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid token")
+
+        user.email_verified = True
+        user.email_verified_at = datetime.now(timezone.utc)
+        user_token.used_at = datetime.now(timezone.utc)
+        await self.session.commit()
+
+    async def resend_verification(self, email: str):
+        user = await self.user_repository.get_by_email(email)
+        if user and not user.email_verified:
+            verify_token = await self._create_user_token(user.id, "EMAIL_VERIFICATION", expiry_hours=24)
+            await self.session.commit()
+            send_email_task.delay(
+                user.email,
+                "verify_email",
+                {"verify_url": f"{settings.FRONTEND_URL}/verify-email?token={verify_token}"}
+            )
+
+    async def change_password(self, user: User, current_password: str, new_password: str):
+        # need to fetch fresh user with hashed password since current_user from Depends(get_current_user) may not have it if omitted in schema
+        user_with_pwd = await self.user_repository.get_by_id(user.id)
+
+        if not verify_password(current_password, user_with_pwd.hashed_password):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid current password")
+
+        user_with_pwd.hashed_password = hash_password(new_password)
+        await self.session.commit()
