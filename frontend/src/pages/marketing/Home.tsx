@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, AlertTriangle, CheckCircle2, Clock, Zap, Target } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Target } from 'lucide-react';
 import { SeoHead } from '../../components/geo/SeoHead';
 import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
 import ConstellationMap from '../../components/ConstellationMap';
+import { TickerStrip } from '../../components/TickerStrip';
+import { KeyFindings } from '../../components/KeyFindings';
 
 export default function Home() {
   const faqItems = [
@@ -57,11 +59,11 @@ export default function Home() {
 
       {/* 1. Hero Section */}
       <section className="border-b border-border-strong bg-bg-primary overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-32">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-0 lg:min-h-[700px] flex items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
 
             {/* Left Content */}
-            <div className="flex flex-col items-start text-left">
+            <div className="flex flex-col items-start text-left max-w-[600px]">
               <h1 className="text-display text-text-primary mb-6 leading-tight">
                 Find What's Really Holding Your Business Back
               </h1>
@@ -86,53 +88,13 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Visual: Constellation + Business Reality Snapshot */}
-            <div className="relative w-full aspect-square md:aspect-auto md:h-[500px] flex items-center justify-center rounded-xl overflow-hidden bg-[#0B1F3A]">
-              {/* Background Layer: Constellation Map */}
-              <div className="absolute inset-0 opacity-80 pointer-events-none">
-                <ConstellationMap variant="hero" height={500} />
+            {/* Right Visual: Constellation */}
+            <div className="relative w-full aspect-square md:aspect-auto md:h-[600px] flex items-center justify-center overflow-hidden bg-[#0B1F3A] rounded-xl lg:rounded-none lg:bg-transparent">
+              <div className="absolute inset-0 opacity-80 pointer-events-none rounded-xl lg:rounded-none overflow-hidden bg-[#0B1F3A]">
+                <ConstellationMap variant="hero" height={600} />
               </div>
-
-              {/* Foreground Layer: Business Reality Snapshot Floating Card */}
-              <div className="bg-bg-primary border border-border-strong rounded-xl shadow-lg p-6 relative z-10 overflow-hidden w-full max-w-sm ml-auto mr-4 md:mr-8 translate-y-4 shadow-2xl backdrop-blur-sm bg-bg-primary/95">
-                <div className="flex items-center justify-between mb-6 border-b border-border-light pb-4">
-                  <h3 className="font-semibold text-text-primary text-sm uppercase tracking-wider">Business Reality Snapshot</h3>
-                  <span className="text-xs font-mono text-text-secondary px-2 py-1 bg-bg-secondary rounded">LIVE</span>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-secondary/50">
-                    <div className="flex items-center gap-3">
-                      <AlertTriangle className="w-4 h-4 text-accent-amber" />
-                      <span className="text-sm font-medium text-text-secondary">AI Adoption Gaps</span>
-                    </div>
-                    <span className="text-sm text-text-primary font-bold">42%</span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-secondary/50">
-                    <div className="flex items-center gap-3">
-                      <Clock className="w-4 h-4 text-accent-red" />
-                      <span className="text-sm font-medium text-text-secondary">Workflow Bottlenecks</span>
-                    </div>
-                    <span className="text-sm text-text-primary font-bold">4</span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 border border-border-light rounded bg-bg-secondary/50">
-                    <div className="flex items-center gap-3">
-                      <Target className="w-4 h-4 text-text-secondary" />
-                      <span className="text-sm font-medium text-text-secondary">Manual Tasks Identified</span>
-                    </div>
-                    <span className="text-sm text-text-primary font-bold">17</span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 border border-accent-blue/30 rounded bg-accent-blue/5">
-                    <div className="flex items-center gap-3">
-                      <Zap className="w-4 h-4 text-accent-blue" />
-                      <span className="text-sm font-medium text-accent-blue">Recommended Priority</span>
-                    </div>
-                    <span className="text-sm text-accent-blue font-bold">Workflow Handoff</span>
-                  </div>
-                </div>
+              <div className="absolute bottom-4 right-4 text-xs font-mono text-accent-blue/70 bg-[#0B1F3A]/80 px-3 py-1.5 rounded-full border border-accent-blue/20 backdrop-blur-sm z-10">
+                TarkaX Intelligence Engine
               </div>
             </div>
 
@@ -140,7 +102,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. Reality Gap Section */}
+      {/* 2. Ticker Strip */}
+      <TickerStrip />
+
+      {/* 3. Key Findings Businesses Miss */}
+      <KeyFindings />
+
+      {/* 4. Reality Gap Section */}
       <section className="py-24 bg-bg-secondary border-b border-border-strong">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
           <h2 className="text-h2 text-text-primary mb-16">
@@ -191,59 +159,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. What We Help You Discover (Problem Cards) */}
-      <section className="py-24 bg-bg-primary border-b border-border-strong">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-h2 text-text-primary mb-4">Discover What's Broken</h2>
-            <p className="text-body text-text-secondary max-w-2xl mx-auto">We look past the symptoms to find the hidden causes dragging down your operational efficiency.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Card 1 */}
-            <Link to="/problems/ai-roi" className="group block bg-bg-secondary border border-border-strong p-6 rounded-lg hover:border-accent-blue transition-colors">
-              <h3 className="text-lg font-bold text-text-primary mb-4 group-hover:text-accent-blue transition-colors">AI Investments Not Delivering ROI</h3>
-              <ul className="space-y-2 text-sm text-text-secondary">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Unused licenses</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Low adoption rates</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Workflow disconnects</li>
-              </ul>
-            </Link>
-
-            {/* Card 2 */}
-            <Link to="/solutions/discover-bottlenecks" className="group block bg-bg-secondary border border-border-strong p-6 rounded-lg hover:border-accent-blue transition-colors">
-              <h3 className="text-lg font-bold text-text-primary mb-4 group-hover:text-accent-blue transition-colors">Hidden Operational Bottlenecks</h3>
-              <ul className="space-y-2 text-sm text-text-secondary">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Approval delays</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Manual handoffs</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Process friction</li>
-              </ul>
-            </Link>
-
-            {/* Card 3 */}
-            <Link to="/problems/inconsistent-ai" className="group block bg-bg-secondary border border-border-strong p-6 rounded-lg hover:border-accent-blue transition-colors">
-              <h3 className="text-lg font-bold text-text-primary mb-4 group-hover:text-accent-blue transition-colors">Inconsistent AI Outputs</h3>
-              <ul className="space-y-2 text-sm text-text-secondary">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Off-brand responses</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Poor prompt structures</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Unpredictable results</li>
-              </ul>
-            </Link>
-
-            {/* Card 4 */}
-            <Link to="/solutions/reduce-manual-work" className="group block bg-bg-secondary border border-border-strong p-6 rounded-lg hover:border-accent-blue transition-colors">
-              <h3 className="text-lg font-bold text-text-primary mb-4 group-hover:text-accent-blue transition-colors">Manual Work Holding You Back</h3>
-              <ul className="space-y-2 text-sm text-text-secondary">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Repetitive tasks</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Duplicate data entry</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-border-strong" /> Spreadsheet dependency</li>
-              </ul>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. How TarkaX Works (Journey) */}
+      {/* 5. How TarkaX Works (Journey) */}
       <section className="py-24 bg-bg-dark text-text-inverse border-b border-border-strong">
         <div className="max-w-5xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -288,7 +204,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Example Findings */}
+      {/* 6. Product Lenses (Investigations) */}
+      <section className="py-24 bg-bg-secondary border-b border-border-strong">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="mb-16">
+            <h2 className="text-h2 text-text-primary mb-4">Investigate Your Business</h2>
+            <p className="text-body text-text-secondary">Choose an area to analyze.</p>
+          </div>
+
+          <div className="space-y-6">
+            <Link to="/problems/ai-roi" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
+              <div>
+                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">Why Isn't AI Working?</h3>
+                <p className="text-text-secondary">Discover where your AI investments are breaking down across awareness, adoption, and governance.</p>
+              </div>
+              <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
+                Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            <Link to="/problems/team-productivity" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
+              <div>
+                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">What's Slowing Your Team Down?</h3>
+                <p className="text-text-secondary">Identify the hidden bottlenecks, tool bloat, and manual tasks dragging down productivity.</p>
+              </div>
+              <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
+                Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            <Link to="/problems/inconsistent-ai" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
+              <div>
+                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">Why Are AI Outputs Inconsistent?</h3>
+                <p className="text-text-secondary">Diagnose and standardize the prompt structures being used by your team.</p>
+              </div>
+              <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
+                Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Example Findings */}
       <section className="py-24 bg-bg-primary border-b border-border-strong">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -344,48 +302,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. Product Lenses (Investigations) */}
-      <section className="py-24 bg-bg-secondary border-b border-border-strong">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="mb-16">
-            <h2 className="text-h2 text-text-primary mb-4">Investigate Your Business</h2>
-            <p className="text-body text-text-secondary">Choose an area to analyze.</p>
-          </div>
-
-          <div className="space-y-6">
-            <Link to="/problems/ai-roi" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
-              <div>
-                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">Why Isn't AI Working?</h3>
-                <p className="text-text-secondary">Discover where your AI investments are breaking down across awareness, adoption, and governance.</p>
-              </div>
-              <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
-                Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
-
-            <Link to="/problems/team-productivity" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
-              <div>
-                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">What's Slowing Your Team Down?</h3>
-                <p className="text-text-secondary">Identify the hidden bottlenecks, tool bloat, and manual tasks dragging down productivity.</p>
-              </div>
-              <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
-                Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
-
-            <Link to="/problems/inconsistent-ai" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
-              <div>
-                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">Why Are AI Outputs Inconsistent?</h3>
-                <p className="text-text-secondary">Diagnose and standardize the prompt structures being used by your team.</p>
-              </div>
-              <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
-                Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
           </div>
         </div>
       </section>
