@@ -44,29 +44,45 @@ import re  # noqa: E402
 app = FastAPI(title="AI Productivity OS", version="1.0.0", lifespan=lifespan)
 
 # ADD CORS MIDDLEWARE (CRITICAL)
+# FRONTEND_URL exists to define the primary frontend origin for this environment.
+# CORS_ALLOW_ORIGINS allows specifying a comma-separated list of additional allowed origins (e.g., preview deployments).
+# Production domains should be configured by setting FRONTEND_URL (e.g. https://tarkax.vercel.app)
+# and any additional valid domains via CORS_ALLOW_ORIGINS in the environment variables.
 FRONTEND_URL = settings.FRONTEND_URL
 
 
 def build_allowed_origins() -> list[str]:
-    origins = [
+    raw_origins = [
         "http://localhost:5173",
         "http://localhost:3000",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:3000",
-        "https://ai-productivity-os-six.vercel.app"
     ]
-    if FRONTEND_URL and FRONTEND_URL not in origins:
-        origins.append(FRONTEND_URL)
+
+    if FRONTEND_URL:
+        raw_origins.append(FRONTEND_URL)
 
     if settings.CORS_ALLOW_ORIGINS:
         for origin in settings.CORS_ALLOW_ORIGINS.split(","):
-            origin = origin.strip()
-            if origin and origin not in origins:
-                origins.append(origin)
-    return origins
+            raw_origins.append(origin)
+
+    # Normalize origins: strip whitespace, strip trailing slash, and remove duplicates
+    normalized_origins = []
+    for origin in raw_origins:
+        cleaned_origin = origin.strip().rstrip("/")
+        if cleaned_origin and cleaned_origin not in normalized_origins:
+            normalized_origins.append(cleaned_origin)
+
+    return normalized_origins
 
 
 ALLOWED_ORIGINS = build_allowed_origins()
+
+print("=== CORS CONFIGURATION ===", flush=True)
+print(f"FRONTEND_URL: {FRONTEND_URL}", flush=True)
+print(f"CORS_ALLOW_ORIGINS: {settings.CORS_ALLOW_ORIGINS}", flush=True)
+print(f"CORS_ALLOW_ORIGIN_REGEX: {settings.CORS_ALLOW_ORIGIN_REGEX}", flush=True)
+print(f"ALLOWED_ORIGINS: {ALLOWED_ORIGINS}", flush=True)
 
 
 def cors_error_headers(request: Request) -> dict[str, str]:
@@ -86,7 +102,7 @@ def cors_error_headers(request: Request) -> dict[str, str]:
         return {}
 
     return {
-        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Origin": normalized_origin,
         "Access-Control-Allow-Credentials": "true",
         "Vary": "Origin",
     }
