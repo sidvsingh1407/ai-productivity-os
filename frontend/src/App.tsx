@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { RouteTracker } from './components/analytics/RouteTracker';
 import { PrivateRoute } from './components/PrivateRoute';
 import { AppShell } from './components/layout/AppShell';
@@ -146,6 +147,7 @@ function App() {
         </Routes>
       </BrowserRouter>
       <Analytics />
+      <SpeedInsights />
     </>
   );
 }
