@@ -1,10 +1,11 @@
+from typing import Optional
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from users.schemas import UserResponse
 from organizations.schemas import OrgResponse
 
 class AuthResponse(BaseModel):
     user: UserResponse
-    org: OrgResponse
+    org: Optional[OrgResponse] = None
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
