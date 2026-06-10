@@ -124,9 +124,11 @@ class AuthService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Email or organization already exists",
             )
-        except Exception:
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
             await self.user_repository.session.rollback()
-            logger.exception("Registration failed due to unexpected backend error")
+            logger.exception(f"Registration failed due to unexpected backend error. Type: {type(e).__name__}, Message: {str(e)}, Traceback: {tb}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Registration failed",
