@@ -47,6 +47,7 @@ import { VerifyEmail } from './pages/VerifyEmail';
 import { Dashboard } from './pages/Dashboard';
 import NewAudit from './pages/NewAudit';
 import AuditDetail from './pages/AuditDetail';
+import AuditHistory from './pages/AuditHistory';
 import NewWorkflow from './pages/NewWorkflow';
 import WorkflowDetail from './pages/WorkflowDetail';
 import IntegrationResults from "./pages/IntegrationResults";
@@ -123,6 +124,7 @@ function App() {
         }>
           <Route index element={<Navigate to="/app/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="audits" element={<AuditHistory />} />
           <Route path="audits/new" element={<NewAudit />} />
           <Route path="audits/:id" element={<AuditDetail />} />
           <Route path="workflows/new" element={<NewWorkflow />} />
