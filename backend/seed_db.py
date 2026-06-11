@@ -22,13 +22,13 @@ async def seed():
         await session.flush()
 
         superadmin = User(
-            email="superadmin@tarkax.test",
+            email="superadmin@tarkax.com",
             hashed_password=hash_password("password123"),
             is_active=True,
             is_superadmin=True, full_name="Super Admin"
         )
         user = User(
-            email="user@tarkax.test",
+            email="user@tarkax.com",
             hashed_password=hash_password("password123"),
             is_active=True,
             is_superadmin=False, full_name="Standard User"
