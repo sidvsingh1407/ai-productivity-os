@@ -16,7 +16,7 @@ class UserUpdate(BaseModel):
 
 class UserResponse(BaseModel):
     id: UUID
-    email: EmailStr
+    email: str
     full_name: str
     is_superadmin: bool
     is_active: bool
