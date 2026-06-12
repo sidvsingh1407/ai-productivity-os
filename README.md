@@ -68,69 +68,6 @@ TarkaX uses a robust, JWT-based authentication system.
 *   **Logout:** Client-side token clearing and optional server-side invalidation.
 *   **Password Management:** Full support for Forgot Password (email link), Reset Password, and Change Password flows.
 
-
-## Local Development
-
-### 1. Database Setup
-TarkaX requires a PostgreSQL database. For local development, you can use Docker or a local PostgreSQL installation. Ensure your `DATABASE_URL` in `backend/.env` points to your local database.
-
-### 2. Backend Setup
-Navigate to the backend directory and set up a Python virtual environment:
-
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-Run database migrations to initialize the schema:
-```bash
-alembic upgrade head
-```
-
-Start the FastAPI development server:
-```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### 3. Frontend Setup
-In a new terminal window, navigate to the frontend directory:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-The frontend will be available at `http://localhost:5173`.
-
-## Deployment
-
-TarkaX is configured for deployment on modern PaaS providers.
-
-### Current Production
-*   **Backend:** Render
-    *   Deploy the `backend` directory using a Python environment.
-    *   Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-    *   Ensure all required environment variables are set.
-*   **Frontend:** Vercel
-    *   Deploy the `frontend` directory.
-    *   Build command: `npm run build`
-    *   Output directory: `dist`
-    *   Set `VITE_API_URL` to your production backend URL.
-
-### Alternative Deployment
-*   **Railway:** The repository includes a `railway.json` configuration file, allowing for unified deployment of the backend (and optionally frontend/database) on Railway.
-
-**Post-Deployment Verification:**
-After deployment, verify that the frontend can successfully communicate with the backend by checking the `/health` endpoint and ensuring CORS headers are correctly populated.
-
-## Testing
-
-*   **Playwright Tests:** End-to-end frontend tests are located in `frontend/playwright-tests/`. Run them using `npx playwright test` inside the frontend directory.
-*   **Backend Verification:** Automated backend testing leverages Pytest. Ensure your local environment is active and run `pytest` from the backend directory.
-*   **Manual Verification:** Contributors should manually verify critical flows (Registration, Login, Audit Creation) locally before submitting pull requests.
-
 ## Current Status
 
 ### Production Readiness
