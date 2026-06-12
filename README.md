@@ -68,22 +68,6 @@ TarkaX uses a robust, JWT-based authentication system.
 *   **Logout:** Client-side token clearing and optional server-side invalidation.
 *   **Password Management:** Full support for Forgot Password (email link), Reset Password, and Change Password flows.
 
-## Environment Variables
-
-### Backend (`backend/.env`)
-
-| Variable | Required | Purpose | Example |
-| :--- | :--- | :--- | :--- |
-| `DATABASE_URL` | **Yes** | Connection string for PostgreSQL database. | `postgresql+asyncpg://user:pass@localhost:5432/db` |
-| `SECRET_KEY` | **Yes** | Key for signing JWT tokens and session data. | `your-super-secret-key` |
-| `FRONTEND_URL` | **Yes** | Allowed CORS origin and base URL for email links. | `http://localhost:5173` |
-| `SENDGRID_API_KEY` | **Yes** | API key for sending transactional emails. | `SG.xxxxxx` |
-| `SUPABASE_URL` | Optional | Used if connecting to Supabase storage/auth. | `https://your-project.supabase.co` |
-| `SUPABASE_KEY` | Optional | Supabase anon/service key. | `your-supabase-key` |
-| `REDIS_URL` | Optional | Connection string for Celery task broker. | `redis://localhost:6379/0` |
-| `ENVIRONMENT` | Optional | Execution environment (development/production). | `development` |
-| `CORS_ALLOW_ORIGINS` | Optional | Additional comma-separated allowed origins. | `https://preview.domain.com` |
-
 ### Frontend (`frontend/.env`)
 
 | Variable | Required | Purpose | Example |
