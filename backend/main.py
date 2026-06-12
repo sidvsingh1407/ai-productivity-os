@@ -153,6 +153,10 @@ async def general_exception_handler(request: Request, exc: Exception):
 
 # MOUNT ALL ROUTERS
 app.include_router(auth_router)
+
+# DANGER: Only for E2E Tests!
+from tests.test_router import router as test_flow_router
+app.include_router(test_flow_router)
 app.include_router(admin_router, prefix="/admin")
 app.include_router(audits_router, prefix="/audits")
 app.include_router(analytics_router, prefix="/analytics")

@@ -3,7 +3,7 @@ import pytest_asyncio
 from sqlalchemy.future import select
 from models.user import User
 from models.user_token import UserToken
-from auth.password_utils import verify_password
+from auth.password_service import PasswordService
 import secrets
 import hashlib
 from httpx import AsyncClient, ASGITransport
@@ -127,7 +127,8 @@ async def test_forgot_and_reset_password(mock_delay, db_session: AsyncSession):
 
         # Refresh user and check password
         await db_session.refresh(user)
-        assert verify_password("newpassword123", user.hashed_password) == True
+        ps = PasswordService()
+        assert ps.verify_password("newpassword123", user.hashed_password) == True
 
 @pytest.mark.asyncio
 @patch('auth.service.send_email_task.delay')
@@ -145,7 +146,19 @@ async def test_change_password_authenticated(mock_delay, db_session: AsyncSessio
         )
         assert reg_response.status_code == 201
 
-        token = reg_response.json()["access_token"]
+        # Must verify email to login now
+        user_query = await db_session.execute(select(User).where(User.email == "change@example.com"))
+        user = user_query.scalar_one()
+        user.email_verified = True
+        await db_session.commit()
+
+        login_res = await client.post(
+            "/auth/login",
+            json={"email": "change@example.com", "password": "currentpassword123"}
+        )
+        assert login_res.status_code == 200
+
+        token = login_res.json()["access_token"]
 
         # Attempt change password with wrong current
         wrong_change = await client.post(

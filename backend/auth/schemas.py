@@ -12,6 +12,10 @@ class AuthResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class RegisterResponse(BaseModel):
+    message: str
+    user: UserResponse
+
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
 

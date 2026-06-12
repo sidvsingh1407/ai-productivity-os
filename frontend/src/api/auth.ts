@@ -14,7 +14,11 @@ export const authApi = {
     return response.data;
   },
   logout: async () => {
-    const response = await apiClient.post('/auth/logout');
+    // Optionally we can get refresh_token from state here if not passed in, but the apiClient handles interceptors.
+    // Best is to retrieve it directly from store.
+    const { useAuthStore } = await import('../store/authStore');
+    const state = useAuthStore.getState();
+    const response = await apiClient.post('/auth/logout', { refresh_token: state.refresh_token });
     return response.data;
   },
   forgotPassword: async (data: { email: string }) => {
