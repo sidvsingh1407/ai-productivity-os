@@ -40,13 +40,8 @@ export function Register() {
         password: dataForm.password,
         org_name: dataForm.companyName // Backend expects org_name, form uses companyName
       });
-      // Assuming backend auto-logs in and returns tokens, or we redirect to login
-      if (data.access_token) {
-         setAuth(data.user, data.org, data.access_token, data.refresh_token);
-         navigate('/dashboard');
-      } else {
-         navigate('/login');
-      }
+      // Backend does not auto-login and return tokens anymore. It sends a verification email.
+      navigate('/login', { state: { message: data.message } });
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Failed to register. Please try again.');
     } finally {

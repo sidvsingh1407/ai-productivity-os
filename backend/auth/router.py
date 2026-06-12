@@ -5,9 +5,10 @@ from pydantic import BaseModel
 from database import get_db
 from auth.service import AuthService
 from users.schemas import UserCreate
-from auth.schemas import AuthResponse, ForgotPasswordRequest, ResetPasswordRequest, VerifyEmailRequest, ResendVerificationRequest, ChangePasswordRequest
+from auth.schemas import AuthResponse, RegisterResponse, ForgotPasswordRequest, ResetPasswordRequest, VerifyEmailRequest, ResendVerificationRequest, ChangePasswordRequest
 from dependencies import get_current_user
 from models.user import User
+from typing import Optional
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -18,7 +19,10 @@ class LoginRequest(BaseModel):
 class RefreshRequest(BaseModel):
     refresh_token: str
 
-@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=AuthResponse)
+class LogoutRequest(BaseModel):
+    refresh_token: Optional[str] = None
+
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=RegisterResponse)
 async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
     auth_service = AuthService(db)
     result = await auth_service.register_user(
@@ -40,14 +44,15 @@ async def refresh(refresh_data: RefreshRequest, db: AsyncSession = Depends(get_d
     return await auth_service.refresh_tokens(refresh_data.refresh_token)
 
 @router.post("/logout")
-async def logout():
+async def logout(logout_data: LogoutRequest, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db)
+    await auth_service.logout(current_user, logout_data.refresh_token)
     return {"message": "Logged out successfully"}
 
 @router.post("/forgot-password", status_code=status.HTTP_200_OK)
 async def forgot_password(request: ForgotPasswordRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
     auth_service = AuthService(db)
     await auth_service.forgot_password(request.email)
-    # Return success regardless of whether email exists to prevent user enumeration
     return {"message": "If an account exists, a password reset link has been sent."}
 
 @router.post("/reset-password", status_code=status.HTTP_200_OK)

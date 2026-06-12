@@ -6,7 +6,7 @@ from main import app
 from database import Base, engine, async_session_maker
 from models.user import User
 from models.organization import Organization, OrgMember, OrgRole
-from auth.password_utils import hash_password
+from auth.password_service import PasswordService
 from sqlalchemy.future import select
 
 pytestmark = pytest.mark.asyncio
@@ -43,9 +43,9 @@ async def setup_test_user(db_session, email="test_del@example.com", is_owner=Fal
 
     user = User(
         email=email,
-        hashed_password=hash_password("password123"),
+        hashed_password=PasswordService().hash_password("password123"),
         full_name="Test User",
-        is_active=True
+        is_active=True, email_verified=True
     )
     db_session.add(user)
     await db_session.commit()
@@ -64,9 +64,9 @@ async def setup_test_user(db_session, email="test_del@example.com", is_owner=Fal
         # Add another admin so they are not the sole admin
         other_user = User(
             email=f"other_{email}",
-            hashed_password=hash_password("password123"),
+            hashed_password=PasswordService().hash_password("password123"),
             full_name="Other User",
-            is_active=True
+            is_active=True, email_verified=True
         )
         db_session.add(other_user)
         await db_session.commit()

@@ -9,7 +9,7 @@ from models.workflow import Workflow
 from models.report import ExportJob
 from users.repository import UserRepository
 from users.schemas import UserCreate
-from auth.password_utils import hash_password
+from auth.password_service import PasswordService
 from sqlalchemy.future import select
 from sqlalchemy import update, delete
 from fastapi import HTTPException
