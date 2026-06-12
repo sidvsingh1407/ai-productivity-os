@@ -1,82 +1,180 @@
-# AI Productivity OS
 
-A Python + React monorepo for the AI Productivity Intelligence System.
+# TarkaX
 
-## 1. Current project state
-The repository is structured as a monorepo with `backend` and `frontend` directories.
+## Overview
 
-**Root level files:**
-- `README.md`
-- `docker-compose.yml`
-- `file_audit.txt`
+**Business Clarity for the AI Era**
 
-**Backend (`/backend`)**
-A FastAPI application using SQLAlchemy and asyncpg.
-*   **Infrastructure & Config:** `Dockerfile`, `Procfile`, `requirements.txt`, `.env.example`, `config.py`, `database.py`, `dependencies.py`, `main.py`
-*   **Database Migrations:** `alembic.ini`, `alembic/` (with two migrations in `versions/`: `3ff69d4ebaa6_initial_migration.py` and `5ed348e4f775_initial_models.py`)
-*   **Models (`models/`):** `audit.py`, `billing.py`, `organization.py`, `report.py`, `user.py`, `workflow.py`
-*   **Feature Modules:**
-    *   `admin/` (router, schemas, service)
-    *   `analytics/` (router, schemas, service)
-    *   `audits/` (repository, router, schemas, scoring_engine, service)
-    *   `auth/` (jwt_utils, password_utils, router, service)
-    *   `billing/` (router)
-    *   `integration/` (recommendation_engine, router, schemas, service)
-    *   `organizations/` (repository, router, schemas, service)
-    *   `reports/` (pdf_generator, router, schemas, service)
-    *   `users/` (repository, router, schemas, service)
-    *   `workflows/` (pipeline, repository, router, schemas, service, temp_models)
-*   **Tasks:** `tasks/` (celery_app.py, email_tasks.py, pdf_tasks.py)
-*   **Storage:** `storage/reports/`
+TarkaX helps businesses discover what is actually slowing growth, creating operational friction, reducing productivity, and preventing AI investments from delivering value. Rather than focusing on AI hype, TarkaX provides operational intelligence and diagnostic tools to uncover hidden bottlenecks and reality gaps within your organization.
 
-**Frontend (`/frontend`)**
-A React application built with Vite and TypeScript.
-*   **Infrastructure & Config:** `package.json`, `vite.config.ts`, `tailwind.config.ts`, `tsconfig.json`, `vercel.json`
-*   **Entry:** `index.html`, `src/main.tsx`, `src/App.tsx`, `src/index.css`
-*   **Pages (`src/pages/`):** `Dashboard.tsx`, `LandingPage.tsx`, `NewAudit.tsx`, `NewWorkflow.tsx`, `Analytics.tsx`, `AuditDetail.tsx`, `AuditHistory.tsx`, `IntegrationResults.tsx`, `WorkflowDetail.tsx`, `Settings/Billing.tsx`, `Settings/OrgSettings.tsx`, `admin/AdminOrgs.tsx`, `admin/AdminUsers.tsx`
-*   **Components (`src/components/`):** `DisclaimerModal.tsx`, `admin/AdminRoute.tsx`, `auth/PrivateRoute.tsx`, `charts/ScoreRadarChart.tsx`, `charts/ScoreTrendLine.tsx`, UI components (`ui/progress.tsx`, etc.), `layout/`
-*   **State & API:** `src/store/authStore.ts`, `src/api/client.ts`
+## Core Capabilities
 
-## 2. What is incomplete or missing
-*   **Backend:**
-    *   `reports/pdf_generator.py` references `generate_report` which is undefined (F821).
-*   **Frontend Packages:** Several UI libraries referenced in code are missing from `package.json` and not installed:
-    *   `framer-motion` (used in `DisclaimerModal.tsx`, `LandingPage.tsx`)
-    *   `recharts` (used in `ScoreRadarChart.tsx`, `ScoreTrendLine.tsx`)
-    *   `sonner` (used in `AdminRoute.tsx`, `Billing.tsx`, `OrgSettings.tsx`, `AdminUsers.tsx`)
-    *   `@radix-ui/react-progress` (used in `ui/progress.tsx`)
-*   **Frontend Import Paths:**
-    *   Missing aliased imports: Cannot find module `@/lib/api` (used across `Analytics.tsx`, `OrgSettings.tsx`, `AdminOrgs.tsx`, `AdminUsers.tsx`).
-    *   Broken imports: `import { apiClient } from "@/api/client"` fails because `apiClient` is a default export, not a named export.
-*   **Frontend Type Errors:**
-    *   Properties `is_superadmin` do not exist on the defined `User` type.
-    *   `organization` does not exist on `AuthState`.
-    *   Type mismatches in UI component props (e.g., passing `"success"` or `"warning"` to components that do not accept those variants).
+*   **Workflow Diagnostic:** Analyze and identify inefficiencies in existing business processes.
+*   **AI Audit:** Evaluate AI adoption and uncover hidden barriers to ROI.
+*   **Prompt Improver:** Standardize and optimize AI interactions across teams.
+*   **Dashboard & Reporting:** Gain visibility into operational friction with clear, actionable insights.
+*   **Authentication System:** Secure user registration, organization management, and role-based access control.
 
-## 3. Deployment status
-**Frontend on Vercel**
-*   **Env vars needed:** At minimum `VITE_API_URL` (usually maps to backend).
-*   **Build command:** `npm run build` (which runs `tsc && vite build`)
-*   **Output directory:** `dist`
-*   **Configuration:** `vercel.json` is configured to rewrite all routes to `/index.html`.
+## User Journey
 
-**Backend on Render**
-*   **Env vars needed:** `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_KEY`, `SECRET_KEY`, `REDIS_URL`, `SENDGRID_API_KEY`, `FRONTEND_URL`
+Register → Verify Email → Login → Run Analysis → Review Findings → Access Dashboard
 
-**Database on Supabase**
-*   **Migrations:** Must run Alembic migrations from the `backend/` directory (`alembic upgrade head`) to apply `3ff69d4ebaa6_initial_migration.py` and `5ed348e4f775_initial_models.py`.
-*   **Tables:** The migrations will create tables corresponding to models: users, organizations, user_organizations, audits, workflows, reports, and billing/subscription tables.
+## Architecture
 
-## 4. Known issues
-*   **Frontend Build Failure:** The frontend **cannot be deployed** currently because `npm run build` fails due to multiple missing packages (`framer-motion`, `recharts`, `sonner`, `@radix-ui/react-progress`), missing internal modules (`@/lib/api`), broken export signatures (`apiClient`), and strict TypeScript type errors (`is_superadmin`, missing props).
-*   **Backend Syntax/Import Errors:** The backend has undefined names in `reports/pdf_generator.py` which will crash runtime execution of PDF generation tasks.
+TarkaX is structured as a monorepo containing a modern React frontend and a robust FastAPI backend.
 
-## 5. Next steps
-1.  **Fix Frontend Dependencies:** Run `npm install framer-motion recharts sonner @radix-ui/react-progress` in the `frontend` directory.
-2.  **Fix Frontend Imports & Types:**
-    *   Correct the import of `apiClient` to `import apiClient from "@/api/client"`.
-    *   Implement or stub the missing `@/lib/api` file.
-    *   Update the `User` interface to include `is_superadmin?: boolean` and `AuthState` to include `organization`.
-    *   Fix the strict type string matches for UI variants (e.g. replacing `"success"` with `"default"` or implementing the variants).
-3.  **Fix Backend Code:** Resolve the undefined `generate_report` function in `backend/reports/pdf_generator.py`.
-4.  **Verify Build:** Successfully run `npm run build` in the frontend and a successful start of the backend server locally before attempting cloud deployment.
+### Frontend
+*   **Framework:** React 18 with Vite
+*   **Routing:** React Router (handling public marketing pages, protected app routes, and admin routes)
+*   **State Management:** Zustand (for authentication and global state)
+*   **Styling:** Tailwind CSS with Radix UI components
+
+### Backend
+*   **Framework:** FastAPI (Python)
+*   **Database Layer:** SQLAlchemy (asyncpg) connecting to PostgreSQL
+*   **Authentication:** JWT-based authentication with role-based access control (RBAC)
+
+### Infrastructure
+*   **Deployment Platform:** Render (Backend) and Vercel (Frontend). Railway is available as an alternative deployment target.
+*   **Background Tasks:** Celery with Redis for asynchronous processing (e.g., PDF generation, email sending).
+*   **Email System:** SendGrid for transactional emails (verification, password reset).
+
+## Project Structure
+
+```text
+.
+├── backend/            # FastAPI application
+│   ├── alembic/        # Database migrations
+│   ├── models/         # SQLAlchemy database models
+│   ├── tasks/          # Celery background tasks
+│   └── [modules]/      # Feature-based routers and services (auth, audits, workflows, etc.)
+├── frontend/           # React application
+│   ├── src/
+│   │   ├── api/        # API client and endpoints
+│   │   ├── components/ # Reusable UI components
+│   │   ├── pages/      # Page components
+│   │   └── store/      # Zustand state stores
+├── docs/               # Technical audits and architecture documents
+└── README.md           # This file
+```
+
+## Authentication System
+
+TarkaX uses a robust, JWT-based authentication system.
+
+*   **Registration:** Users can sign up, creating a user record and an associated organization.
+*   **Email Verification:** A verification link is sent via email (SendGrid) to activate the account.
+*   **Login:** Users authenticate with email/password to receive access and refresh tokens.
+*   **Logout:** Client-side token clearing and optional server-side invalidation.
+*   **Password Management:** Full support for Forgot Password (email link), Reset Password, and Change Password flows.
+
+## Environment Variables
+
+### Backend (`backend/.env`)
+
+| Variable | Required | Purpose | Example |
+| :--- | :--- | :--- | :--- |
+| `DATABASE_URL` | **Yes** | Connection string for PostgreSQL database. | `postgresql+asyncpg://user:pass@localhost:5432/db` |
+| `SECRET_KEY` | **Yes** | Key for signing JWT tokens and session data. | `your-super-secret-key` |
+| `FRONTEND_URL` | **Yes** | Allowed CORS origin and base URL for email links. | `http://localhost:5173` |
+| `SENDGRID_API_KEY` | **Yes** | API key for sending transactional emails. | `SG.xxxxxx` |
+| `SUPABASE_URL` | Optional | Used if connecting to Supabase storage/auth. | `https://your-project.supabase.co` |
+| `SUPABASE_KEY` | Optional | Supabase anon/service key. | `your-supabase-key` |
+| `REDIS_URL` | Optional | Connection string for Celery task broker. | `redis://localhost:6379/0` |
+| `ENVIRONMENT` | Optional | Execution environment (development/production). | `development` |
+| `CORS_ALLOW_ORIGINS` | Optional | Additional comma-separated allowed origins. | `https://preview.domain.com` |
+
+### Frontend (`frontend/.env`)
+
+| Variable | Required | Purpose | Example |
+| :--- | :--- | :--- | :--- |
+| `VITE_API_URL` | **Yes** | Base URL for backend API requests. | `http://localhost:8000` |
+| `VITE_APP_NAME` | Optional | Application name for UI display. | `AI Productivity OS` |
+| `VITE_APP_ENVIRONMENT` | Optional | Environment indicator for UI. | `development` |
+
+## Local Development
+
+### 1. Database Setup
+TarkaX requires a PostgreSQL database. For local development, you can use Docker or a local PostgreSQL installation. Ensure your `DATABASE_URL` in `backend/.env` points to your local database.
+
+### 2. Backend Setup
+Navigate to the backend directory and set up a Python virtual environment:
+
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Run database migrations to initialize the schema:
+```bash
+alembic upgrade head
+```
+
+Start the FastAPI development server:
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### 3. Frontend Setup
+In a new terminal window, navigate to the frontend directory:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+The frontend will be available at `http://localhost:5173`.
+
+## Deployment
+
+TarkaX is configured for deployment on modern PaaS providers.
+
+### Current Production
+*   **Backend:** Render
+    *   Deploy the `backend` directory using a Python environment.
+    *   Start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+    *   Ensure all required environment variables are set.
+*   **Frontend:** Vercel
+    *   Deploy the `frontend` directory.
+    *   Build command: `npm run build`
+    *   Output directory: `dist`
+    *   Set `VITE_API_URL` to your production backend URL.
+
+### Alternative Deployment
+*   **Railway:** The repository includes a `railway.json` configuration file, allowing for unified deployment of the backend (and optionally frontend/database) on Railway.
+
+**Post-Deployment Verification:**
+After deployment, verify that the frontend can successfully communicate with the backend by checking the `/health` endpoint and ensuring CORS headers are correctly populated.
+
+## Testing
+
+*   **Playwright Tests:** End-to-end frontend tests are located in `frontend/playwright-tests/`. Run them using `npx playwright test` inside the frontend directory.
+*   **Backend Verification:** Automated backend testing leverages Pytest. Ensure your local environment is active and run `pytest` from the backend directory.
+*   **Manual Verification:** Contributors should manually verify critical flows (Registration, Login, Audit Creation) locally before submitting pull requests.
+
+## Current Status
+
+### Production Readiness
+TarkaX is actively being developed with core workflows functional.
+
+**Known Issues & Limitations:**
+*   Alembic SQLite support for JSONB columns is currently incomplete; local testing may rely on SQLAlchemy `create_all` or in-memory databases.
+*   Certain background tasks (like PDF generation) rely on robust Redis availability; synchronous fallbacks are being refined.
+
+## Roadmap
+
+*   **Improved Observability & Monitoring:** Enhancing application telemetry and logging for better production insights.
+*   **Expanded Reporting Capabilities:** Adding deeper analysis views and export options for diagnostic findings.
+*   **Enhanced Operational Diagnostics:** Building more comprehensive workflows to identify business bottlenecks.
+
+## Contributing
+
+*   **Branch Strategy:** Create feature branches from `main` (e.g., `feature/add-new-diagnostic`).
+*   **Pull Requests:** Ensure all new code includes appropriate tests and documentation updates. Verify changes against local environments before requesting review.
+*   **Testing Requirements:** All PRs should pass existing Playwright and Pytest suites without regressions. Do not commit temporary test artifacts or databases.
+
+## License
+
+No formal license file (`LICENSE`) currently exists in the repository. All rights are reserved by default.
