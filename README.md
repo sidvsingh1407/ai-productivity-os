@@ -68,13 +68,6 @@ TarkaX uses a robust, JWT-based authentication system.
 *   **Logout:** Client-side token clearing and optional server-side invalidation.
 *   **Password Management:** Full support for Forgot Password (email link), Reset Password, and Change Password flows.
 
-### Frontend (`frontend/.env`)
-
-| Variable | Required | Purpose | Example |
-| :--- | :--- | :--- | :--- |
-| `VITE_API_URL` | **Yes** | Base URL for backend API requests. | `http://localhost:8000` |
-| `VITE_APP_NAME` | Optional | Application name for UI display. | `AI Productivity OS` |
-| `VITE_APP_ENVIRONMENT` | Optional | Environment indicator for UI. | `development` |
 
 ## Local Development
 
