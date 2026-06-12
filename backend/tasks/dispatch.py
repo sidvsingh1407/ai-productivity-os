@@ -14,20 +14,23 @@ def safe_task_dispatch(task, *args, **kwargs):
         # Try to dispatch asynchronously via Celery
         return task.delay(*args, **kwargs)
     except OperationalError as e:
+        task_name = getattr(task, 'name', str(task))
         logger.warning(
-            f"Celery broker unavailable, falling back to synchronous execution for {task.name}. Error: {e}"
+            f"Celery broker unavailable, falling back to synchronous execution for {task_name}. Error: {e}"
         )
     except Exception as e:
+        task_name = getattr(task, 'name', str(task))
         logger.warning(
-            f"Unexpected error when dispatching {task.name} to Celery, falling back to synchronous execution. Error: {e}"
+            f"Unexpected error when dispatching {task_name} to Celery, falling back to synchronous execution. Error: {e}"
         )
 
     # Fallback to synchronous execution
     try:
         return task(*args, **kwargs)
     except Exception as e:
+        task_name = getattr(task, 'name', str(task))
         logger.error(
-            f"Synchronous execution failed for {task.name}. Error: {e}"
+            f"Synchronous execution failed for {task_name}. Error: {e}"
         )
         # Return None or a generic failure dict if needed.
         # But we must NOT raise the exception to prevent crashing the main flow.

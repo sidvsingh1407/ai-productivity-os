@@ -10,8 +10,12 @@ import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { loginSchema, LoginFormData } from '@/lib/schemas';
 
+import { useLocation } from 'react-router-dom';
+
 export function Login() {
+  const location = useLocation();
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState(location.state?.message || '');
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -56,6 +60,7 @@ export function Login() {
         </CardHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
+            {successMessage && <div className="text-sm font-medium text-green-600">{successMessage}</div>}
             {error && <div className="text-sm font-medium text-destructive">{error}</div>}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
