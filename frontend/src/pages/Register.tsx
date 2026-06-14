@@ -66,6 +66,7 @@ export function Register() {
               <Input
                 id="fullName"
                 placeholder="John Doe"
+                autoComplete="name"
                 {...register('fullName')}
               />
               {errors.fullName && <span className="text-xs text-destructive">{errors.fullName.message}</span>}
@@ -75,6 +76,7 @@ export function Register() {
               <Input
                 id="companyName"
                 placeholder="Acme Corp"
+                autoComplete="organization"
                 {...register('companyName')}
               />
               {errors.companyName && <span className="text-xs text-destructive">{errors.companyName.message}</span>}
@@ -85,6 +87,7 @@ export function Register() {
                 id="email"
                 type="email"
                 placeholder="m@example.com"
+                autoComplete="email"
                 {...register('email')}
               />
               {errors.email && <span className="text-xs text-destructive">{errors.email.message}</span>}
@@ -94,6 +97,7 @@ export function Register() {
               <Input
                 id="password"
                 type="password"
+                autoComplete="new-password"
                 {...register('password')}
               />
               {errors.password && <span className="text-xs text-destructive">{errors.password.message}</span>}
