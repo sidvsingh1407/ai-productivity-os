@@ -85,10 +85,10 @@ print(f"CORS_ALLOW_ORIGIN_REGEX: {settings.CORS_ALLOW_ORIGIN_REGEX}", flush=True
 print(f"ALLOWED_ORIGINS: {ALLOWED_ORIGINS}", flush=True)
 
 
-def cors_error_headers(request: Request) -> dict[str, str]:
+def cors_error_headers(request: Request) -> dict:
     origin = request.headers.get("origin")
     if not origin:
-        return {}
+        return {"Access-Control-Allow-Origin": "*"}
 
     normalized_origin = origin.strip().rstrip("/")
     origin_allowed = normalized_origin in ALLOWED_ORIGINS
@@ -99,7 +99,7 @@ def cors_error_headers(request: Request) -> dict[str, str]:
         ) is not None
 
     if not origin_allowed:
-        return {}
+        return {"Access-Control-Allow-Origin": "*"}
 
     return {
         "Access-Control-Allow-Origin": normalized_origin,
