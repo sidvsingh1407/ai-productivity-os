@@ -92,6 +92,7 @@ export function ResetPassword() {
                   id="password"
                   name="password"
                   type="password"
+                  autoComplete="new-password"
                   required
                   disabled={!token}
                   value={password}
@@ -107,6 +108,7 @@ export function ResetPassword() {
                   id="confirm-password"
                   name="confirm-password"
                   type="password"
+                  autoComplete="new-password"
                   required
                   disabled={!token}
                   value={confirmPassword}

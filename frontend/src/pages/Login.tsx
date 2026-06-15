@@ -68,6 +68,7 @@ export function Login() {
                 id="email"
                 type="email"
                 placeholder="m@example.com"
+                autoComplete="email"
                 {...register('email')}
               />
               {errors.email && <span className="text-xs text-destructive">{errors.email.message}</span>}
@@ -82,6 +83,7 @@ export function Login() {
               <Input
                 id="password"
                 type="password"
+                autoComplete="current-password"
                 {...register('password')}
               />
               {errors.password && <span className="text-xs text-destructive">{errors.password.message}</span>}
