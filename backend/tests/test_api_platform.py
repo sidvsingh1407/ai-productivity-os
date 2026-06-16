@@ -3,7 +3,7 @@ import pytest_asyncio
 import uuid
 import time
 from datetime import datetime, timedelta, timezone
-from httpx import AsyncClient, ASGITransport
+from httpx import AsyncClient, ASGITransport, ASGITransport
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import FastAPI, Depends
@@ -14,7 +14,7 @@ from models.api_platform import ApiTier, ApiKey, ApiUsageLog
 from api_platform import ApiKeyService, verify_api_key, APIKeyRoute, RateLimitService
 
 # Ensure db schema exists
-@pytest_asyncio.fixture(autouse=True, scope="module")
+@pytest_asyncio.fixture(autouse=True, scope="function")
 async def setup_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

@@ -1,6 +1,6 @@
 import pytest
 import pytest_asyncio
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
 import uuid
 import asyncio
 
@@ -60,7 +60,7 @@ async def setup_api_data():
 async def test_workflow_api(setup_api_data):
     raw_key, org_id = setup_api_data
 
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         response = await ac.post(
             "/api/v1/workflow",
             json={

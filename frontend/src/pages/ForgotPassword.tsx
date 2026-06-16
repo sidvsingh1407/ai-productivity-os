@@ -6,6 +6,7 @@ export function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [resetUrl, setResetUrl] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,7 +14,10 @@ export function ForgotPassword() {
     setErrorMessage('');
 
     try {
-      await authApi.forgotPassword({ email });
+      const response = await authApi.forgotPassword({ email });
+      if (response.reset_url) {
+        setResetUrl(response.reset_url);
+      }
       setStatus('success');
     } catch (error: any) {
       setStatus('error');
@@ -40,6 +44,12 @@ export function ForgotPassword() {
                 <h3 className="text-sm font-medium text-green-800">Check your email</h3>
                 <div className="mt-2 text-sm text-green-700">
                   <p>If an account exists with {email}, we've sent instructions for resetting your password.</p>
+                  {resetUrl && (
+                    <div className="mt-4 p-3 bg-white border border-green-200 rounded text-xs break-all">
+                      <p className="font-semibold mb-1 text-slate-700">Demo Mode / Mock Email:</p>
+                      <a href={resetUrl} className="text-blue-600 hover:underline">{resetUrl}</a>
+                    </div>
+                  )}
                 </div>
                 <div className="mt-4">
                   <Link to="/login" className="text-sm font-medium text-green-800 hover:text-green-900 underline">
