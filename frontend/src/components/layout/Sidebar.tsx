@@ -81,10 +81,7 @@ export function Sidebar() {
       </div>
 
       <div className="p-4 border-t">
-        <Button variant="ghost" className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground" onClick={clearAuth}>
-          <LogOut className="w-4 h-4" />
-          Log out
-        </Button>
+        {/* Auth is temporarily disabled */}
       </div>
     </aside>
   );
