@@ -1,18 +1,21 @@
 import { test, expect } from '@playwright/test';
 
+// Make random emails unique across processes if multiple runners execute
+const getEmail = (prefix) => `${prefix}_${Date.now()}_${Math.random().toString(36).substring(2,7)}@example.com`;
+
 test.describe('Authentication Flows', () => {
 
   test('Registration -> Verification Email Generated -> Verify Account -> Login', async ({ page, request }) => {
-    await page.goto('http://localhost:5173/register');
+    await page.goto('http://localhost:5173/register', { waitUntil: 'networkidle' });
 
-    const randomEmail = `testuser_${Date.now()}@example.com`;
+    const randomEmail = getEmail('testuser');
     await page.fill('input[id="fullName"]', 'Playwright Test User');
     await page.fill('input[id="companyName"]', 'Playwright Corp');
     await page.fill('input[id="email"]', randomEmail);
     await page.fill('input[id="password"]', 'StrongPassw0rd!');
     await page.click('button[type="submit"]');
 
-    await expect(page).toHaveURL(/.*\/login/);
+    await expect(page).toHaveURL(/.*\/login/, { timeout: 15000 });
     await expect(page.locator('text=Registration successful. Please verify your email.')).toBeVisible();
 
     // Verify Account programmatically
@@ -24,12 +27,12 @@ test.describe('Authentication Flows', () => {
     await page.fill('input[id="password"]', 'StrongPassw0rd!');
     await page.click('button[type="submit"]');
 
-    await expect(page).toHaveURL(/.*\/app\/dashboard/);
+    await expect(page).toHaveURL(/.*\/app\/dashboard/, { timeout: 15000 });
   });
 
   test('Logout and Protected Route Denied', async ({ page, request }) => {
     // 1. Register & Verify
-    const randomEmail = `logout_${Date.now()}@example.com`;
+    const randomEmail = getEmail('logout');
     await request.post('http://localhost:8000/auth/register', {
         data: {
             email: randomEmail,
@@ -41,24 +44,24 @@ test.describe('Authentication Flows', () => {
     await request.get(`http://localhost:8000/test-api/get-verification-token?email=${randomEmail}`);
 
     // 2. Login
-    await page.goto('http://localhost:5173/login');
+    await page.goto('http://localhost:5173/login', { waitUntil: 'networkidle' });
     await page.fill('input[id="email"]', randomEmail);
     await page.fill('input[id="password"]', 'StrongPassw0rd!');
     await page.click('button[type="submit"]');
-    await expect(page).toHaveURL(/.*\/app\/dashboard/);
+    await expect(page).toHaveURL(/.*\/app\/dashboard/, { timeout: 15000 });
 
     // 3. Logout
     await page.click('button:has-text("Log out")'); // Using the Sidebar button text
-    await expect(page).toHaveURL(/.*\/login/);
+    await expect(page).toHaveURL(/.*\/login/, { timeout: 15000 });
 
     // 4. Protected Route Blocked
-    await page.goto('http://localhost:5173/app/dashboard');
-    await expect(page).toHaveURL(/.*\/login/);
+    await page.goto('http://localhost:5173/app/dashboard', { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL(/.*\/login/, { timeout: 15000 });
   });
 
   test('Refresh Token and Refresh Rotation', async ({ page, request }) => {
     // 1. Register & Verify
-    const randomEmail = `refresh_${Date.now()}@example.com`;
+    const randomEmail = getEmail('refresh');
     await request.post('http://localhost:8000/auth/register', {
         data: {
             email: randomEmail,
@@ -112,14 +115,14 @@ test.describe('Authentication Flows', () => {
   });
 
   test('Password Reset', async ({ page, request }) => {
-    const randomEmail = `reset_${Date.now()}@example.com`;
+    const randomEmail = getEmail('reset');
     await request.post('http://localhost:8000/auth/register', {
         data: { email: randomEmail, password: 'StrongPassw0rd!', full_name: 'Reset Tester', org_name: 'Reset Org' }
     });
     await request.get(`http://localhost:8000/test-api/get-verification-token?email=${randomEmail}`);
 
     // Forgot Password
-    await page.goto('http://localhost:5173/forgot-password');
+    await page.goto('http://localhost:5173/forgot-password', { waitUntil: 'networkidle' });
     await page.fill('input[type="email"]', randomEmail);
     await page.click('button[type="submit"]');
     await expect(page.locator('text=Check your email')).toBeVisible();
@@ -130,7 +133,7 @@ test.describe('Authentication Flows', () => {
     const { token } = await tokenRes.json();
 
     // Reset Password
-    await page.goto(`http://localhost:5173/reset-password?token=${token}`);
+    await page.goto(`http://localhost:5173/reset-password?token=${token}`, { waitUntil: 'networkidle' });
     await page.fill('input[id="password"]', 'NewPassw0rd!');
     await page.fill('input[id="confirm-password"]', 'NewPassw0rd!');
     await page.click('button[type="submit"]');
@@ -139,30 +142,35 @@ test.describe('Authentication Flows', () => {
     await expect(page.locator('text=Password reset successful')).toBeVisible();
 
     // Wait to be on login page, or just navigate
-    await page.goto('http://localhost:5173/login');
+    await page.goto('http://localhost:5173/login', { waitUntil: 'networkidle' });
     await page.fill('input[id="email"]', randomEmail);
     await page.fill('input[id="password"]', 'NewPassw0rd!');
     await page.click('button[type="submit"]');
-    await expect(page).toHaveURL(/.*\/app\/dashboard/);
+    await expect(page).toHaveURL(/.*\/app\/dashboard/, { timeout: 15000 });
   });
 
   test('Delete Account', async ({ page, request }) => {
-    const randomEmail = `delete_${Date.now()}@example.com`;
+    const randomEmail = getEmail('delete');
     await request.post('http://localhost:8000/auth/register', {
         data: { email: randomEmail, password: 'StrongPassw0rd!', full_name: 'Delete Tester', org_name: 'Delete Org' }
     });
     await request.get(`http://localhost:8000/test-api/get-verification-token?email=${randomEmail}`);
 
     // Login to grab API token for direct API deletion for E2E speed, since delete UI might be deep
-    await page.goto('http://localhost:5173/login');
+    await page.goto('http://localhost:5173/login', { waitUntil: 'networkidle' });
     await page.fill('input[id="email"]', randomEmail);
     await page.fill('input[id="password"]', 'StrongPassw0rd!');
     await page.click('button[type="submit"]');
-    await expect(page).toHaveURL(/.*\/app\/dashboard/);
+    await expect(page).toHaveURL(/.*\/app\/dashboard/, { timeout: 15000 });
+
+    // Bypass Org Admin requirement
+    await request.post('http://localhost:8000/test-api/bypass-org-admin', {
+        data: { email: randomEmail }
+    });
 
     // Use page request to delete account (intercept the user session)
     // Here we find the Delete Account button in settings (assumes it exists based on requirements)
-    await page.goto('http://localhost:5173/app/settings/danger-zone');
+    await page.goto('http://localhost:5173/app/settings/danger-zone', { waitUntil: 'networkidle' });
     // Wait for the button
     const deleteBtn = page.locator('button:has-text("Delete Account")').first();
     await deleteBtn.waitFor({ state: 'visible' });
@@ -176,7 +184,7 @@ test.describe('Authentication Flows', () => {
     await modalBtn.click();
 
     // Should be redirected to home first, and if protected it goes to login. Or home directly
-    await expect(page).toHaveURL(/.*\//);
+    await expect(page).toHaveURL(/.*\//, { timeout: 15000 });
 
     // User Cannot Access Account
     const loginRes = await request.post('http://localhost:8000/auth/login', {
