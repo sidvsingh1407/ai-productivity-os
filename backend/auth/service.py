@@ -53,7 +53,7 @@ class AuthService:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Password is too weak")
 
             hashed_pwd = self.password_service.hash_password(password)
-            new_user = User(email=email, hashed_password=hashed_pwd, full_name=full_name)
+            new_user = User(email=email, hashed_password=hashed_pwd, full_name=full_name, email_verified=True)
             self.user_repository.session.add(new_user)
             await self.user_repository.session.flush()
 
@@ -104,7 +104,10 @@ class AuthService:
             import traceback
             tb = traceback.format_exc()
             await self.user_repository.session.rollback()
-            logger.exception(f"Registration failed due to unexpected backend error. Type: {type(e).__name__}, Message: {str(e)}, Traceback: {tb}")
+            logger.exception(
+                f"Registration failed due to unexpected backend error. "
+                f"Type: {type(e).__name__}, Message: {str(e)}, Traceback: {tb}"
+            )
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Registration failed",
@@ -176,7 +179,7 @@ class AuthService:
 
         await self.session.commit()
 
-    async def forgot_password(self, email: str):
+    async def forgot_password(self, email: str) -> str | None:
         user = await self.user_repository.get_by_email(email)
         if user:
             reset_token = await self.token_service.create_password_reset_token(user.id)
@@ -187,6 +190,8 @@ class AuthService:
                 "password_reset",
                 {"reset_url": f"{settings.FRONTEND_URL}/reset-password?token={reset_token}"}
             )
+            return reset_token
+        return None
 
     async def reset_password(self, token: str, new_password: str):
         if not self.password_service.validate_password(new_password):

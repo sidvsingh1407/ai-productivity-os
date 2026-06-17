@@ -52,8 +52,16 @@ async def logout(logout_data: LogoutRequest, current_user: User = Depends(get_cu
 @router.post("/forgot-password", status_code=status.HTTP_200_OK)
 async def forgot_password(request: ForgotPasswordRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
     auth_service = AuthService(db)
-    await auth_service.forgot_password(request.email)
-    return {"message": "If an account exists, a password reset link has been sent."}
+    token = await auth_service.forgot_password(request.email)
+    # Exposing the reset URL for development/demo purposes because emails are mock.
+    reset_url = None
+    if token:
+        from config import settings
+        reset_url = f"{settings.FRONTEND_URL}/reset-password?token={token}"
+    return {
+        "message": "If an account exists, a password reset link has been sent.",
+        "reset_url": reset_url
+    }
 
 @router.post("/reset-password", status_code=status.HTTP_200_OK)
 async def reset_password(request: ResetPasswordRequest, db: AsyncSession = Depends(get_db)):
