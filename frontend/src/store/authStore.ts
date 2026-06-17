@@ -34,12 +34,27 @@ export interface AuthState {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      user: null,
-      org: null,
-      organization: undefined,
-      access_token: null,
-      refresh_token: null,
-      isAuthenticated: false,
+      user: {
+        id: "00000000-0000-0000-0000-000000000001",
+        email: "development@tarkax.com",
+        full_name: "Development Mode",
+        is_superadmin: true,
+        is_active: true,
+        email_verified: true,
+      },
+      org: {
+        id: "00000000-0000-0000-0000-000000000002",
+        name: "Development Organization",
+        slug: "development-organization",
+      },
+      organization: {
+        id: "00000000-0000-0000-0000-000000000002",
+        name: "Development Organization",
+        slug: "development-organization",
+      },
+      access_token: "temp_access_token",
+      refresh_token: "temp_refresh_token",
+      isAuthenticated: true,
       setAuth: (user, org, access_token, refresh_token) =>
         set({ user, org, organization: org, access_token, refresh_token, isAuthenticated: true }),
       clearAuth: () =>
