@@ -3,9 +3,7 @@ import os
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///local_test.db"
 
-from main import app
 from database import Base, engine, async_session_maker
 from models.user import User
 from models.organization import Organization, OrgMember
