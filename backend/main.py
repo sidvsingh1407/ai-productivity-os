@@ -25,7 +25,7 @@ async def lifespan(app: FastAPI):
         await seed()
         print("SYSTEM LOG: Development user seed complete.", flush=True)
     except Exception as e:
-        print(f"SYSTEM LOG: Seed failed (can ignore if using fallback): {e}")
+        logger.exception("SYSTEM LOG: Critical Seed Failure! The application may be missing required development user/org rows. Details: %s", e)
 
     print("SYSTEM LOG: Database schema sync complete.", flush=True)
     yield
