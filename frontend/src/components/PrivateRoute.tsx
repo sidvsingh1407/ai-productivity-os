@@ -1,6 +1,12 @@
+import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 
 export function PrivateRoute({ children }: { children: React.ReactNode }) {
-  // Temporary pass-through component
+  const { isAuthenticated } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
   return <>{children}</>;
 }

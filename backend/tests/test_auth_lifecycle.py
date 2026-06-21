@@ -149,8 +149,8 @@ async def test_change_password_authenticated(mock_delay, db_session: AsyncSessio
         # Must verify email to login now
         user_query = await db_session.execute(select(User).where(User.email == "change@example.com"))
         user = user_query.scalar_one()
-        # user.email_verified = True
-        # await db_session.commit()
+        user.email_verified = True
+        await db_session.commit()
 
         login_res = await client.post(
             "/auth/login",

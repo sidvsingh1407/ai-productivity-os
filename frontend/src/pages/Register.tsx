@@ -26,7 +26,7 @@ export function Register() {
   });
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/app/dashboard" replace />;
   }
 
   const onSubmit = async (dataForm: RegisterFormData) => {
@@ -34,18 +34,20 @@ export function Register() {
     setLoading(true);
 
     try {
-      const data = await authApi.register({
+      await authApi.register({
         full_name: dataForm.fullName,
         email: dataForm.email,
         password: dataForm.password,
         org_name: dataForm.companyName // Backend expects org_name, form uses companyName
       });
-      // Assuming backend auto-logs in and returns tokens, or we redirect to login
-      if (data.access_token && data.user) {
-         setAuth(data.user, data.org, data.access_token, data.refresh_token);
-         navigate('/app/dashboard');
-      } else {
-         navigate('/login');
+      // Auto-login after registration to follow original spec where possible, or just navigate to dashboard and let it redirect to login if unverified. Since backend requires email_verified, we'll try to log them in automatically. But wait, if they need verification, login will fail 403. Let's auto login and if it fails, go to login. Actually, to conform to "After registration: /app/dashboard":
+      try {
+        const loginData = await authApi.login({ email: dataForm.email, password: dataForm.password });
+        setAuth(loginData.user, loginData.org, loginData.access_token, loginData.refresh_token);
+        navigate('/app/dashboard');
+      } catch (loginErr) {
+        // If login fails (e.g. requires verification), we fall back to login page
+        navigate('/login', { state: { message: "Registration successful. Please verify your email to login." } });
       }
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Failed to register. Please try again.');
@@ -71,6 +73,7 @@ export function Register() {
               <Input
                 id="fullName"
                 placeholder="John Doe"
+                autoComplete="name"
                 {...register('fullName')}
               />
               {errors.fullName && <span className="text-xs text-destructive">{errors.fullName.message}</span>}
@@ -80,6 +83,7 @@ export function Register() {
               <Input
                 id="companyName"
                 placeholder="Acme Corp"
+                autoComplete="organization"
                 {...register('companyName')}
               />
               {errors.companyName && <span className="text-xs text-destructive">{errors.companyName.message}</span>}
@@ -90,6 +94,7 @@ export function Register() {
                 id="email"
                 type="email"
                 placeholder="m@example.com"
+                autoComplete="email"
                 {...register('email')}
               />
               {errors.email && <span className="text-xs text-destructive">{errors.email.message}</span>}
@@ -99,6 +104,7 @@ export function Register() {
               <Input
                 id="password"
                 type="password"
+                autoComplete="new-password"
                 {...register('password')}
               />
               {errors.password && <span className="text-xs text-destructive">{errors.password.message}</span>}
