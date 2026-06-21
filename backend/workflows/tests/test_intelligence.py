@@ -1,5 +1,5 @@
 import pytest
-from backend.workflows.workflow_intelligence_engine import generate_workflow_intelligence
+from workflows.workflow_intelligence_engine import generate_workflow_intelligence
 
 def test_generate_workflow_intelligence_manual_approval():
     input_config = {

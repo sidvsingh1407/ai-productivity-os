@@ -1,10 +1,14 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel
 
 from database import get_db
 from auth.service import AuthService
 from users.schemas import UserCreate
+from auth.schemas import AuthResponse, RegisterResponse, ForgotPasswordRequest, ResetPasswordRequest, VerifyEmailRequest, ResendVerificationRequest, ChangePasswordRequest
+from dependencies import get_current_user
+from models.user import User
+from typing import Optional
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -15,7 +19,10 @@ class LoginRequest(BaseModel):
 class RefreshRequest(BaseModel):
     refresh_token: str
 
-@router.post("/register", status_code=status.HTTP_201_CREATED)
+class LogoutRequest(BaseModel):
+    refresh_token: Optional[str] = None
+
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=RegisterResponse)
 async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
     auth_service = AuthService(db)
     result = await auth_service.register_user(
@@ -26,31 +33,10 @@ async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
     )
     return result
 
-@router.post("/login")
+@router.post("/login", response_model=AuthResponse)
 async def login(login_data: LoginRequest, db: AsyncSession = Depends(get_db)):
     auth_service = AuthService(db)
     return await auth_service.login_user(login_data.email, login_data.password)
-
-from dependencies import get_current_user
-from organizations.service import OrganizationService
-
-@router.get("/me")
-async def get_me(current_user = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    org_service = OrganizationService(db)
-    orgs = await org_service.get_user_organizations(current_user.id)
-    org = orgs[0] if orgs else None
-    return {
-        "user": {
-            "id": str(current_user.id),
-            "email": current_user.email,
-            "full_name": current_user.full_name,
-            "is_superadmin": current_user.is_superadmin
-        },
-        "org": {
-            "id": str(org.id) if org else "",
-            "name": org.name if org else ""
-        }
-    }
 
 @router.post("/refresh")
 async def refresh(refresh_data: RefreshRequest, db: AsyncSession = Depends(get_db)):
@@ -58,5 +44,48 @@ async def refresh(refresh_data: RefreshRequest, db: AsyncSession = Depends(get_d
     return await auth_service.refresh_tokens(refresh_data.refresh_token)
 
 @router.post("/logout")
-async def logout():
+async def logout(logout_data: LogoutRequest, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db)
+    await auth_service.logout(current_user, logout_data.refresh_token)
     return {"message": "Logged out successfully"}
+
+@router.get("/me")
+async def read_users_me(current_user: User = Depends(get_current_user)):
+    return {
+        "id": str(current_user.id),
+        "email": current_user.email,
+        "full_name": current_user.full_name,
+        "is_superadmin": current_user.is_superadmin,
+        "is_active": current_user.is_active,
+        "email_verified": getattr(current_user, 'email_verified', True)
+    }
+
+@router.post("/forgot-password", status_code=status.HTTP_200_OK)
+async def forgot_password(request: ForgotPasswordRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db)
+    await auth_service.forgot_password(request.email)
+    return {"message": "If an account exists, a password reset link has been sent."}
+
+@router.post("/reset-password", status_code=status.HTTP_200_OK)
+async def reset_password(request: ResetPasswordRequest, db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db)
+    await auth_service.reset_password(request.token, request.new_password)
+    return {"message": "Password reset successfully."}
+
+@router.post("/verify-email", status_code=status.HTTP_200_OK)
+async def verify_email(request: VerifyEmailRequest, db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db)
+    await auth_service.verify_email(request.token)
+    return {"message": "Email verified successfully."}
+
+@router.post("/resend-verification", status_code=status.HTTP_200_OK)
+async def resend_verification(request: ResendVerificationRequest, db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db)
+    await auth_service.resend_verification(request.email)
+    return {"message": "Verification email sent if account exists and is unverified."}
+
+@router.post("/change-password", status_code=status.HTTP_200_OK)
+async def change_password(request: ChangePasswordRequest, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    auth_service = AuthService(db)
+    await auth_service.change_password(current_user, request.current_password, request.new_password)
+    return {"message": "Password changed successfully."}

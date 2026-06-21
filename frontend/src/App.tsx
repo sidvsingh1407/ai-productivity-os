@@ -2,9 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { RouteTracker } from './components/analytics/RouteTracker';
-import { PrivateRoute } from './components/auth/PrivateRoute';
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
+import { PrivateRoute } from './components/PrivateRoute';
 import { AppShell } from './components/layout/AppShell';
 import { MarketingLayout } from './components/layout/MarketingLayout';
 
@@ -41,6 +39,11 @@ import BlogPage from './pages/marketing/BlogPage';
 import ContactPage from "./pages/marketing/ContactPage";
 import { DeveloperPortal } from "./pages/marketing/DeveloperPortal";
 
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
+import { ForgotPassword } from './pages/ForgotPassword';
+import { ResetPassword } from './pages/ResetPassword';
+import { VerifyEmail } from './pages/VerifyEmail';
 import { Dashboard } from './pages/Dashboard';
 import NewAudit from './pages/NewAudit';
 import AuditDetail from './pages/AuditDetail';
@@ -104,15 +107,23 @@ function App() {
           {/* Legacy route catch-all */}
           <Route path="/sample-report" element={<Navigate to="/example-findings" replace />} />
           <Route path="/developers" element={<DeveloperPortal />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
         </Route>
 
+        {/* Auth Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+
         {/* Protected Routes */}
-        <Route path="/app" element={<PrivateRoute />}>
-          <Route element={<AppShell />}>
-            <Route index element={<Navigate to="/app/dashboard" replace />} />
-            <Route path="dashboard" element={<Dashboard />} />
+        <Route path="/app" element={
+          <PrivateRoute>
+            <AppShell />
+          </PrivateRoute>
+        }>
+          <Route index element={<Navigate to="/app/dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="audits" element={<AuditHistory />} />
           <Route path="audits/new" element={<NewAudit />} />
           <Route path="audits/:id" element={<AuditDetail />} />
@@ -121,14 +132,13 @@ function App() {
           <Route path="integrations/:id" element={<IntegrationResults />} />
           <Route path="developers" element={<DeveloperDashboard />} />
           <Route path="prompt-improver" element={<PromptImprover />} />
-            <Route path="settings" element={<SettingsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
 
-            {/* Admin Routes */}
-            <Route path="admin" element={<AdminRoute />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="orgs" element={<AdminOrgs />} />
-            </Route>
+          {/* Admin Routes */}
+          <Route path="admin" element={<AdminRoute />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="orgs" element={<AdminOrgs />} />
           </Route>
         </Route>
 

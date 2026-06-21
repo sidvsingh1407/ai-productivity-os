@@ -8,7 +8,6 @@ from contextlib import asynccontextmanager
 
 from database import engine, Base
 import models  # noqa: F401
-from auth.router import router as auth_router
 
 
 @asynccontextmanager
@@ -19,19 +18,11 @@ async def lifespan(app: FastAPI):
     )
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-
-    # Run the seed to ensure temp dev user/org exist
-    try:
-        from seed_db import seed
-        await seed()
-        print("SYSTEM LOG: Development user seed complete.", flush=True)
-    except Exception as e:
-        print(f"SYSTEM LOG: Seed failed (can ignore if using fallback): {e}")
-
     print("SYSTEM LOG: Database schema sync complete.", flush=True)
     yield
 
 # Import all routers
+from auth.router import router as auth_router  # noqa: E402
 from admin.router import router as admin_router  # noqa: E402
 from audits.router import router as audits_router  # noqa: E402
 from analytics.router import router as analytics_router  # noqa: E402
@@ -39,6 +30,7 @@ from workflows.router import router as workflows_router  # noqa: E402
 from integration.router import router as integration_router  # noqa: E402
 from reports.router import router as reports_router  # noqa: E402
 from users.router import router as users_router  # noqa: E402
+from users.account_router import router as account_router  # noqa: E402
 from organizations.router import router as organizations_router  # noqa: E402
 from billing.router import router as billing_router  # noqa: E402
 from contact.router import router as contact_router  # noqa: E402
@@ -160,6 +152,8 @@ async def general_exception_handler(request: Request, exc: Exception):
     )
 
 # MOUNT ALL ROUTERS
+app.include_router(auth_router)
+
 # DANGER: Only for E2E Tests!
 from tests.test_router import router as test_flow_router
 app.include_router(test_flow_router)
@@ -170,6 +164,7 @@ app.include_router(workflows_router)
 app.include_router(integration_router)
 app.include_router(reports_router)
 app.include_router(users_router)
+app.include_router(account_router)
 app.include_router(organizations_router, prefix="/organizations")
 app.include_router(billing_router, prefix="/billing")
 app.include_router(contact_router)
@@ -177,7 +172,6 @@ app.include_router(sample_router)
 app.include_router(prompt_intelligence_router, prefix="/api")
 app.include_router(api_platform_router, prefix="/api/v1")
 app.include_router(api_platform_management_router, prefix="/api/platform")
-app.include_router(auth_router)
 
 
 @app.get("/")
