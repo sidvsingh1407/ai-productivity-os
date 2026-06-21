@@ -111,31 +111,53 @@ class AuthService:
             )
 
     async def login_user(self, email: str, password: str) -> dict:
-        user = await self.user_repository.get_by_email(email)
-        if not user or not self.password_service.verify_password(password, user.hashed_password):
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
+        try:
+            user = await self.user_repository.get_by_email(email)
+            if not user or not self.password_service.verify_password(password, user.hashed_password):
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
+        except HTTPException:
+            raise
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
+            logger.exception(f"Login failed due to unexpected backend error. Type: {type(e).__name__}, Message: {str(e)}, Traceback: {tb}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Login failed",
+            )
 
-        if not user.is_active:
-             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user")
+        try:
+            if not user.is_active:
+                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user")
 
-        if not user.email_verified:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Please verify your email before logging in.")
+            if not user.email_verified:
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Please verify your email before logging in.")
 
-        orgs = await self.org_service.get_user_organizations(user.id)
-        primary_org = orgs[0] if orgs else None
+            orgs = await self.org_service.get_user_organizations(user.id)
+            primary_org = orgs[0] if orgs else None
 
-        access_token = self.token_service.create_access_token(data={"sub": str(user.id)})
-        refresh_token = await self.token_service.create_refresh_token(user.id)
+            access_token = self.token_service.create_access_token(data={"sub": str(user.id)})
+            refresh_token = await self.token_service.create_refresh_token(user.id)
 
-        await self.session.commit()
+            await self.session.commit()
 
-        return {
-            "user": user,
-            "org": primary_org,
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-            "token_type": "bearer"
-        }
+            return {
+                "user": user,
+                "org": primary_org,
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "token_type": "bearer"
+            }
+        except HTTPException:
+            raise
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
+            logger.exception(f"Login failed due to unexpected backend error (second part). Type: {type(e).__name__}, Message: {str(e)}, Traceback: {tb}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Login failed",
+            )
 
     async def refresh_tokens(self, refresh_token: str) -> dict:
         payload = await self.token_service.verify_refresh_token(refresh_token)
