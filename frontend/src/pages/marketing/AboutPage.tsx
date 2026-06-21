@@ -201,10 +201,10 @@ export default function AboutPage() {
             <h3 className="text-h3 text-text-primary mb-space-sm">Explore TarkaX Capabilities</h3>
             <div className="flex flex-wrap gap-4">
               <Link to="/ai-audit" className="text-accent-blue font-medium hover:underline flex items-center gap-1">
-                AI Audit <ArrowRight className="w-4 h-4" />
+                See Where AI Is Failing <ArrowRight className="w-4 h-4" />
               </Link>
               <Link to="/workflow-diagnostic" className="text-accent-blue font-medium hover:underline flex items-center gap-1">
-                Workflow Diagnostic <ArrowRight className="w-4 h-4" />
+                See Where Workflows Break <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </div>

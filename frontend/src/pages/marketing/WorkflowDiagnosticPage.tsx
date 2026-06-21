@@ -160,7 +160,7 @@ export default function WorkflowDiagnosticPage() {
             <h3 className="text-h3 text-text-primary mb-space-sm">Explore Related Products</h3>
             <div className="flex gap-4">
               <Link to="/ai-audit" className="text-accent-blue font-medium hover:underline flex items-center gap-1">
-                AI Audit <ArrowRight className="w-4 h-4" />
+                See Where AI Is Failing <ArrowRight className="w-4 h-4" />
               </Link>
               <Link to="/forecasting" className="text-accent-blue font-medium hover:underline flex items-center gap-1">
                 Forecasting Framework <ArrowRight className="w-4 h-4" />
