@@ -114,7 +114,7 @@ export default function BlogPage() {
                           When AI Readiness Scores Hide Operational Risk
                        </h4>
                        <p className="text-body text-text-secondary line-clamp-2">
-                          Why traditional sentiment-based assessments fail to measure true operational readiness and often create a false sense of security. View Sample Report.
+                          Why traditional sentiment-based assessments fail to measure true operational readiness and often create a false sense of security. View Example Findings.
                        </p>
                     </div>
                  </Link>
@@ -162,7 +162,7 @@ export default function BlogPage() {
                           What Traditional Assessments Fail to Measure
                        </h4>
                        <p className="text-body text-text-secondary line-clamp-2">
-                          The danger of relying on "how do you feel about this tool" surveys over behavioral diagnostics. View Sample Report.
+                          The danger of relying on "how do you feel about this tool" surveys over behavioral diagnostics. View Example Findings.
                        </p>
                     </div>
                  </Link>
@@ -211,7 +211,7 @@ export default function BlogPage() {
                      <p className="text-body text-text-secondary line-clamp-3 mb-space-md">
                         Structuring uncomfortable truths. How to deliver structural failure intelligence in a way that drives action rather than defensiveness.
                      </p>
-                     <div className="mt-auto text-body font-medium text-accent-blue pt-space-sm">View Sample Report →</div>
+                     <div className="mt-auto text-body font-medium text-accent-blue pt-space-sm">View Example Findings →</div>
                   </div>
                </Link>
             </div>

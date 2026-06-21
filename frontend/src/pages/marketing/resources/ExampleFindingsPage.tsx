@@ -38,7 +38,7 @@ export default function ExampleFindingsPage() {
     return (
       <div className="bg-bg-primary min-h-screen flex flex-col items-center justify-center p-6 text-center">
         <h2 className="text-h2 font-semibold text-text-primary mb-4">Report Generation Failed</h2>
-        <p className="text-body text-text-secondary mb-6">Unable to generate the sample report via the deterministic engine.</p>
+        <p className="text-body text-text-secondary mb-6">Unable to generate the example findings via the deterministic engine.</p>
         <button onClick={() => navigate('/')} className="text-accent-blue font-medium hover:underline">Return Home</button>
       </div>
     );
