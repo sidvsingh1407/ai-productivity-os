@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 
 from database import engine, Base
 import models  # noqa: F401
+from auth.router import router as auth_router
 
 
 @asynccontextmanager
@@ -176,6 +177,7 @@ app.include_router(sample_router)
 app.include_router(prompt_intelligence_router, prefix="/api")
 app.include_router(api_platform_router, prefix="/api/v1")
 app.include_router(api_platform_management_router, prefix="/api/platform")
+app.include_router(auth_router)
 
 
 @app.get("/")

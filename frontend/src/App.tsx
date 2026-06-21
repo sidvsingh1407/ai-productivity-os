@@ -2,7 +2,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { RouteTracker } from './components/analytics/RouteTracker';
-import { PrivateRoute } from './components/PrivateRoute';
+import { PrivateRoute } from './components/auth/PrivateRoute';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
 import { AppShell } from './components/layout/AppShell';
 import { MarketingLayout } from './components/layout/MarketingLayout';
 
@@ -102,16 +104,15 @@ function App() {
           {/* Legacy route catch-all */}
           <Route path="/sample-report" element={<Navigate to="/example-findings" replace />} />
           <Route path="/developers" element={<DeveloperPortal />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Route>
 
         {/* Protected Routes */}
-        <Route path="/app" element={
-          <PrivateRoute>
-            <AppShell />
-          </PrivateRoute>
-        }>
-          <Route index element={<Navigate to="/app/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
+        <Route path="/app" element={<PrivateRoute />}>
+          <Route element={<AppShell />}>
+            <Route index element={<Navigate to="/app/dashboard" replace />} />
+            <Route path="dashboard" element={<Dashboard />} />
           <Route path="audits" element={<AuditHistory />} />
           <Route path="audits/new" element={<NewAudit />} />
           <Route path="audits/:id" element={<AuditDetail />} />
@@ -120,13 +121,14 @@ function App() {
           <Route path="integrations/:id" element={<IntegrationResults />} />
           <Route path="developers" element={<DeveloperDashboard />} />
           <Route path="prompt-improver" element={<PromptImprover />} />
-          <Route path="settings" element={<SettingsPage />} />
+            <Route path="settings" element={<SettingsPage />} />
 
-          {/* Admin Routes */}
-          <Route path="admin" element={<AdminRoute />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="users" element={<AdminUsers />} />
-            <Route path="orgs" element={<AdminOrgs />} />
+            {/* Admin Routes */}
+            <Route path="admin" element={<AdminRoute />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="orgs" element={<AdminOrgs />} />
+            </Route>
           </Route>
         </Route>
 
