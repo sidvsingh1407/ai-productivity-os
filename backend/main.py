@@ -16,9 +16,13 @@ async def lifespan(app: FastAPI):
         "SYSTEM LOG: Scanning models and verifying tables on Supabase...",
         flush=True
     )
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    print("SYSTEM LOG: Database schema sync complete.", flush=True)
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        print("SYSTEM LOG: Database schema sync complete.", flush=True)
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error("SYSTEM ERROR: Failed to synchronize database schema during startup.", exc_info=True)
     yield
 
 # Import all routers

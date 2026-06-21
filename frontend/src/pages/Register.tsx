@@ -34,22 +34,31 @@ export function Register() {
     setLoading(true);
 
     try {
+      // 1. Attempt registration
       await authApi.register({
         full_name: dataForm.fullName,
         email: dataForm.email,
         password: dataForm.password,
         org_name: dataForm.companyName // Backend expects org_name, form uses companyName
       });
-      // Auto-login after registration to follow original spec where possible, or just navigate to dashboard and let it redirect to login if unverified. Since backend requires email_verified, we'll try to log them in automatically. But wait, if they need verification, login will fail 403. Let's auto login and if it fails, go to login. Actually, to conform to "After registration: /app/dashboard":
+
+      // If we reach here, registration returned a 2xx success response.
+      // 2. Attempt auto-login
       try {
         const loginData = await authApi.login({ email: dataForm.email, password: dataForm.password });
         setAuth(loginData.user, loginData.org, loginData.access_token, loginData.refresh_token);
         navigate('/app/dashboard');
-      } catch (loginErr) {
-        // If login fails (e.g. requires verification), we fall back to login page
-        navigate('/login', { state: { message: "Registration successful. Please verify your email to login." } });
+      } catch (loginErr: any) {
+        // If login fails due to required verification (403), we fall back to login page
+        if (loginErr.response?.status === 403) {
+          navigate('/login', { state: { message: "Registration successful. Please verify your email to login." } });
+        } else {
+          // If login fails for any other reason (500, timeout, etc.), display inline error
+          setError(loginErr.response?.data?.detail || 'Registration successful, but failed to auto-login. Please try logging in manually.');
+        }
       }
     } catch (err: any) {
+      // If registration fails (e.g., 500 error, 400 validation error), catch it and display inline
       setError(err.response?.data?.detail || 'Failed to register. Please try again.');
     } finally {
       setLoading(false);
