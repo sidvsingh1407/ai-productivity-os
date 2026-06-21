@@ -47,6 +47,9 @@ class OrganizationRepository:
             await self.session.commit()
 
     async def get_user_organizations(self, user_id: UUID) -> List[Organization]:
+        if isinstance(user_id, str):
+            import uuid
+            user_id = uuid.UUID(user_id)
         result = await self.session.execute(
             select(Organization)
             .join(OrgMember, OrgMember.org_id == Organization.id)
