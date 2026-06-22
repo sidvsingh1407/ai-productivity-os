@@ -14,15 +14,16 @@ from auth.token_service import TokenService
 from auth.token_repository import TokenRepository
 from models.user import User
 from models.organization import Organization, OrgMember, OrgRole
-from tasks.email_tasks import send_email_task
-from tasks.dispatch import safe_task_dispatch
+from utils.email import send_templated_email
+from fastapi import BackgroundTasks
 from config import settings
 
 logger = logging.getLogger(__name__)
 
 class AuthService:
-    def __init__(self, session: AsyncSession):
+    def __init__(self, session: AsyncSession, background_tasks: BackgroundTasks = None):
         self.session = session
+        self.background_tasks = background_tasks
         self.user_repository = UserRepository(session)
         self.org_service = OrganizationService(session)
         self.password_service = PasswordService()
@@ -73,19 +74,19 @@ class AuthService:
             verify_token = await self.token_service.create_verification_token(new_user.id)
             await self.session.commit()
 
-            safe_task_dispatch(
-                send_email_task,
-                new_user.email,
-                "welcome",
-                {"name": new_user.full_name, "frontend_url": settings.FRONTEND_URL}
-            )
-
-            safe_task_dispatch(
-                send_email_task,
-                new_user.email,
-                "verify_email",
-                {"verify_url": f"{settings.FRONTEND_URL}/verify-email?token={verify_token}"}
-            )
+            if self.background_tasks:
+                self.background_tasks.add_task(
+                    send_templated_email,
+                    new_user.email,
+                    "welcome",
+                    {"name": new_user.full_name, "frontend_url": settings.FRONTEND_URL}
+                )
+                self.background_tasks.add_task(
+                    send_templated_email,
+                    new_user.email,
+                    "verify_email",
+                    {"verify_url": f"{settings.FRONTEND_URL}/verify-email?token={verify_token}"}
+                )
 
             return {
                 "message": "Registration successful. Please verify your email.",
@@ -203,12 +204,13 @@ class AuthService:
         if user:
             reset_token = await self.token_service.create_password_reset_token(user.id)
             await self.session.commit()
-            safe_task_dispatch(
-                send_email_task,
-                user.email,
-                "password_reset",
-                {"reset_url": f"{settings.FRONTEND_URL}/reset-password?token={reset_token}"}
-            )
+            if self.background_tasks:
+                self.background_tasks.add_task(
+                    send_templated_email,
+                    user.email,
+                    "password_reset",
+                    {"reset_url": f"{settings.FRONTEND_URL}/reset-password?token={reset_token}"}
+                )
 
     async def reset_password(self, token: str, new_password: str):
         if not self.password_service.validate_password(new_password):
@@ -251,12 +253,13 @@ class AuthService:
         if user and not user.email_verified:
             verify_token = await self.token_service.create_verification_token(user.id)
             await self.session.commit()
-            safe_task_dispatch(
-                send_email_task,
-                user.email,
-                "verify_email",
-                {"verify_url": f"{settings.FRONTEND_URL}/verify-email?token={verify_token}"}
-            )
+            if self.background_tasks:
+                self.background_tasks.add_task(
+                    send_templated_email,
+                    user.email,
+                    "verify_email",
+                    {"verify_url": f"{settings.FRONTEND_URL}/verify-email?token={verify_token}"}
+                )
 
     async def change_password(self, user: User, current_password: str, new_password: str):
         user_with_pwd = await self.user_repository.get_by_id(user.id)

@@ -26,7 +26,7 @@ async def db_session() -> AsyncSession:
         yield session
 
 @pytest.mark.asyncio
-@patch('auth.service.send_email_task.delay')
+@patch('auth.service.send_templated_email')
 async def test_register_and_verify_email(mock_delay, db_session: AsyncSession):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         # Register user
@@ -75,7 +75,7 @@ async def test_register_and_verify_email(mock_delay, db_session: AsyncSession):
 
 
 @pytest.mark.asyncio
-@patch('auth.service.send_email_task.delay')
+@patch('auth.service.send_templated_email')
 async def test_forgot_and_reset_password(mock_delay, db_session: AsyncSession):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         # Create test user
@@ -131,7 +131,7 @@ async def test_forgot_and_reset_password(mock_delay, db_session: AsyncSession):
         assert ps.verify_password("newpassword123", user.hashed_password) == True
 
 @pytest.mark.asyncio
-@patch('auth.service.send_email_task.delay')
+@patch('auth.service.send_templated_email')
 async def test_change_password_authenticated(mock_delay, db_session: AsyncSession):
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         # Register user

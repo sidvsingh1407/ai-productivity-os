@@ -23,8 +23,8 @@ class LogoutRequest(BaseModel):
     refresh_token: Optional[str] = None
 
 @router.post("/register", status_code=status.HTTP_201_CREATED, response_model=RegisterResponse)
-async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
-    auth_service = AuthService(db)
+async def register(user_data: UserCreate, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db, background_tasks=background_tasks)
     result = await auth_service.register_user(
         email=user_data.email,
         password=user_data.password,
@@ -62,7 +62,7 @@ async def read_users_me(current_user: User = Depends(get_current_user)):
 
 @router.post("/forgot-password", status_code=status.HTTP_200_OK)
 async def forgot_password(request: ForgotPasswordRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
-    auth_service = AuthService(db)
+    auth_service = AuthService(db, background_tasks=background_tasks)
     await auth_service.forgot_password(request.email)
     return {"message": "If an account exists, a password reset link has been sent."}
 
@@ -79,8 +79,8 @@ async def verify_email(request: VerifyEmailRequest, db: AsyncSession = Depends(g
     return {"message": "Email verified successfully."}
 
 @router.post("/resend-verification", status_code=status.HTTP_200_OK)
-async def resend_verification(request: ResendVerificationRequest, db: AsyncSession = Depends(get_db)):
-    auth_service = AuthService(db)
+async def resend_verification(request: ResendVerificationRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db)):
+    auth_service = AuthService(db, background_tasks=background_tasks)
     await auth_service.resend_verification(request.email)
     return {"message": "Verification email sent if account exists and is unverified."}
 
