@@ -9,6 +9,13 @@ from contextlib import asynccontextmanager
 from database import engine, Base
 import models  # noqa: F401
 
+# Fix for asyncpg UUID serialization in FastAPI's jsonable_encoder
+from fastapi.encoders import ENCODERS_BY_TYPE
+try:
+    import asyncpg.pgproto.pgproto
+    ENCODERS_BY_TYPE[asyncpg.pgproto.pgproto.UUID] = str
+except ImportError:
+    pass
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
