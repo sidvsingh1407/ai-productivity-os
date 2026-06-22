@@ -59,7 +59,12 @@ export function Register() {
       }
     } catch (err: any) {
       // If registration fails (e.g., 500 error, 400 validation error), catch it and display inline
-      setError(err.response?.data?.detail || 'Failed to register. Please try again.');
+      // For validation errors from backend, the response could be an array under detail
+      if (Array.isArray(err.response?.data?.detail)) {
+        setError(err.response.data.detail[0]?.msg || 'Validation error');
+      } else {
+        setError(err.response?.data?.detail || err.message || 'Failed to register. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
