@@ -2,6 +2,7 @@ import React from 'react';
 import ProfileSettings from './ProfileSettings';
 import OrgSettings from './OrgSettings';
 import Billing from './Billing';
+import AccountActions from './AccountActions';
 import DangerZone from './DangerZone';
 
 export default function SettingsPage() {
@@ -10,6 +11,7 @@ export default function SettingsPage() {
       <ProfileSettings />
       <OrgSettings />
       <Billing />
+      <AccountActions />
       <DangerZone />
     </div>
   );
