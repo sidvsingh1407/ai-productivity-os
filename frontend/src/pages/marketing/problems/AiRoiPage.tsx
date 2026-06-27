@@ -24,7 +24,7 @@ export default function AiRoiPage() {
         impact: "$18,000 annual waste and 0% productivity gain in core workflows."
       }}
       productLensUrl="/register"
-      productLensLabel="Run AI Audit"
+      productLensLabel="Run Compliance Readiness"
     />
   );
 }

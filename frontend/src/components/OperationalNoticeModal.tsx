@@ -103,7 +103,7 @@ export const OperationalNoticeModal: React.FC = () => {
               <ShieldAlert className="w-6 h-6" />
             </div>
             <h2 id="modal-title" className="text-2xl sm:text-3xl font-serif text-gray-900 tracking-tight">
-              Operational Intelligence Notice
+              AI Governance Notice
             </h2>
           </div>
 

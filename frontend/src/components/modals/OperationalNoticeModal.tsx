@@ -67,7 +67,7 @@ export function OperationalNoticeModal({
             id="modal-title"
             className="mb-6 text-2xl font-light tracking-wide text-zinc-50"
           >
-            Operational Intelligence Notice
+            AI Governance Notice
           </h2>
 
           <div className="space-y-6 text-[15px] leading-relaxed text-zinc-300">

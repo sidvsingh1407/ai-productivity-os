@@ -38,25 +38,25 @@ export const trackContactSubmission = () => {
 };
 
 /**
- * Tracks when a user starts the AI Audit flow.
+ * Tracks when a user starts the Compliance Readiness flow.
  */
 export const trackAIAuditStarted = () => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'ai_audit_started', {
       event_category: 'engagement',
-      event_label: 'AI Audit',
+      event_label: 'Compliance Readiness',
     });
   }
 };
 
 /**
- * Tracks when a user starts the Workflow Diagnostic flow.
+ * Tracks when a user starts the Workflow Intelligence flow.
  */
 export const trackWorkflowDiagnosticStarted = () => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', 'workflow_diagnostic_started', {
       event_category: 'engagement',
-      event_label: 'Workflow Diagnostic',
+      event_label: 'Workflow Intelligence',
     });
   }
 };

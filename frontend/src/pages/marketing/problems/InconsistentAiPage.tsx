@@ -24,7 +24,7 @@ export default function InconsistentAiPage() {
         impact: "Inconsistent brand experience and wasted employee hours on revisions."
       }}
       productLensUrl="/app/prompt-improver"
-      productLensLabel="Try Prompt Improver"
+      productLensLabel="Try Output Quality"
     />
   );
 }

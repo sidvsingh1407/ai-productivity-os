@@ -64,7 +64,7 @@ export default function WorkflowDetail() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Workflow Diagnostic</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Workflow Intelligence</h1>
           <p className="text-slate-500">ID: {id}</p>
         </div>
         <Badge variant={workflow.status === 'completed' ? 'default' : 'secondary'} className="text-sm px-3 py-1">

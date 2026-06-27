@@ -20,25 +20,25 @@ export function Sidebar() {
           <Link to="/app/dashboard">
             <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
               <LayoutDashboard className="w-4 h-4" />
-              Dashboard
+              Command Center
             </Button>
           </Link>
           <Link to="/app/audits/new">
             <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
               <Target className="w-4 h-4" />
-              AI Audit
+              Compliance Readiness
             </Button>
           </Link>
           <Link to="/app/workflows/new">
             <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
               <GitBranch className="w-4 h-4" />
-              Workflow Diagnostic
+              Workflow Intelligence
             </Button>
           </Link>
           <Link to="/app/prompt-improver">
             <Button variant="secondary" className="w-full justify-start gap-2">
               <Sparkles className="w-4 h-4 text-accent-blue" />
-              Prompt Improver
+              Output Quality
             </Button>
           </Link>
           <div className="pt-4 pb-2 px-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">

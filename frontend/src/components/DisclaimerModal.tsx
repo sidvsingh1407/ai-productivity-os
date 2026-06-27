@@ -42,7 +42,7 @@ export function DisclaimerModal({ isOpen, onClose, targetPath }: DisclaimerModal
                 <div className="w-12 h-12 rounded-full bg-accent-gold/10 flex items-center justify-center">
                   <ShieldAlert className="w-6 h-6 text-accent-gold" />
                 </div>
-                <h2 className="text-2xl font-light text-white tracking-tight">Operational Intelligence Notice</h2>
+                <h2 className="text-2xl font-light text-white tracking-tight">AI Governance Notice</h2>
               </div>
 
               <div className="space-y-4 text-dark-zinc-400 font-light leading-relaxed">

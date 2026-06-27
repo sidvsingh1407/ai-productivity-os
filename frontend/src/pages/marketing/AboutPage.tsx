@@ -27,8 +27,8 @@ export default function AboutPage() {
   return (
     <div className="bg-bg-primary">
       <SeoHead
-        title="About TarkaX | Operational Intelligence Platform"
-        description="Learn about TarkaX, an Operational Intelligence platform built to diagnose structural weaknesses, AI readiness gaps, and operational friction."
+        title="About TarkaX | AI Governance Platform"
+        description="Learn about TarkaX, an AI Governance platform built to diagnose structural weaknesses, AI readiness gaps, and operational friction."
         canonical="https://tarkax.com/about"
         schema={[breadcrumbSchema]}
       />

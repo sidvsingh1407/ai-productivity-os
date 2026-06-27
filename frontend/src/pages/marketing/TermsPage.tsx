@@ -21,7 +21,7 @@ export default function TermsPage() {
           <p>By accessing or using the TarkaX platform, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you may not access the service.</p>
 
           <h2 className="text-h2 font-medium text-text-primary mt-8">2. Service Description</h2>
-          <p>TarkaX is a Subscription SaaS Operational Intelligence Platform. The service provides capabilities including AI Audit, Workflow Diagnostic, Risk Projection, Failure Intelligence, and Prompt Improver (in development). The platform offers both free and paid plans, with future plans for API access.</p>
+          <p>TarkaX is a Subscription SaaS AI Governance Platform. The service provides capabilities including Compliance Readiness, Workflow Intelligence, Risk Projection, Failure Intelligence, and Output Quality (in development). The platform offers both free and paid plans, with future plans for API access.</p>
 
           <h2 className="text-h2 font-medium text-text-primary mt-8">3. Account Requirements and Age Restriction</h2>
           <p>You must be at least 18 years old to create an account and use the TarkaX platform. By creating an account, you represent and warrant that you are at least 18 years of age.</p>

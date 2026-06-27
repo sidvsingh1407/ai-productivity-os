@@ -135,7 +135,7 @@ export default function ExampleFindingsPage() {
                Request a Demo
              </button>
              <button onClick={() => navigate('/ai-audit')} className="px-6 py-3 border border-border-strong text-text-primary font-medium rounded-md hover:bg-bg-secondary">
-               Learn About AI Audits
+               Learn About Compliance Readinesss
              </button>
           </div>
         </div>

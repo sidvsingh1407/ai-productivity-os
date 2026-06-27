@@ -19,7 +19,7 @@ export default function StandardizeAiOutputsPage() {
         { step: "Deploy Organizational Standards", detail: "Roll out the standardized prompts to the team, replacing ad-hoc 'chatting' with structured engineering." }
       ]}
       productLensUrl="/app/prompt-improver"
-      productLensLabel="Try Prompt Improver"
+      productLensLabel="Try Output Quality"
     />
   );
 }

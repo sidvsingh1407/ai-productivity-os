@@ -79,7 +79,7 @@ export default function AdminDashboard() {
               <GitBranch className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Workflow Diagnostics</p>
+              <p className="text-sm font-medium text-slate-500">Workflow Intelligence</p>
               <p className="text-2xl font-bold text-slate-900">{stats?.total_workflows || 0}</p>
             </div>
           </div>

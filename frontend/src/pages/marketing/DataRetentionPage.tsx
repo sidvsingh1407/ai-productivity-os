@@ -27,15 +27,15 @@ export default function DataRetentionPage() {
           <p><strong>Retention Period:</strong> Retained for the active duration of the user's account. Upon account deletion request, account data is permanently deleted within 30 days, except where retention is required by law.</p>
 
           <h3 className="text-h3 font-medium text-text-primary mt-6">Audit Data</h3>
-          <p><strong>Description:</strong> Responses and inputs provided during AI Audits.</p>
+          <p><strong>Description:</strong> Responses and inputs provided during Compliance Readinesss.</p>
           <p><strong>Retention Period:</strong> Retained for 24 months from the date the audit was completed to allow for year-over-year operational comparisons, or until the user requests deletion.</p>
 
           <h3 className="text-h3 font-medium text-text-primary mt-6">Workflow Data</h3>
-          <p><strong>Description:</strong> Inputs, diagnostic configurations, and structural data provided during Workflow Diagnostics.</p>
+          <p><strong>Description:</strong> Inputs, diagnostic configurations, and structural data provided during Workflow Intelligence.</p>
           <p><strong>Retention Period:</strong> Retained for 24 months from the date of the workflow analysis to support historical diagnostic comparisons, or until the user requests deletion.</p>
 
           <h3 className="text-h3 font-medium text-text-primary mt-6">Prompt Data</h3>
-          <p><strong>Description:</strong> Inputs and text submitted via the Prompt Improver features.</p>
+          <p><strong>Description:</strong> Inputs and text submitted via the Output Quality features.</p>
           <p><strong>Retention Period:</strong> Retained temporarily for processing and deleted within 90 days, as this feature focuses on immediate improvement rather than long-term historical analysis.</p>
 
           <h3 className="text-h3 font-medium text-text-primary mt-6">Contact Form Data</h3>

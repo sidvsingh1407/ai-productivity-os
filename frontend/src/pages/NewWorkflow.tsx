@@ -55,7 +55,7 @@ export default function NewWorkflow() {
   return (
     <div className="max-w-3xl mx-auto py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Run Workflow Diagnostic</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Run Workflow Intelligence</h1>
         <p className="text-slate-500 mt-2">
           Describe your operational workflow to generate automation blueprints and diagnostics.
           {sourceAuditId && <span className="block mt-1 font-medium text-primary">Linked to Audit ID: {sourceAuditId}</span>}

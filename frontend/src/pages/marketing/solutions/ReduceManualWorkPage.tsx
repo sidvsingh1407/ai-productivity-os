@@ -19,7 +19,7 @@ export default function ReduceManualWorkPage() {
         { step: "Recommend Automation Paths", detail: "Provide clear evidence of which manual tasks should be eliminated, delegated, or automated." }
       ]}
       productLensUrl="/register"
-      productLensLabel="Run Workflow Diagnostic"
+      productLensLabel="Run Workflow Intelligence"
     />
   );
 }

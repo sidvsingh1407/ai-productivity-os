@@ -25,9 +25,9 @@ export default function PrivacyPage() {
           <p>We collect several types of information from and about users of our platform, including:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong>Account Information:</strong> Name, Email Address, and Company Name.</li>
-            <li><strong>Audit Data:</strong> Responses provided during AI Audits.</li>
-            <li><strong>Workflow Data:</strong> Inputs and configurations provided during Workflow Diagnostics.</li>
-            <li><strong>Prompt Data:</strong> Inputs used within the Prompt Improver features.</li>
+            <li><strong>Audit Data:</strong> Responses provided during Compliance Readinesss.</li>
+            <li><strong>Workflow Data:</strong> Inputs and configurations provided during Workflow Intelligence.</li>
+            <li><strong>Prompt Data:</strong> Inputs used within the Output Quality features.</li>
             <li><strong>Analytics Usage:</strong> Usage details, IP addresses, and information collected through cookies and other tracking technologies. We use Google Analytics and Vercel Analytics to understand how our platform is used.</li>
           </ul>
 

@@ -159,8 +159,8 @@ export default function ContactPage() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded-md border border-border-strong focus:outline-none focus:ring-2 focus:ring-accent-blue focus:border-transparent transition-colors bg-bg-primary text-body"
                 >
-                  <option value="AI Audit">AI Audit</option>
-                  <option value="Workflow Diagnostic">Workflow Diagnostic</option>
+                  <option value="Compliance Readiness">Compliance Readiness</option>
+                  <option value="Workflow Intelligence">Workflow Intelligence</option>
                   <option value="Forecasting Framework">Forecasting Framework</option>
                   <option value="Benchmarking">Benchmarking</option>
                   <option value="Partnership">Partnership</option>

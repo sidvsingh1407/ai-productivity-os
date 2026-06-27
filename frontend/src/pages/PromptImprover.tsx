@@ -70,7 +70,7 @@ export default function PromptImprover() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-h1 font-bold">Prompt Improver</h1>
+        <h1 className="text-h1 font-bold">Output Quality</h1>
         <p className="text-body text-text-secondary mt-2">
           Transform operational instructions into high-reliability prompts.
         </p>
@@ -85,7 +85,7 @@ export default function PromptImprover() {
           <div className="space-y-4">
             <div className="relative">
               <Textarea
-                placeholder="E.g., Create a customer support chatbot."
+                placeholder="No prompts submitted. Paste a prompt to receive a structured improvement and consistency score."
                 className="min-h-[150px] resize-y"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
