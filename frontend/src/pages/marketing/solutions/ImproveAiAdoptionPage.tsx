@@ -13,13 +13,13 @@ export default function ImproveAiAdoptionPage() {
         "Ensure training and enablement are targeted at the actual skill gaps."
       ]}
       howWeHelp={[
-        { step: "Evaluate Readiness", detail: "Our AI Audit measures your organization across five pillars: Awareness, Adoption, Integration, ROI, and Governance." },
+        { step: "Evaluate Readiness", detail: "Our Compliance Readiness measures your organization across five pillars: Awareness, Adoption, Integration, ROI, and Governance." },
         { step: "Identify Structural Barriers", detail: "We look past 'lack of training' to find the real issues: missing guidelines, fear of making mistakes, or disconnected data." },
         { step: "Highlight Utilization Gaps", detail: "See exactly where expensive licenses are sitting idle and the operational reasons why." },
         { step: "Draft an Adoption Roadmap", detail: "Get a clear plan to remove the specific friction points stopping your team from leveraging AI." }
       ]}
       productLensUrl="/register"
-      productLensLabel="Run AI Audit"
+      productLensLabel="Run Compliance Readiness"
     />
   );
 }

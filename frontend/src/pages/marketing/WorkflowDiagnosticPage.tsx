@@ -7,16 +7,16 @@ import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
 export default function WorkflowDiagnosticPage() {
   const faqItems = [
     {
-      question: "What is Workflow Diagnostics?",
-      answer: "Workflow Diagnostics is the practice of evaluating operational processes to identify structural weaknesses, hidden friction, and execution gaps. It relies on qualitative inputs and behavioral insights rather than pure system logs to uncover the human realities of how work actually gets done."
+      question: "What is Workflow Intelligence?",
+      answer: "Workflow Intelligence is the practice of evaluating operational processes to identify structural weaknesses, hidden friction, and execution gaps. It relies on qualitative inputs and behavioral insights rather than pure system logs to uncover the human realities of how work actually gets done."
     },
     {
-      question: "How is Workflow Diagnostics different from process mapping?",
-      answer: "Process mapping documents the theoretical way a task should be completed. Workflow Diagnostics evaluates the actual operational reality, identifying workarounds, shadow IT, and hidden bottlenecks that process maps fail to capture."
+      question: "How is Workflow Intelligence different from process mapping?",
+      answer: "Process mapping documents the theoretical way a task should be completed. Workflow Intelligence evaluates the actual operational reality, identifying workarounds, shadow IT, and hidden bottlenecks that process maps fail to capture."
     },
     {
-      question: "Who should use Workflow Diagnostics?",
-      answer: "Operations leaders, COOs, and external consultants use Workflow Diagnostics to audit complex environments, optimize processes before automation, and identify root causes of operational friction."
+      question: "Who should use Workflow Intelligence?",
+      answer: "Operations leaders, COOs, and external consultants use Workflow Intelligence to audit complex environments, optimize processes before automation, and identify root causes of operational friction."
     }
   ];
 
@@ -33,7 +33,7 @@ export default function WorkflowDiagnosticPage() {
       {
         "@type": "ListItem",
         "position": 2,
-        "name": "Workflow Diagnostic",
+        "name": "Workflow Intelligence",
         "item": "https://tarkax.com/workflow-diagnostic"
       }
     ]
@@ -44,8 +44,8 @@ export default function WorkflowDiagnosticPage() {
   return (
     <div className="bg-bg-primary animate-fade-up">
       <SeoHead
-        title="Workflow Diagnostic | TarkaX"
-        description="Evaluate workflow health and identify operational weaknesses systematically with TarkaX Workflow Diagnostic."
+        title="Workflow Intelligence | TarkaX"
+        description="Evaluate workflow health and identify operational weaknesses systematically with TarkaX Workflow Intelligence."
         canonical="https://tarkax.com/workflow-diagnostic"
         schema={[breadcrumbSchema, faqSchema]}
       />
@@ -56,13 +56,13 @@ export default function WorkflowDiagnosticPage() {
             Diagnostic Framework
           </div>
           <h1 className="text-h1 text-text-primary max-w-3xl mb-space-sm">
-            Workflow Diagnostic
+            Workflow Intelligence
           </h1>
 
           <div className="mt-8 max-w-3xl w-full">
             <DefinitionBlock
-              question="What is a Workflow Diagnostic?"
-              answer="A Workflow Diagnostic is an analytical evaluation of operational processes designed to uncover hidden friction, structural bottlenecks, and behavioral workarounds that impede execution."
+              question="What is a Workflow Intelligence?"
+              answer="A Workflow Intelligence is an analytical evaluation of operational processes designed to uncover hidden friction, structural bottlenecks, and behavioral workarounds that impede execution."
             />
           </div>
 
@@ -83,7 +83,7 @@ export default function WorkflowDiagnosticPage() {
               Organizations struggle to identify where processes actually break down. Inefficiencies are often treated as isolated incidents rather than symptoms of systemic structural weaknesses.
             </p>
             <p className="text-body text-text-secondary">
-              The Workflow Diagnostic provides a structured framework to evaluate processes, identifying friction points and operational gaps before they compound into major failures.
+              The Workflow Intelligence provides a structured framework to evaluate processes, identifying friction points and operational gaps before they compound into major failures.
             </p>
           </div>
         </div>

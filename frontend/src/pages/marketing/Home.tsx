@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, Target } from 'lucide-react';
+import { ArrowRight, Target } from 'lucide-react';
 import { SeoHead } from '../../components/geo/SeoHead';
 import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
 import ConstellationMap from '../../components/ConstellationMap';
@@ -64,23 +64,22 @@ export default function Home() {
           {/* Left Content */}
           <div className="w-full md:w-[55vw] xl:w-[50vw] flex items-center justify-center px-6 py-20 md:py-16">
             <div className="flex flex-col items-start text-left w-full max-w-[650px]">
-              <h1 className="text-display text-text-primary mb-6 leading-tight">
-                Find What's Really Holding Your Business Back
+              <h1 className="font-barlow text-[4rem] leading-[1.1] text-text-primary mb-6">
+                Your AI systems are live.<br />Are they compliant?
               </h1>
-              <div className="text-h3 font-normal text-text-secondary mb-10 space-y-4">
-                <p>Most businesses don't know what's actually slowing them down.</p>
-                <p className="text-body mt-4 text-text-secondary/80">TarkaX helps uncover bottlenecks, workflow friction, adoption gaps, and hidden inefficiencies before you spend time or money fixing the wrong thing.</p>
+              <div className="font-sans text-lg font-normal text-slate-400 mb-10 max-w-2xl">
+                <p>TarkaX delivers a scored EU AI Act readiness assessment in under 48 hours — built for mid-market teams who cannot afford enterprise governance platforms or six-month consulting engagements.</p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center">
                 <Link
                   to="/register"
                   className="px-8 py-4 bg-accent-blue text-text-inverse text-body font-medium transition-colors hover:bg-accent-blue/90 inline-flex items-center justify-center rounded-md shadow-sm"
                 >
-                  Start Free Analysis
+                  Start Your Assessment
                 </Link>
                 <Link
                   to="/example-findings"
-                  className="px-8 py-4 bg-bg-secondary text-text-primary border border-border-strong text-body font-medium transition-colors hover:bg-bg-tertiary inline-flex items-center justify-center rounded-md shadow-sm"
+                  className="text-text-primary hover:text-accent-blue text-body font-medium transition-colors inline-flex items-center justify-center underline underline-offset-4"
                 >
                   See Example Findings
                 </Link>
@@ -92,7 +91,7 @@ export default function Home() {
           <div className="w-full md:w-[45vw] xl:w-[50vw] relative bg-[#0B1F3A] flex-shrink-0 h-[420px] md:h-auto">
             {/* Header inside the absolute map container */}
             <div className="absolute top-6 left-6 z-10 pointer-events-none">
-              <h3 className="text-sm font-semibold text-text-inverse mb-1">Operational Intelligence Map</h3>
+              <h3 className="text-sm font-semibold text-text-inverse mb-1">AI Governance Map</h3>
               <p className="text-xs text-text-inverse/70 max-w-[250px]">Visualizing hidden bottlenecks, workflow friction, adoption gaps, and operational risks.</p>
             </div>
 
@@ -106,6 +105,13 @@ export default function Home() {
 
       {/* 2. Ticker Strip */}
       <TickerStrip />
+
+      {/* Positioning Line */}
+      <div className="py-12 bg-bg-primary text-center">
+        <p className="font-sans text-lg text-slate-500 max-w-3xl mx-auto px-6">
+          Built for the companies Credo AI and IBM Watsonx were not designed for.
+        </p>
+      </div>
 
       {/* 3. Key Findings Businesses Miss */}
       <KeyFindings />
@@ -209,16 +215,12 @@ export default function Home() {
       {/* 6. Product Lenses (Investigations) */}
       <section className="py-24 bg-bg-secondary border-b border-border-strong">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="mb-16">
-            <h2 className="text-h2 text-text-primary mb-4">Investigate Your Business</h2>
-            <p className="text-body text-text-secondary">Choose an area to analyze.</p>
-          </div>
-
           <div className="space-y-6">
             <Link to="/problems/ai-roi" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
               <div>
-                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">Why Isn't AI Working?</h3>
-                <p className="text-text-secondary">Discover where your AI investments are breaking down across awareness, adoption, and governance.</p>
+                <div className="font-mono text-xs font-semibold text-text-secondary tracking-wider uppercase mb-2">COMPLIANCE READINESS</div>
+                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">Know your EU AI Act exposure before a regulator does</h3>
+                <p className="text-text-secondary">A scored gap analysis mapped to Annex III risk tiers. Export-ready evidence for board reporting or regulatory inquiry.</p>
               </div>
               <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
                 Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -227,8 +229,9 @@ export default function Home() {
 
             <Link to="/problems/team-productivity" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
               <div>
-                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">What's Slowing Your Team Down?</h3>
-                <p className="text-text-secondary">Identify the hidden bottlenecks, tool bloat, and manual tasks dragging down productivity.</p>
+                <div className="font-mono text-xs font-semibold text-text-secondary tracking-wider uppercase mb-2">WORKFLOW INTELLIGENCE</div>
+                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">Find exactly where your AI investment is leaking</h3>
+                <p className="text-text-secondary">Diagnose which workflows are underperforming, where human-AI handoffs break down, and which processes are ready for AI — and which are not.</p>
               </div>
               <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
                 Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -237,8 +240,9 @@ export default function Home() {
 
             <Link to="/problems/inconsistent-ai" className="flex flex-col md:flex-row md:items-center justify-between p-8 bg-bg-primary border border-border-strong rounded-lg hover:border-accent-blue transition-all group">
               <div>
-                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">Why Are AI Outputs Inconsistent?</h3>
-                <p className="text-text-secondary">Diagnose and standardize the prompt structures being used by your team.</p>
+                <div className="font-mono text-xs font-semibold text-text-secondary tracking-wider uppercase mb-2">OUTPUT QUALITY</div>
+                <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors">Stop losing 37% of your AI time to rework</h3>
+                <p className="text-text-secondary">Standardize prompts across your organization. Consistent inputs produce consistent outputs. Reduce correction cycles at the source.</p>
               </div>
               <div className="mt-6 md:mt-0 flex items-center gap-2 text-accent-blue font-medium">
                 Start Investigation <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

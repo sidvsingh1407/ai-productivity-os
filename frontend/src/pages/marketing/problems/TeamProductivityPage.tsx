@@ -24,7 +24,7 @@ export default function TeamProductivityPage() {
         impact: "Reduced client satisfaction and delayed revenue recognition."
       }}
       productLensUrl="/register"
-      productLensLabel="Run Workflow Diagnostic"
+      productLensLabel="Run Workflow Intelligence"
     />
   );
 }

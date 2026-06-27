@@ -164,7 +164,7 @@ export function MarketingLayout() {
                 TarkaX
               </Link>
               <p className="text-body text-text-inverse/70 font-light leading-relaxed">
-                Operational Intelligence Platform built on Failure Intelligence principles.
+                AI Governance Platform built on Failure Intelligence principles.
               </p>
             </div>
 

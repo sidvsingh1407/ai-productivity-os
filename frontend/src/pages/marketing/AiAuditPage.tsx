@@ -7,15 +7,15 @@ import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
 export default function AiAuditPage() {
   const faqItems = [
     {
-      question: "What does an AI Audit measure?",
-      answer: "An AI Audit measures an organization's structural readiness to adopt and scale artificial intelligence. It evaluates governance frameworks, knowledge silos, technology infrastructure, and cultural alignment to identify where AI initiatives are most likely to break down."
+      question: "What does a Compliance Readiness measure?",
+      answer: "An Compliance Readiness measures an organization's structural readiness to adopt and scale artificial intelligence. It evaluates governance frameworks, knowledge silos, technology infrastructure, and cultural alignment to identify where AI initiatives are most likely to break down."
     },
     {
-      question: "How is an AI Audit different from an IT assessment?",
-      answer: "While IT assessments focus on infrastructure and security compliance, an AI Audit evaluates operational integration, business alignment, and Failure Intelligence. It measures whether the organization can actually extract value from AI investments."
+      question: "How is a Compliance Readiness different from an IT assessment?",
+      answer: "While IT assessments focus on infrastructure and security compliance, a Compliance Readiness evaluates operational integration, business alignment, and Failure Intelligence. It measures whether the organization can actually extract value from AI investments."
     },
     {
-      question: "What is the typical output of an AI Audit?",
+      question: "What is the typical output of a Compliance Readiness?",
       answer: "The output is an actionable diagnostic report detailing maturity scores across key dimensions, identifying critical capability gaps, and providing prioritized operational interventions to mitigate adoption risk."
     }
   ];
@@ -33,7 +33,7 @@ export default function AiAuditPage() {
       {
         "@type": "ListItem",
         "position": 2,
-        "name": "AI Audit",
+        "name": "Compliance Readiness",
         "item": "https://tarkax.com/ai-audit"
       }
     ]
@@ -44,8 +44,8 @@ export default function AiAuditPage() {
   return (
     <div className="bg-bg-primary">
       <SeoHead
-        title="AI Audit | TarkaX"
-        description="Establish a quantitative baseline for organizational AI readiness. Evaluate governance, integration, and operational maturity with TarkaX's AI Audit."
+        title="Compliance Readiness | TarkaX"
+        description="Establish a quantitative baseline for organizational AI readiness. Evaluate governance, integration, and operational maturity with TarkaX's Compliance Readiness."
         canonical="https://tarkax.com/ai-audit"
         schema={[breadcrumbSchema, faqSchema]}
       />
@@ -56,13 +56,13 @@ export default function AiAuditPage() {
             Flagship Module
           </div>
           <h1 className="text-h1 text-text-primary max-w-3xl mb-space-sm">
-            AI Audit
+            Compliance Readiness
           </h1>
 
           <div className="mt-8 max-w-3xl w-full">
             <DefinitionBlock
-              question="What is an AI Audit?"
-              answer="An AI Audit is a diagnostic evaluation of an organization's structural readiness to adopt and scale artificial intelligence. It identifies governance gaps, operational misalignment, and execution risks before capital is deployed."
+              question="What is a Compliance Readiness?"
+              answer="An Compliance Readiness is a diagnostic evaluation of an organization's structural readiness to adopt and scale artificial intelligence. It identifies governance gaps, operational misalignment, and execution risks before capital is deployed."
             />
           </div>
 
@@ -83,7 +83,7 @@ export default function AiAuditPage() {
               Organizations frequently deploy AI tools without assessing underlying structural readiness. This leads to fragmented adoption, unmanaged risk, and an inability to measure return on investment.
             </p>
             <p className="text-body text-text-secondary">
-              The AI Audit evaluates the organization's actual capacity to integrate and govern artificial intelligence, moving beyond surface-level tool counts to structural truths.
+              The Compliance Readiness evaluates the organization's actual capacity to integrate and govern artificial intelligence, moving beyond surface-level tool counts to structural truths.
             </p>
           </div>
         </div>

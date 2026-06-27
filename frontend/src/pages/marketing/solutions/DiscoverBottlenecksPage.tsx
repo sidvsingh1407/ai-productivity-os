@@ -19,7 +19,7 @@ export default function DiscoverBottlenecksPage() {
         { step: "Provide Targeted Recommendations", detail: "Receive specific, actionable steps to resolve the friction—whether it's changing a rule, automating a handoff, or retraining a team." }
       ]}
       productLensUrl="/register"
-      productLensLabel="Run Workflow Diagnostic"
+      productLensLabel="Run Workflow Intelligence"
     />
   );
 }

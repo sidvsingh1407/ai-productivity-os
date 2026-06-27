@@ -9,7 +9,7 @@ export function DeveloperPortal() {
     { id: 'quickstart', label: 'Quick Start' },
     { id: 'versioning', label: 'API Versioning' },
     { id: 'errors', label: 'Common Errors' },
-    { id: 'audit', label: 'AI Audit API' },
+    { id: 'audit', label: 'Compliance Readiness API' },
     { id: 'workflow', label: 'Workflow API' },
     { id: 'risk', label: 'Risk Projection API' },
     { id: 'prompt', label: 'Prompt Intelligence API' }
@@ -61,8 +61,8 @@ export function DeveloperPortal() {
                <div className="text-left mb-6">
                  <h3 className="font-semibold text-text-primary mb-2">Planned APIs:</h3>
                  <ul className="list-disc pl-5 text-body text-text-secondary space-y-1">
-                   <li>AI Audit API</li>
-                   <li>Workflow Diagnostic API</li>
+                   <li>Compliance Readiness API</li>
+                   <li>Workflow Intelligence API</li>
                    <li>Prompt Intelligence API</li>
                  </ul>
                </div>
@@ -141,7 +141,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
 
             <div className="space-y-12">
               <div>
-                <h3 className="text-2xl font-bold mb-4">AI Audit Quick Start</h3>
+                <h3 className="text-2xl font-bold mb-4">Compliance Readiness Quick Start</h3>
                 <ol className="list-decimal pl-6 space-y-4">
                   <li><strong>Obtain API Key:</strong> Navigate to the Developer Dashboard and create a new key.</li>
                   <li>
@@ -308,7 +308,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
           </section>
 
           <section id="audit" className="mb-16 pt-8 scroll-mt-32">
-            <h2 className="text-3xl font-bold border-b border-border-light pb-2 mb-6">AI Audit API</h2>
+            <h2 className="text-3xl font-bold border-b border-border-light pb-2 mb-6">Compliance Readiness API</h2>
             <div className="flex items-center gap-3 mb-4">
               <span className="bg-green-100 text-green-800 px-2 py-1 rounded font-mono text-sm font-bold">POST</span>
               <code className="text-lg">/api/v1/audit</code>
@@ -347,7 +347,7 @@ response = requests.post('https://api.tarkax.com/api/v1/audit', headers=headers,
           </section>
 
           <section id="workflow" className="mb-16 pt-8 scroll-mt-32">
-            <h2 className="text-3xl font-bold border-b border-border-light pb-2 mb-6">Workflow Diagnostic API</h2>
+            <h2 className="text-3xl font-bold border-b border-border-light pb-2 mb-6">Workflow Intelligence API</h2>
             <div className="flex items-center gap-3 mb-4">
               <span className="bg-green-100 text-green-800 px-2 py-1 rounded font-mono text-sm font-bold">POST</span>
               <code className="text-lg">/workflows/</code>

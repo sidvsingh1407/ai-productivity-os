@@ -165,7 +165,7 @@ export default function NewAudit() {
   return (
     <div className="max-w-6xl mx-auto py-12 px-6">
       <div className="mb-12 border-b border-border-strong pb-8">
-        <h1 className="text-display text-text-primary mb-2">AI Readiness Diagnostic</h1>
+        <h1 className="text-display text-text-primary mb-2">Compliance Readiness Assessment</h1>
         <p className="text-h3 text-text-secondary font-normal">Establish a structural baseline for artificial intelligence integration.</p>
       </div>
 

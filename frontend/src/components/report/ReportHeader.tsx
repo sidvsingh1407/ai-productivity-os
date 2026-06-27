@@ -13,7 +13,7 @@ export function ReportHeader({ organizationName, reportTitle, date, version = '1
       <div className="flex justify-between items-start mb-16">
         <div>
           <div className="text-h2 font-bold tracking-tight text-text-primary">TarkaX</div>
-          <div className="text-label text-text-secondary mt-1">Operational Intelligence Platform</div>
+          <div className="text-label text-text-secondary mt-1">AI Governance Platform</div>
         </div>
         <div className="text-right">
           <div className="text-body font-medium text-text-primary">{organizationName}</div>

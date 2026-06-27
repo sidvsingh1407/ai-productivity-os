@@ -114,7 +114,7 @@ export function Dashboard() {
   return (
     <div className="max-w-5xl mx-auto py-12 px-6">
       <div className="mb-12">
-        <h1 className="text-display text-text-primary mb-4">Decision Support Interface</h1>
+        <h1 className="text-display text-text-primary mb-4">Command Center</h1>
         <p className="text-data text-text-secondary border-b border-border-strong pb-4">
           {getStatusLine()}
         </p>
@@ -123,15 +123,15 @@ export function Dashboard() {
       {!isLoading && !lastAudit ? (
         // --- Empty State ---
         <div className="border border-border-strong bg-bg-primary p-12 text-center">
-          <h2 className="text-h2 text-text-primary mb-4">No Assessments Yet</h2>
+          <h2 className="text-h2 text-text-primary mb-4">No assessment run yet.</h2>
           <p className="text-body text-text-secondary max-w-2xl mx-auto mb-8">
-            Run your first AI Audit to receive intelligence, recommendations, and risk insights.
+            Start your EU AI Act readiness check to see your exposure score.
           </p>
           <button
             onClick={() => navigate('/app/audits/new')}
             className="px-8 py-4 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90"
           >
-            Start AI Audit
+            Start Compliance Readiness
           </button>
         </div>
       ) : (
@@ -185,13 +185,13 @@ export function Dashboard() {
                   onClick={() => navigate(`/app/workflows/new${lastAudit ? `?auditId=${lastAudit.id}` : ''}`)}
                   className="px-6 py-3 border border-border-strong bg-bg-primary text-text-primary text-body font-medium transition-colors hover:bg-bg-secondary"
                 >
-                  Run Workflow Diagnostic
+                  Run Workflow Intelligence
                 </button>
                 <button
                   onClick={() => navigate(`/app/prompt-improver`)}
                   className="px-6 py-3 bg-text-primary text-text-inverse text-body font-medium transition-colors hover:bg-text-primary/90"
                 >
-                  Use Prompt Improver
+                  Use Output Quality
                 </button>
               </div>
             </div>

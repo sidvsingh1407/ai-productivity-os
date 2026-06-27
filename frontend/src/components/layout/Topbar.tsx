@@ -11,7 +11,7 @@ export function Topbar() {
             {org.name}
           </span>
         )}
-        <h1 className="text-xl font-semibold">Dashboard</h1>
+        <h1 className="text-xl font-semibold">Command Center</h1>
       </div>
       <div className="flex items-center gap-4">
         {user && (
