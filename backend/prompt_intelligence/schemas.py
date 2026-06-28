@@ -1,5 +1,7 @@
-from pydantic import BaseModel, Field, field_validator
-from typing import List, Dict, Any
+import uuid
+from datetime import datetime
+from pydantic import BaseModel, Field, field_validator, ConfigDict
+from typing import List, Dict, Any, Optional
 
 class PromptRequest(BaseModel):
     prompt: str
