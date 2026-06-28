@@ -36,5 +36,14 @@ class PromptResponse(BaseModel):
     intelligence_scores: ScoresResponse
     validation: ValidationResponse
 
+# New schemas for Prompt History
+class PromptHistoryResponse(BaseModel):
+    id: uuid.UUID
+    user_id: uuid.UUID
+    original_prompt: str
+    improved_prompt: Optional[str] = None
+    created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
+
 class ValidationFailureResponse(BaseModel):
     validation: ValidationResponse
