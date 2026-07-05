@@ -7,6 +7,7 @@ from audits.scoring_engine import score_response
 from audits.schemas import AuditResponse
 from audits.intelligence_engine import generate_intelligence
 from benchmarking.adapter import get_api_benchmark_payload
+from services.narrative_service import generate_audit_narrative
 
 async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Dict[str, Any] = None, industry_type: str = None) -> AuditResponse:
     # 1. create audit record (status: running)
@@ -38,6 +39,42 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
         )
         intelligence["benchmark"] = benchmark_payload
 
+        # 4.7 Generate dynamic narrative
+        company_context = {
+            "company_name": form_response.get("companyName", "the organization"),
+            "industry": form_response.get("industry", industry_type_str or "unspecified"),
+            "company_size": form_response.get("companySize", "unspecified"),
+            "region": form_response.get("region", "unspecified"),
+            "ai_usage_description": form_response.get("primaryAiUsage", "unspecified"),
+            "governance_status": form_response.get("governanceMaturity", "unspecified")
+        }
+
+        narrative_scores = {
+            "overall_score": audit.total_score or 0,
+            "awareness_score": org_dimension_scores.get("awareness", 0) * 5,
+            "adoption_score": org_dimension_scores.get("adoption", 0) * 5,
+            "integration_score": org_dimension_scores.get("integration", 0) * 5,
+            "governance_score": org_dimension_scores.get("governance", 0) * 5,
+            "roi_score": org_dimension_scores.get("roi", 0) * 5,
+        }
+
+        narrative = await generate_audit_narrative(narrative_scores, company_context)
+
+        narrative_source = "static"
+        if narrative:
+            narrative_source = "dynamic"
+            if "executive_summary" in narrative:
+                # Update executive summary fields if present
+                for key in ["overall_assessment", "critical_risk", "primary_opportunity", "recommended_first_action"]:
+                    if key in narrative["executive_summary"]:
+                        intelligence["executive_summary"][key] = narrative["executive_summary"][key]
+
+            if "roadmap" in narrative:
+                intelligence["roadmap"] = narrative["roadmap"]
+
+            if "recommendations" in narrative:
+                intelligence["recommendations"] = narrative["recommendations"]
+
         # 5. return AuditResponse
         return AuditResponse(
             id=audit.id,
@@ -55,6 +92,7 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
             contradictions=audit.contradictions,
             missing_data_flags=scores_dict.get('missing_data_flags', []),
             intelligence=intelligence,
+            narrative_source=narrative_source,
             status=audit.status,
             industry_type=audit.industry_type,
             created_at=audit.created_at
