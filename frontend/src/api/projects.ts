@@ -18,6 +18,7 @@ export interface Project {
     created_at: string;
     updated_at: string;
     saved_prompts?: SavedPrompt[];
+    saved_prompts_count?: number;
 }
 
 export interface PromptHistoryRecord {
