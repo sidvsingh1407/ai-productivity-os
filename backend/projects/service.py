@@ -25,6 +25,7 @@ class ProjectsService:
         db.add(new_project)
         await db.commit()
         await db.refresh(new_project)
+        new_project.__dict__["saved_prompts"] = []
         return new_project
 
     async def list_projects(self, db: AsyncSession, user_id: uuid.UUID):
@@ -70,7 +71,7 @@ class ProjectsService:
         prompts = prompts_result.scalars().all()
 
         # Attach prompts manually for Pydantic to parse
-        project.saved_prompts = prompts
+        project.__dict__["saved_prompts"] = prompts
         return project
 
     async def update_project(self, db: AsyncSession, user_id: uuid.UUID, project_id: uuid.UUID, name: str = None, description: str = None):
@@ -88,6 +89,12 @@ class ProjectsService:
 
         await db.commit()
         await db.refresh(project)
+
+        prompts_stmt = select(SavedPrompt).where(SavedPrompt.project_id == project_id).order_by(SavedPrompt.created_at.desc())
+        prompts_result = await db.execute(prompts_stmt)
+        prompts = prompts_result.scalars().all()
+        project.__dict__["saved_prompts"] = prompts
+
         return project
 
     async def delete_project(self, db: AsyncSession, user_id: uuid.UUID, project_id: uuid.UUID):
