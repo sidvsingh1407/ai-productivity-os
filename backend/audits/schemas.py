@@ -154,6 +154,7 @@ class AuditResponse(BaseModel):
 
     # Consolidated Intelligence Payload
     intelligence: Optional[AuditIntelligenceResponse] = None
+    narrative_source: Optional[str] = None
 
     status: AuditStatus
     industry_type: Optional[IndustryType] = None

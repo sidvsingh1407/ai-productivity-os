@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     CORS_ALLOW_ORIGINS: str = ""
     CORS_ALLOW_ORIGIN_REGEX: str = ""
 
+    GEMINI_API_KEY1: str = ""
+    GEMINI_API_KEY2: str = ""
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
 settings = Settings()

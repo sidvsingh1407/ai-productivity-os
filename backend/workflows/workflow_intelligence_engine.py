@@ -1,6 +1,4 @@
 from typing import Dict, Any, List
-from workflows.narrative_generator import generate_workflow_narrative
-
 def generate_workflow_intelligence(input_config: Dict[str, Any]) -> Dict[str, Any]:
     """
     Generates deterministic operational intelligence from workflow input data.
@@ -56,46 +54,6 @@ def generate_workflow_intelligence(input_config: Dict[str, Any]) -> Dict[str, An
         "workflow_risk_level": workflow_risk_level,
         "workflow_maturity": maturity
     }
-
-    base_result = {
-        "workflow_maturity": maturity,
-        "workflow_risk_level": workflow_risk_level,
-        "automation_coverage": "Moderate" # Need a fallback/dummy for LLM prompt if not present
-    }
-
-    workflow_context = {
-        "process_name": input_config.get("process_name", "Unknown Process"),
-        "description": input_config.get("description", ""),
-        "team_size": input_config.get("team_size", "Unknown"),
-        "tools": input_config.get("tools_used", "Unknown"),
-        "time_estimate": input_config.get("time_estimate", "Unknown")
-    }
-
-    narrative = generate_workflow_narrative(
-        workflow_context=workflow_context,
-        intelligence=base_result,
-        bottlenecks=bottlenecks,
-        recommendations=recommendations
-    )
-
-    if narrative:
-        if "executive_summary" in narrative and narrative["executive_summary"]:
-            executive_summary["most_critical_bottleneck"] = narrative["executive_summary"]
-            most_critical_bottleneck = narrative["executive_summary"]
-
-        if "critical_bottleneck_analysis" in narrative and narrative["critical_bottleneck_analysis"]:
-            executive_summary["primary_root_cause"] = narrative["critical_bottleneck_analysis"]
-            primary_root_cause = narrative["critical_bottleneck_analysis"]
-
-        if "top_automation_opportunity" in narrative and narrative["top_automation_opportunity"]:
-            executive_summary["highest_priority_intervention"] = narrative["top_automation_opportunity"]
-            highest_priority_intervention = narrative["top_automation_opportunity"]
-
-        if recommendations and len(recommendations) > 0:
-            if "immediate_next_step" in narrative and narrative["immediate_next_step"]:
-                recommendations[0]["recommendation"] = narrative["immediate_next_step"]
-            if "expected_impact" in narrative and narrative["expected_impact"]:
-                recommendations[0]["expected_impact"] = narrative["expected_impact"]
 
     return {
         "executive_summary": executive_summary,

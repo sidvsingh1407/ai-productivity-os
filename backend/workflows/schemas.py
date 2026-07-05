@@ -77,3 +77,4 @@ class WorkflowIntelligence(BaseModel):
 class WorkflowDetailResponse(WorkflowResponse):
     blueprints: List[BlueprintResponse] = []
     intelligence: Optional[WorkflowIntelligence] = None
+    narrative_source: Optional[str] = None
