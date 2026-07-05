@@ -28,6 +28,12 @@ apiClient.interceptors.response.use(
 
     // Avoid infinite loops
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // Skip the interceptor logic for login/register endpoints so errors propagate to forms
+      const url = originalRequest.url || '';
+      if (url.includes('/auth/login') || url.includes('/auth/register')) {
+        return Promise.reject(error);
+      }
+
       originalRequest._retry = true;
       const { refresh_token, clearAuth, setAuth, user, org } = useAuthStore.getState();
 

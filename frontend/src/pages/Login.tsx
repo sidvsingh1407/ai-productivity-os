@@ -43,7 +43,14 @@ export function Login() {
       setAuth(data.user, data.org, data.access_token, data.refresh_token);
       navigate('/app/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Failed to login. Please check your credentials.');
+      const status = err.response?.status;
+      if (status === 403) {
+        setError('Please verify your email before logging in. Check your inbox for a verification link.');
+      } else if (status === 401) {
+        setError('Incorrect email or password.');
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
