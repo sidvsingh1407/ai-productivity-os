@@ -621,25 +621,8 @@ def main():
         with open(scores_file, 'r') as f:
             scores = json.load(f)
 
-        # Placeholder for agent findings (would come from agent execution)
-        agent_findings = {
-            'tool_evaluator': {
-                'redundancies': [],
-                'underutilized': [],
-            },
-            'workflow_optimizer': {
-                'quick_wins': [],
-            },
-            'compliance_auditor': {},
-            'analytics_reporter': {
-                'top_5_recommendations': [],
-                'cost_waste': {},
-            }
-        }
-
         # Merge scores and findings for standard reporting
         audit_data['scores'] = scores
-        audit_data['agent_findings'] = agent_findings
         generate_report(audit_data, output_file)
         print(f"Report generated: {output_file}")
 
