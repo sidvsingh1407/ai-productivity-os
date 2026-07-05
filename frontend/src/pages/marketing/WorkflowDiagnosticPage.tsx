@@ -126,11 +126,11 @@ export default function WorkflowDiagnosticPage() {
         </div>
       </section>
 
-      {/* Sample Findings */}
+      {/* Example Findings */}
       <section className="py-[80px] bg-bg-primary border-b border-border-light">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <h2 className="text-h2 text-text-primary mb-space-xl text-center">
-            Sample Findings
+            Example Findings
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-space-lg">
              <div className="p-space-md border border-border-light bg-bg-secondary rounded-lg shadow-subtle">

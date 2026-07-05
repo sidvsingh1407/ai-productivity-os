@@ -130,13 +130,13 @@ export default function AiAuditPage() {
         </div>
       </section>
 
-      {/* Sample Outputs */}
+      {/* Example Findings */}
       <section className="py-[80px] bg-bg-primary border-b border-border-light">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-space-xl items-center">
             <div>
               <h2 className="text-h2 text-text-primary mb-space-md">
-                Sample Outputs
+                Example Findings
               </h2>
               <ul className="space-y-space-md">
                 <li className="flex items-start gap-4">
