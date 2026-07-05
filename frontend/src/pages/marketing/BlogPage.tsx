@@ -104,7 +104,7 @@ export default function BlogPage() {
                        </p>
                     </div>
                  </Link>
-                 <Link to="/sample-report" className="flex gap-space-sm cursor-pointer group">
+                 <Link to="/example-findings" className="flex gap-space-sm cursor-pointer group">
                     <div className="w-32 h-24 bg-bg-secondary border border-border-light rounded-md shrink-0 shadow-subtle flex items-center justify-center text-center p-2">
                       <span className="text-text-secondary text-[10px] uppercase font-mono">Report</span>
                     </div>
@@ -155,7 +155,7 @@ export default function BlogPage() {
                        </p>
                     </div>
                  </Link>
-                 <Link to="/sample-report" className="flex gap-space-sm cursor-pointer group">
+                 <Link to="/example-findings" className="flex gap-space-sm cursor-pointer group">
                     <div>
                        <div className="text-label text-text-secondary mb-space-xs">Assessment Flaws</div>
                        <h4 className="text-body font-medium text-text-primary mb-space-xs group-hover:text-accent-blue transition-colors">
@@ -202,7 +202,7 @@ export default function BlogPage() {
                      <div className="mt-auto text-body font-medium text-accent-blue pt-space-sm">Contact Us →</div>
                   </div>
                </Link>
-               <Link to="/sample-report" className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
+               <Link to="/example-findings" className="border border-border-light rounded-lg overflow-hidden flex flex-col cursor-pointer shadow-subtle hover:shadow-card transition-shadow duration-300">
                   <div className="p-space-md flex-grow flex flex-col bg-bg-primary">
                      <div className="text-label text-text-secondary mb-space-xs">Client Delivery</div>
                      <h3 className="text-h3 text-text-primary mb-space-sm">
