@@ -35,7 +35,7 @@ async def _generate_pdf_async(audit_id: str, org_id: str):
         }
 
         # 3. Generate Intelligence Package
-        intelligence = generate_intelligence(scores_dict)
+        intelligence = generate_intelligence(scores_dict, form_response=audit.form_response)
 
         # Prepare data for PDF generator
         audit_data = {
