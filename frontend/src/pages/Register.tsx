@@ -59,14 +59,12 @@ export function Register() {
       }
     } catch (err: any) {
       // If registration fails (e.g., 500 error, 400 validation error), catch it and display inline
-      // For validation errors from backend, the response could be an array under detail
-      const detail = err.response?.data?.detail;
-      if (Array.isArray(detail)) {
-        setError(detail[0]?.msg || 'Registration failed. Please try again.');
-      } else if (typeof detail === 'string') {
-        setError(detail);
+      // Do not redirect.
+      const status = err.response?.status;
+      if (status >= 500) {
+        setError("We're experiencing an issue. Please try again in a moment.");
       } else {
-        setError('Registration failed. Please try again.');
+        setError("Something went wrong. Please try again.");
       }
     } finally {
       setLoading(false);

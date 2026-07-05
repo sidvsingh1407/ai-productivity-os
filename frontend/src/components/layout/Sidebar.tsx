@@ -1,10 +1,27 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
+import { authApi } from '@/api/auth';
 import { LayoutDashboard, Target, GitBranch, Sparkles, FileText, Settings, LogOut, Code2, Shield } from "lucide-react";
 import { Button } from '../ui/button';
 
 export function Sidebar() {
+  const navigate = useNavigate();
   const { clearAuth, user } = useAuthStore();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await authApi.logout();
+    } catch (error) {
+      console.error('Logout API call failed:', error);
+    } finally {
+      clearAuth();
+      setIsLoggingOut(false);
+      navigate('/login');
+    }
+  };
 
   return (
     <aside className="w-64 border-r bg-card flex flex-col justify-between">
@@ -81,7 +98,15 @@ export function Sidebar() {
       </div>
 
       <div className="p-4 border-t">
-        {/* Auth is temporarily disabled */}
+        <Button
+          variant="ghost"
+          className="w-full justify-start gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+        >
+          <LogOut className="w-4 h-4" />
+          {isLoggingOut ? 'Logging out...' : 'Log Out'}
+        </Button>
       </div>
     </aside>
   );
