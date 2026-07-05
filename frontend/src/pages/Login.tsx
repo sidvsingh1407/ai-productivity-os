@@ -44,12 +44,16 @@ export function Login() {
       navigate('/app/dashboard');
     } catch (err: any) {
       const status = err.response?.status;
-      if (status === 403) {
-        setError('Please verify your email before logging in. Check your inbox for a verification link.');
-      } else if (status === 401) {
-        setError('Incorrect email or password.');
+      const detail = err.response?.data?.detail;
+
+      if (status === 403 && typeof detail === 'string' && detail.toLowerCase().includes('verify')) {
+        setError('Please verify your email before logging in. Check your inbox.');
+      } else if (status === 401 || status === 403) {
+        setError('Invalid email or password. Please try again.');
+      } else if (status >= 500) {
+        setError("We're experiencing an issue. Please try again in a moment.");
       } else {
-        setError('Something went wrong. Please try again.');
+        setError("Something went wrong. Please try again.");
       }
     } finally {
       setLoading(false);
