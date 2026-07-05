@@ -30,7 +30,7 @@ SAMPLE_FORM_RESPONSE = {
 
 def generate_offline_sample():
     scores = score_response(SAMPLE_FORM_RESPONSE)
-    intelligence = generate_intelligence(scores)
+    intelligence = generate_intelligence(scores, form_response=SAMPLE_FORM_RESPONSE)
 
     report = {
         "id": str(uuid.uuid4()),

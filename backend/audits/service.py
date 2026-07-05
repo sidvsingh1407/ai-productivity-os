@@ -24,7 +24,7 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
 
         # 4.5 generate intelligence dynamically
         industry_type_str = audit.industry_type.value if hasattr(audit.industry_type, 'value') else audit.industry_type
-        intelligence = generate_intelligence(scores_dict, industry_type_str)
+        intelligence = generate_intelligence(scores_dict, industry_type_str, form_response)
 
         # 4.6 append benchmark intelligence
         completed_audits = await repository.get_all_completed_audits(db)

@@ -59,7 +59,7 @@ async def get_audits(
             'missing_data_flags': []
         }
         industry_type_str = audit.industry_type.value if hasattr(audit.industry_type, 'value') else audit.industry_type
-        intelligence = generate_intelligence(scores_dict, industry_type_str)
+        intelligence = generate_intelligence(scores_dict, industry_type_str, audit.form_response)
 
         # We need to construct a response model manually to inject these fields
         # since they are not present in the ORM model natively.
@@ -103,7 +103,7 @@ async def get_single_audit(
         'missing_data_flags': []
     }
     industry_type_str = audit.industry_type.value if hasattr(audit.industry_type, 'value') else audit.industry_type
-    intelligence = generate_intelligence(scores_dict, industry_type_str)
+    intelligence = generate_intelligence(scores_dict, industry_type_str, audit.form_response)
 
     audit_dict = schemas.AuditResponse.model_validate(audit).model_dump()
 

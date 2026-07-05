@@ -249,7 +249,9 @@ def generate_executive_summary(scores: Dict[str, Any], recommendations: List[Dic
 
     return summary
 
-def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = None) -> Dict[str, Any]:
+from audits.narrative_generator import generate_audit_narrative
+
+def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = None, form_response: Dict[str, Any] | None = None) -> Dict[str, Any]:
     """
     Entrypoint for intelligence generation.
     Takes a raw scores dictionary and returns a structure with findings, recommendations, executive summary,
@@ -379,6 +381,57 @@ def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = No
     # Remove 'linked_finding' from recommendations before final output
     for r in clean_recommendations:
         r.pop("linked_finding", None)
+
+    # ---------------------------------------------------------
+    # Apply dynamic LLM narrative layer (if successful)
+    # ---------------------------------------------------------
+    company_context = {}
+    if form_response:
+        company_context = {
+            "industry": form_response.get("industry", industry_type or "Not specified"),
+            "company_size": form_response.get("companySize", "Not specified"),
+            "region": form_response.get("region", "Not specified"),
+            "ai_usage": form_response.get("primaryAiUsage", "Not specified"),
+            "governance_level": form_response.get("governanceMaturity", "Not specified")
+        }
+
+    narrative = generate_audit_narrative(
+        company_context=company_context,
+        scores=scores,
+        risk_findings=risk_projection,
+        roadmap=roadmap,
+        coi=coi,
+        target_state=target_state
+    )
+
+    if narrative:
+        # Map dynamic narrative over existing keys
+        if "executive_summary" in narrative and narrative["executive_summary"]:
+            executive_summary["overall_assessment"] = narrative["executive_summary"]
+
+        if "critical_findings" in narrative and narrative["critical_findings"]:
+            findings_text = narrative["critical_findings"]
+            if isinstance(findings_text, list):
+                findings_text = " ".join(findings_text)
+            executive_summary["critical_risk"] = findings_text
+
+        if "highest_priority_action" in narrative and narrative["highest_priority_action"]:
+            executive_summary["recommended_first_action"] = narrative["highest_priority_action"]
+
+        if "regulatory_exposure" in narrative and narrative["regulatory_exposure"]:
+            executive_summary["primary_opportunity"] = narrative["regulatory_exposure"]
+
+        if "cost_of_inaction_narrative" in narrative and narrative["cost_of_inaction_narrative"]:
+            # If cost_of_inaction is a list, and it has items, we will inject it into the first item
+            # or append a new synthetic item depending on structure.
+            # But based on the schema, `cost_of_inaction` is a List[CostOfInaction], let's modify the first item
+            # to hold this narrative, or if it doesn't fit the schema exactly, we might need to put it where it fits.
+            # The user requested: "Feed into cost_of_inaction section as narrative text"
+            # Since the schema is `Optional[List[CostOfInaction]]`, let's add it to the `expected_impact` of the first item
+            # if we have to, or we can just prepend it to the first item's expected_impact list.
+            if coi and isinstance(coi, list) and len(coi) > 0:
+                coi[0]["expected_impact"].insert(0, narrative["cost_of_inaction_narrative"])
+
 
     return {
         "operational_health": operational_health,
