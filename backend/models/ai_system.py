@@ -3,7 +3,15 @@ from datetime import datetime
 from sqlalchemy import String, DateTime, ForeignKey, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.types import JSON
 from database import Base
+
+# Use JSONB for Postgres, but gracefully fallback to JSON for SQLite in tests
+from sqlalchemy.ext.compiler import compiles
+
+@compiles(JSONB, "sqlite")
+def compile_jsonb_sqlite(type_, compiler, **kw):
+    return "JSON"
 
 class AISystem(Base):
     __tablename__ = "ai_systems"
