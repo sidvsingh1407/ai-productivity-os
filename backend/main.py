@@ -48,6 +48,7 @@ from contact.router import router as contact_router  # noqa: E402
 from sample.router import router as sample_router  # noqa: E402
 from prompt_intelligence.router import router as prompt_intelligence_router # noqa: E402
 from projects.router import router as projects_router # noqa: E402
+from ai_systems.router import router as ai_systems_router # noqa: E402
 from api_platform.router import router as api_platform_router
 from api_platform.management_router import router as api_platform_management_router  # noqa: E402
 from config import settings  # noqa: E402
@@ -183,6 +184,7 @@ app.include_router(contact_router)
 app.include_router(sample_router)
 app.include_router(prompt_intelligence_router, prefix="/api")
 app.include_router(projects_router, prefix="/api")
+app.include_router(ai_systems_router, prefix="/api")
 app.include_router(api_platform_router, prefix="/api/v1")
 app.include_router(api_platform_management_router, prefix="/api/platform")
 
