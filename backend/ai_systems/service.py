@@ -12,11 +12,7 @@ class AISystemsService:
     async def create_system(self, db: AsyncSession, organization_id: uuid.UUID, data: AISystemCreate) -> AISystem:
         new_system = AISystem(
             organization_id=organization_id,
-            name=data.name,
-            purpose=data.purpose,
-            data_types=data.data_types,
-            decision_making_role=data.decision_making_role,
-            status=data.status
+            **data.model_dump()
         )
         db.add(new_system)
         await db.commit()

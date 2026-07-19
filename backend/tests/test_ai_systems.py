@@ -207,6 +207,35 @@ async def test_ai_system_technology_fields(db_session: AsyncSession, organizatio
 
 
 @pytest.mark.asyncio
+async def test_create_ai_system_with_extended_fields(db_session: AsyncSession, user, system_payload):
+    headers = get_auth_headers(user)
+
+    # Extend the payload with new optional fields
+    extended_payload = system_payload.copy()
+    extended_payload.update({
+        "vendor": "Acme AI Corp",
+        "risk_classification": "High Risk",
+        "users_count": 500,
+        "incident_count": 2,
+        "knowledge_sources": ["wiki", "internal docs"]
+    })
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        response = await client.post("/api/ai-systems", json=extended_payload, headers=headers)
+
+        assert response.status_code == 201
+        data = response.json()
+        assert data["vendor"] == "Acme AI Corp"
+        assert data["risk_classification"] == "High Risk"
+        assert data["users_count"] == 500
+        assert data["incident_count"] == 2
+        assert data["knowledge_sources"] == ["wiki", "internal docs"]
+
+        # Original fields should still match
+        assert data["name"] == system_payload["name"]
+        assert data["purpose"] == system_payload["purpose"]
+
+@pytest.mark.asyncio
 async def test_ai_system_ownership_isolation(db_session: AsyncSession, user, user2, system_payload):
     headers1 = get_auth_headers(user)
     headers2 = get_auth_headers(user2)
