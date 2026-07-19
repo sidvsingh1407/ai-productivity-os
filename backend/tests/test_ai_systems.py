@@ -158,6 +158,55 @@ async def test_delete_ai_system(db_session: AsyncSession, user, organization: Or
         assert get_res.status_code == 404
 
 @pytest.mark.asyncio
+async def test_ai_system_technology_fields(db_session: AsyncSession, organization: Organization):
+    """
+    Test that the new technology fields map correctly in SQLAlchemy,
+    defaults are applied properly, and types behave as expected.
+    """
+    sys = AISystem(
+        organization_id=organization.id,
+        name="Tech Test System",
+        vendor="OpenAI",
+        model_name="GPT-4",
+        model_version="0613",
+        api_provider="Azure",
+        framework="LangChain",
+        hosting="Cloud",
+        authentication_method="OAuth2",
+        vector_db="Pinecone",
+        workflow_engine="Airflow",
+        agent_framework="AutoGPT"
+    )
+    db_session.add(sys)
+    await db_session.commit()
+    await db_session.refresh(sys)
+
+    assert sys.vendor == "OpenAI"
+    assert sys.model_name == "GPT-4"
+    assert sys.model_version == "0613"
+    assert sys.api_provider == "Azure"
+    assert sys.framework == "LangChain"
+    assert sys.hosting == "Cloud"
+    assert sys.authentication_method == "OAuth2"
+    assert sys.vector_db == "Pinecone"
+    assert sys.workflow_engine == "Airflow"
+    assert sys.agent_framework == "AutoGPT"
+
+    # Test JSONB default properties
+    assert sys.integrations == []
+    assert sys.knowledge_sources == []
+
+    # Update JSONB fields and test persistence
+    sys.integrations = ["Jira", "Slack"]
+    sys.knowledge_sources = ["Confluence", "Google Drive"]
+    await db_session.commit()
+    await db_session.refresh(sys)
+
+    assert sys.integrations == ["Jira", "Slack"]
+    assert sys.knowledge_sources == ["Confluence", "Google Drive"]
+
+
+@pytest.mark.asyncio
 async def test_ai_system_ownership_isolation(db_session: AsyncSession, user, user2, system_payload):
     headers1 = get_auth_headers(user)
     headers2 = get_auth_headers(user2)
