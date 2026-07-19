@@ -65,14 +65,376 @@ async def user2(db_session: AsyncSession, organization2: Organization):
     await db_session.commit()
     return u
 
-@pytest_asyncio.fixture
-async def system_payload():
+@pytest.fixture
+def system_payload():
     return {
         "name": "Test System",
         "purpose": "A test system",
         "data_types": ["personal", "financial"],
         "decision_making_role": "automated",
-        "status": "active"
+        "status": "active",
+        "version": "1.0.0",
+        "lifecycle_status": "in_production",
+        "owner": "test_owner",
+        "department": "Engineering",
+        "business_capability": "Customer Service",
+        "internal_external_users": "internal",
+        "criticality": "high",
+        "implementation_stage": "deployed",
+        "ai_type": "generative",
+        "vendor": "Test Vendor",
+        "model_name": "Test Model",
+        "model_version": "v2",
+        "api_provider": "OpenAI",
+        "framework": "LangChain",
+        "hosting": "AWS",
+        "integrations": ["slack"],
+        "authentication_method": "oauth2",
+        "vector_db": "Pinecone",
+        "knowledge_sources": ["wiki"],
+        "workflow_engine": "Airflow",
+        "agent_framework": "AutoGPT",
+        "deployment_type": "cloud",
+        "data_flow": "sync",
+        "apis": ["api1"],
+        "databases": ["db1"],
+        "event_systems": "kafka",
+        "caching": "redis",
+        "monitoring": "datadog",
+        "logging": "splunk",
+        "deployment_details": "k8s",
+        "data_sensitivity": "confidential",
+        "data_sources": ["db1"],
+        "data_destinations": ["s3"],
+        "usage_frequency": "daily",
+        "users_count": 100,
+        "uptime": 99.9,
+        "approvals_required": True,
+        "risk_classification": "low",
+        "oversight_status": "approved",
+        "documentation_status": "complete",
+        "applicable_policies": ["policy1"],
+        "rbac_enabled": True,
+        "encryption_status": "encrypted",
+        "incident_count": 0,
+        "applicable_regulations": ["GDPR"],
+        "obligations": ["logging"],
+        "evidence_status": "collected",
+        "cost": 1000.50,
+        "roi_notes": "positive",
+        "licensing_type": "commercial",
+        "planned_changes": "none",
+        "roadmap_notes": "Q4 update"
+    }
+
+@pytest.fixture
+def chatbot_payload():
+    return {
+        "name": "Customer Support Chatbot",
+        "purpose": "First-line customer support",
+        "data_types": ["customer_messages", "account_info"],
+        "decision_making_role": "informational",
+        "status": "active",
+        "version": "2.1.0",
+        "lifecycle_status": "in_production",
+        "owner": "support_team",
+        "department": "Customer Success",
+        "business_capability": "Support",
+        "internal_external_users": "external",
+        "criticality": "medium",
+        "implementation_stage": "deployed",
+        "ai_type": "generative",
+        "vendor": "OpenAI",
+        "model_name": "GPT-4",
+        "model_version": "0613",
+        "api_provider": "Azure",
+        "framework": "LangChain",
+        "hosting": "Azure",
+        "integrations": ["zendesk", "slack"],
+        "authentication_method": "api_key",
+        "vector_db": "Pinecone",
+        "knowledge_sources": ["help_center", "kb"],
+        "workflow_engine": "none",
+        "agent_framework": "custom",
+        "deployment_type": "cloud",
+        "data_flow": "sync",
+        "apis": ["zendesk_api"],
+        "databases": ["postgres"],
+        "event_systems": "none",
+        "caching": "redis",
+        "monitoring": "datadog",
+        "logging": "azure_monitor",
+        "deployment_details": "kubernetes",
+        "data_sensitivity": "confidential",
+        "data_sources": ["zendesk"],
+        "data_destinations": ["zendesk"],
+        "usage_frequency": "continuous",
+        "users_count": 50000,
+        "uptime": 99.5,
+        "approvals_required": False,
+        "risk_classification": "low",
+        "oversight_status": "reviewed",
+        "documentation_status": "complete",
+        "applicable_policies": ["acceptable_use", "privacy_policy"],
+        "rbac_enabled": True,
+        "encryption_status": "encrypted",
+        "incident_count": 2,
+        "applicable_regulations": ["GDPR", "CCPA"],
+        "obligations": ["data_deletion", "opt_out"],
+        "evidence_status": "collected",
+        "cost": 5000.0,
+        "roi_notes": "Reduces ticket load by 30%",
+        "licensing_type": "api",
+        "planned_changes": "upgrade to new model",
+        "roadmap_notes": "Q3 2024"
+    }
+
+@pytest.fixture
+def hiring_screener_payload():
+    return {
+        "name": "Resume Screener",
+        "purpose": "Automated resume filtering",
+        "data_types": ["resumes", "demographics"],
+        "decision_making_role": "automated_filtering",
+        "status": "active",
+        "version": "1.0",
+        "lifecycle_status": "in_production",
+        "owner": "hr_team",
+        "department": "Human Resources",
+        "business_capability": "Recruiting",
+        "internal_external_users": "internal",
+        "criticality": "high",
+        "implementation_stage": "deployed",
+        "ai_type": "predictive",
+        "vendor": "AcmeHR",
+        "model_name": "Screener",
+        "model_version": "v1",
+        "api_provider": "AcmeHR",
+        "framework": "custom",
+        "hosting": "SaaS",
+        "integrations": ["workday"],
+        "authentication_method": "oauth2",
+        "vector_db": "none",
+        "knowledge_sources": ["job_descriptions"],
+        "workflow_engine": "none",
+        "agent_framework": "none",
+        "deployment_type": "saas",
+        "data_flow": "batch",
+        "apis": ["workday_api"],
+        "databases": ["snowflake"],
+        "event_systems": "none",
+        "caching": "none",
+        "monitoring": "vendor_dashboard",
+        "logging": "vendor_dashboard",
+        "deployment_details": "managed_by_vendor",
+        "data_sensitivity": "highly_confidential",
+        "data_sources": ["workday"],
+        "data_destinations": ["workday"],
+        "usage_frequency": "daily",
+        "users_count": 20,
+        "uptime": 99.9,
+        "approvals_required": True,
+        "risk_classification": "high",
+        "oversight_status": "under_review",
+        "documentation_status": "in_progress",
+        "applicable_policies": ["anti_discrimination", "hiring_policy"],
+        "rbac_enabled": True,
+        "encryption_status": "encrypted",
+        "incident_count": 0,
+        "applicable_regulations": ["GDPR", "EEOC"],
+        "obligations": ["fairness_audit", "explainability"],
+        "evidence_status": "missing",
+        "cost": 12000.0,
+        "roi_notes": "Saves 40 hours/week",
+        "licensing_type": "subscription",
+        "planned_changes": "none",
+        "roadmap_notes": "Evaluate alternative vendors"
+    }
+
+@pytest.fixture
+def healthcare_diagnostic_payload():
+    return {
+        "name": "Medical Imaging Diagnostic",
+        "purpose": "Assists radiologists in finding anomalies",
+        "data_types": ["medical_images", "patient_health_data"],
+        "decision_making_role": "human_in_the_loop",
+        "status": "active",
+        "version": "3.2.1",
+        "lifecycle_status": "in_production",
+        "owner": "clinical_ops",
+        "department": "Radiology",
+        "business_capability": "Diagnostics",
+        "internal_external_users": "internal",
+        "criticality": "critical",
+        "implementation_stage": "deployed",
+        "ai_type": "computer_vision",
+        "vendor": "HealthAI",
+        "model_name": "VisionDiag",
+        "model_version": "2023.1",
+        "api_provider": "none",
+        "framework": "TensorFlow",
+        "hosting": "on_premise",
+        "integrations": ["epic_emr"],
+        "authentication_method": "mtls",
+        "vector_db": "none",
+        "knowledge_sources": ["training_dataset_v3"],
+        "workflow_engine": "custom",
+        "agent_framework": "none",
+        "deployment_type": "on_premise",
+        "data_flow": "sync",
+        "apis": ["dicom_api"],
+        "databases": ["pacs"],
+        "event_systems": "hl7",
+        "caching": "none",
+        "monitoring": "custom",
+        "logging": "splunk",
+        "deployment_details": "bare_metal",
+        "data_sensitivity": "phi",
+        "data_sources": ["pacs"],
+        "data_destinations": ["epic_emr"],
+        "usage_frequency": "continuous",
+        "users_count": 50,
+        "uptime": 99.99,
+        "approvals_required": True,
+        "risk_classification": "unacceptable",
+        "oversight_status": "approved",
+        "documentation_status": "complete",
+        "applicable_policies": ["phi_handling", "medical_device_policy"],
+        "rbac_enabled": True,
+        "encryption_status": "encrypted",
+        "incident_count": 0,
+        "applicable_regulations": ["HIPAA", "FDA"],
+        "obligations": ["audit_trail", "accuracy_reporting"],
+        "evidence_status": "collected",
+        "cost": 150000.0,
+        "roi_notes": "Improves detection rate by 15%",
+        "licensing_type": "perpetual",
+        "planned_changes": "hardware upgrade",
+        "roadmap_notes": "expand to mri"
+    }
+
+@pytest.fixture
+def credit_scoring_payload():
+    return {
+        "name": "Credit Risk Scorer",
+        "purpose": "Calculates credit scores for loan applicants",
+        "data_types": ["financial_history", "demographics"],
+        "decision_making_role": "automated_decision",
+        "status": "active",
+        "version": "5.0",
+        "lifecycle_status": "in_production",
+        "owner": "risk_team",
+        "department": "Risk Management",
+        "business_capability": "Underwriting",
+        "internal_external_users": "internal",
+        "criticality": "critical",
+        "implementation_stage": "deployed",
+        "ai_type": "machine_learning",
+        "vendor": "Internal",
+        "model_name": "XGBoostScorer",
+        "model_version": "v5",
+        "api_provider": "Internal",
+        "framework": "scikit-learn",
+        "hosting": "AWS",
+        "integrations": ["loan_origination_system"],
+        "authentication_method": "iam",
+        "vector_db": "none",
+        "knowledge_sources": ["historical_loans"],
+        "workflow_engine": "step_functions",
+        "agent_framework": "none",
+        "deployment_type": "cloud",
+        "data_flow": "sync",
+        "apis": ["internal_scoring_api"],
+        "databases": ["aurora"],
+        "event_systems": "eventbridge",
+        "caching": "none",
+        "monitoring": "datadog",
+        "logging": "cloudwatch",
+        "deployment_details": "sagemaker",
+        "data_sensitivity": "highly_confidential",
+        "data_sources": ["experian_api"],
+        "data_destinations": ["loan_origination_system"],
+        "usage_frequency": "continuous",
+        "users_count": 100,
+        "uptime": 99.95,
+        "approvals_required": True,
+        "risk_classification": "high",
+        "oversight_status": "approved",
+        "documentation_status": "complete",
+        "applicable_policies": ["fair_lending", "model_risk_management"],
+        "rbac_enabled": True,
+        "encryption_status": "encrypted",
+        "incident_count": 1,
+        "applicable_regulations": ["FCRA", "ECOA"],
+        "obligations": ["adverse_action_notices", "bias_testing"],
+        "evidence_status": "collected",
+        "cost": 50000.0,
+        "roi_notes": "Reduces default rate",
+        "licensing_type": "internal",
+        "planned_changes": "retrain model in Q4",
+        "roadmap_notes": "include alternative data sources"
+    }
+
+@pytest.fixture
+def internal_copilot_payload():
+    return {
+        "name": "Developer Copilot",
+        "purpose": "Code completion and generation",
+        "data_types": ["source_code", "documentation"],
+        "decision_making_role": "informational",
+        "status": "active",
+        "version": "1.0",
+        "lifecycle_status": "in_production",
+        "owner": "platform_engineering",
+        "department": "Engineering",
+        "business_capability": "Development",
+        "internal_external_users": "internal",
+        "criticality": "low",
+        "implementation_stage": "deployed",
+        "ai_type": "generative",
+        "vendor": "GitHub",
+        "model_name": "Copilot",
+        "model_version": "latest",
+        "api_provider": "GitHub",
+        "framework": "none",
+        "hosting": "SaaS",
+        "integrations": ["vscode", "intellij"],
+        "authentication_method": "sso",
+        "vector_db": "none",
+        "knowledge_sources": ["public_code"],
+        "workflow_engine": "none",
+        "agent_framework": "none",
+        "deployment_type": "saas",
+        "data_flow": "sync",
+        "apis": ["github_api"],
+        "databases": ["none"],
+        "event_systems": "none",
+        "caching": "none",
+        "monitoring": "vendor",
+        "logging": "vendor",
+        "deployment_details": "ide_plugin",
+        "data_sensitivity": "confidential",
+        "data_sources": ["local_ide"],
+        "data_destinations": ["github"],
+        "usage_frequency": "continuous",
+        "users_count": 200,
+        "uptime": 99.0,
+        "approvals_required": False,
+        "risk_classification": "low",
+        "oversight_status": "approved",
+        "documentation_status": "complete",
+        "applicable_policies": ["acceptable_use"],
+        "rbac_enabled": True,
+        "encryption_status": "encrypted",
+        "incident_count": 0,
+        "applicable_regulations": ["none"],
+        "obligations": ["license_compliance"],
+        "evidence_status": "not_required",
+        "cost": 40000.0,
+        "roi_notes": "15% increase in developer productivity",
+        "licensing_type": "subscription",
+        "planned_changes": "none",
+        "roadmap_notes": "roll out to QA team"
     }
 
 def get_auth_headers(user):
@@ -86,21 +448,34 @@ def get_auth_headers(user):
     return {"Authorization": f"Bearer {encoded_jwt}"}
 
 @pytest.mark.asyncio
-async def test_create_ai_system(db_session: AsyncSession, user, system_payload):
+@pytest.mark.parametrize("payload_name", ["system_payload", "chatbot_payload", "credit_scoring_payload"])
+async def test_create_ai_system(db_session: AsyncSession, user, request, payload_name):
     headers = get_auth_headers(user)
+    # If the fixture is async, await it, otherwise get its value
+    fixture_value = request.getfixturevalue(payload_name)
+    if hasattr(fixture_value, "__await__"):
+        payload = await fixture_value
+    else:
+        payload = fixture_value
 
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        response = await client.post("/api/ai-systems", json=system_payload, headers=headers)
+        response = await client.post("/api/ai-systems", json=payload, headers=headers)
 
         assert response.status_code == 201
         data = response.json()
-        assert data["name"] == system_payload["name"]
-        assert data["purpose"] == system_payload["purpose"]
-        assert data["data_types"] == system_payload["data_types"]
-        assert data["decision_making_role"] == system_payload["decision_making_role"]
-        assert data["status"] == system_payload["status"]
+
+        # Test original fields
+        assert data["name"] == payload["name"]
+        assert data["purpose"] == payload["purpose"]
+        assert data["data_types"] == payload["data_types"]
+        assert data["decision_making_role"] == payload["decision_making_role"]
+        assert data["status"] == payload["status"]
         assert "id" in data
         assert "organization_id" in data
+
+        # Test new fields round-trip correctly
+        for key, value in payload.items():
+            assert data.get(key) == value, f"Mismatch for field {key}: expected {value}, got {data.get(key)}"
 
 @pytest.mark.asyncio
 async def test_list_ai_systems(db_session: AsyncSession, user, organization: Organization, system_payload):
@@ -130,18 +505,40 @@ async def test_get_ai_system(db_session: AsyncSession, user, organization: Organ
         assert get_res.json()["id"] == system_id
 
 @pytest.mark.asyncio
-async def test_update_ai_system(db_session: AsyncSession, user, organization: Organization, system_payload):
+@pytest.mark.parametrize("payload_name", ["system_payload", "chatbot_payload", "credit_scoring_payload"])
+async def test_update_ai_system(db_session: AsyncSession, user, organization: Organization, request, payload_name):
     headers = get_auth_headers(user)
+    fixture_value = request.getfixturevalue(payload_name)
+    if hasattr(fixture_value, "__await__"):
+        payload = await fixture_value
+    else:
+        payload = fixture_value
 
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        create_res = await client.post("/api/ai-systems", json=system_payload, headers=headers)
+        create_res = await client.post("/api/ai-systems", json=payload, headers=headers)
         system_id = create_res.json()["id"]
 
         update_payload = {"name": "Updated System"}
+        # also update a few other fields to test
+        if "vendor" in payload:
+            update_payload["vendor"] = "Updated Vendor"
+        if "incident_count" in payload:
+            update_payload["incident_count"] = 5
+
         update_res = await client.put(f"/api/ai-systems/{system_id}", json=update_payload, headers=headers)
         assert update_res.status_code == 200
-        assert update_res.json()["name"] == "Updated System"
-        assert update_res.json()["status"] == "active"
+        data = update_res.json()
+        assert data["name"] == "Updated System"
+        assert data["status"] == payload["status"]
+        if "vendor" in payload:
+            assert data["vendor"] == "Updated Vendor"
+        if "incident_count" in payload:
+            assert data["incident_count"] == 5
+
+        # Verify other fields remain unchanged
+        for key, value in payload.items():
+            if key not in update_payload:
+                assert data.get(key) == value, f"Mismatch for field {key} after update"
 
 @pytest.mark.asyncio
 async def test_delete_ai_system(db_session: AsyncSession, user, organization: Organization, system_payload):
@@ -256,3 +653,27 @@ async def test_ai_system_ownership_isolation(db_session: AsyncSession, user, use
         # User 2 tries to delete it
         delete_res = await client.delete(f"/api/ai-systems/{system_id}", headers=headers2)
         assert delete_res.status_code == 404
+
+@pytest.mark.asyncio
+async def test_ai_system_reproducibility(db_session: AsyncSession, user, healthcare_diagnostic_payload):
+    headers = get_auth_headers(user)
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        # Create first system
+        res1 = await client.post("/api/ai-systems", json=healthcare_diagnostic_payload, headers=headers)
+        assert res1.status_code == 201
+        data1 = res1.json()
+
+        # Create second system with identical payload
+        res2 = await client.post("/api/ai-systems", json=healthcare_diagnostic_payload, headers=headers)
+        assert res2.status_code == 201
+        data2 = res2.json()
+
+        # Remove generated fields
+        generated_fields = {"id", "organization_id", "created_at", "updated_at"}
+        for field in generated_fields:
+            data1.pop(field, None)
+            data2.pop(field, None)
+
+        # Assert all remaining fields are identical
+        assert data1 == data2
