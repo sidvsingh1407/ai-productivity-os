@@ -15,6 +15,51 @@ class AISystemBase(BaseModel):
     )
     status: Literal['active', 'inactive', 'archived'] = Field(default='active')
 
+    version: Optional[str] = None
+    lifecycle_status: Optional[str] = None
+    owner: Optional[str] = None
+    department: Optional[str] = None
+    business_capability: Optional[str] = None
+    internal_external_users: Optional[str] = None
+    criticality: Optional[str] = None
+    implementation_stage: Optional[str] = None
+    ai_type: Optional[str] = None
+    vendor: Optional[str] = None
+    model_name: Optional[str] = None
+    model_version: Optional[str] = None
+    api_provider: Optional[str] = None
+    framework: Optional[str] = None
+    hosting: Optional[str] = None
+    integrations: Optional[List[str]] = Field(default_factory=list)
+    authentication_method: Optional[str] = None
+    vector_db: Optional[str] = None
+    knowledge_sources: Optional[List[str]] = Field(default_factory=list)
+    workflow_engine: Optional[str] = None
+    agent_framework: Optional[str] = None
+    deployment_type: Optional[str] = None
+    data_flow: Optional[str] = None
+    apis: Optional[List[str]] = None
+    databases: Optional[List[str]] = None
+    event_systems: Optional[str] = None
+    caching: Optional[str] = None
+    monitoring: Optional[str] = None
+    logging: Optional[str] = None
+    deployment_details: Optional[str] = None
+    data_sensitivity: Optional[str] = None
+    data_sources: Optional[List[str]] = None
+    data_destinations: Optional[List[str]] = None
+    usage_frequency: Optional[str] = None
+    users_count: Optional[int] = None
+    uptime: Optional[float] = None
+    approvals_required: Optional[bool] = None
+    risk_classification: Optional[str] = None
+    oversight_status: Optional[str] = None
+    documentation_status: Optional[str] = None
+    applicable_policies: Optional[List[str]] = Field(default_factory=list)
+    rbac_enabled: Optional[bool] = None
+    encryption_status: Optional[str] = None
+    incident_count: Optional[int] = 0
+
 class AISystemCreate(AISystemBase):
     pass
 
@@ -24,6 +69,51 @@ class AISystemUpdate(BaseModel):
     data_types: Optional[List[str]] = None
     decision_making_role: Optional[str] = Field(None, min_length=1, max_length=255)
     status: Optional[Literal['active', 'inactive', 'archived']] = None
+
+    version: Optional[str] = None
+    lifecycle_status: Optional[str] = None
+    owner: Optional[str] = None
+    department: Optional[str] = None
+    business_capability: Optional[str] = None
+    internal_external_users: Optional[str] = None
+    criticality: Optional[str] = None
+    implementation_stage: Optional[str] = None
+    ai_type: Optional[str] = None
+    vendor: Optional[str] = None
+    model_name: Optional[str] = None
+    model_version: Optional[str] = None
+    api_provider: Optional[str] = None
+    framework: Optional[str] = None
+    hosting: Optional[str] = None
+    integrations: Optional[List[str]] = Field(default_factory=list)
+    authentication_method: Optional[str] = None
+    vector_db: Optional[str] = None
+    knowledge_sources: Optional[List[str]] = Field(default_factory=list)
+    workflow_engine: Optional[str] = None
+    agent_framework: Optional[str] = None
+    deployment_type: Optional[str] = None
+    data_flow: Optional[str] = None
+    apis: Optional[List[str]] = None
+    databases: Optional[List[str]] = None
+    event_systems: Optional[str] = None
+    caching: Optional[str] = None
+    monitoring: Optional[str] = None
+    logging: Optional[str] = None
+    deployment_details: Optional[str] = None
+    data_sensitivity: Optional[str] = None
+    data_sources: Optional[List[str]] = None
+    data_destinations: Optional[List[str]] = None
+    usage_frequency: Optional[str] = None
+    users_count: Optional[int] = None
+    uptime: Optional[float] = None
+    approvals_required: Optional[bool] = None
+    risk_classification: Optional[str] = None
+    oversight_status: Optional[str] = None
+    documentation_status: Optional[str] = None
+    applicable_policies: Optional[List[str]] = Field(default_factory=list)
+    rbac_enabled: Optional[bool] = None
+    encryption_status: Optional[str] = None
+    incident_count: Optional[int] = 0
 
 class AISystemResponse(AISystemBase):
     id: uuid.UUID
