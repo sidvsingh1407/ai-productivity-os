@@ -36,6 +36,9 @@ export default function AiSystemsList() {
               <TableHead>Name</TableHead>
               <TableHead>Purpose</TableHead>
               <TableHead>Decision Making Role</TableHead>
+              <TableHead>Criticality</TableHead>
+              <TableHead>Lifecycle Status</TableHead>
+              <TableHead>Department</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -43,7 +46,7 @@ export default function AiSystemsList() {
           <TableBody>
             {!systems || systems.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-slate-500 py-8">
+                <TableCell colSpan={8} className="text-center text-slate-500 py-8">
                   No AI systems found.
                 </TableCell>
               </TableRow>
@@ -66,6 +69,15 @@ export default function AiSystemsList() {
                     </TableCell>
                     <TableCell className="max-w-xs truncate" title={system.decision_making_role}>
                       {system.decision_making_role}
+                    </TableCell>
+                    <TableCell className="max-w-[120px] truncate" title={system.criticality}>
+                      {system.criticality || 'N/A'}
+                    </TableCell>
+                    <TableCell className="max-w-[120px] truncate" title={system.lifecycle_status}>
+                      {system.lifecycle_status || 'N/A'}
+                    </TableCell>
+                    <TableCell className="max-w-[120px] truncate" title={system.department}>
+                      {system.department || 'N/A'}
                     </TableCell>
                     <TableCell>
                       <Badge variant={statusVariant} className="capitalize">
