@@ -65,6 +65,14 @@ class AISystem(Base):
     uptime: Mapped[float | None] = mapped_column(Float, nullable=True)
     approvals_required: Mapped[bool | None] = mapped_column(Boolean, nullable=True, default=False)
 
+    risk_classification: Mapped[str | None] = mapped_column(String, nullable=True)
+    oversight_status: Mapped[str | None] = mapped_column(String, nullable=True)
+    documentation_status: Mapped[str | None] = mapped_column(String, nullable=True)
+    applicable_policies: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
+    rbac_enabled: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    encryption_status: Mapped[str | None] = mapped_column(String, nullable=True)
+    incident_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     # onupdate is enforced at the ORM level; this table has no direct SQL write path.
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
