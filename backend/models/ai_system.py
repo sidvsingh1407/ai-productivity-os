@@ -34,6 +34,19 @@ class AISystem(Base):
     implementation_stage: Mapped[str | None] = mapped_column(String, nullable=True)
     ai_type: Mapped[str | None] = mapped_column(String, nullable=True)
 
+    vendor: Mapped[str | None] = mapped_column(String, nullable=True)
+    model_name: Mapped[str | None] = mapped_column(String, nullable=True)
+    model_version: Mapped[str | None] = mapped_column(String, nullable=True)
+    api_provider: Mapped[str | None] = mapped_column(String, nullable=True)
+    framework: Mapped[str | None] = mapped_column(String, nullable=True)
+    hosting: Mapped[str | None] = mapped_column(String, nullable=True)
+    integrations: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
+    authentication_method: Mapped[str | None] = mapped_column(String, nullable=True)
+    vector_db: Mapped[str | None] = mapped_column(String, nullable=True)
+    knowledge_sources: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
+    workflow_engine: Mapped[str | None] = mapped_column(String, nullable=True)
+    agent_framework: Mapped[str | None] = mapped_column(String, nullable=True)
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     # onupdate is enforced at the ORM level; this table has no direct SQL write path.
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
