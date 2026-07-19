@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, DateTime, ForeignKey, Text, func
+from sqlalchemy import String, DateTime, ForeignKey, Text, func, Integer, Float, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.types import JSON
@@ -56,6 +56,14 @@ class AISystem(Base):
     monitoring: Mapped[str | None] = mapped_column(Text, nullable=True)
     logging: Mapped[str | None] = mapped_column(Text, nullable=True)
     deployment_details: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    data_sensitivity: Mapped[str | None] = mapped_column(String, nullable=True)
+    data_sources: Mapped[list[str] | None] = mapped_column(JSONB, nullable=True, default=list)
+    data_destinations: Mapped[list[str] | None] = mapped_column(JSONB, nullable=True, default=list)
+    usage_frequency: Mapped[str | None] = mapped_column(String, nullable=True)
+    users_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    uptime: Mapped[float | None] = mapped_column(Float, nullable=True)
+    approvals_required: Mapped[bool | None] = mapped_column(Boolean, nullable=True, default=False)
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     # onupdate is enforced at the ORM level; this table has no direct SQL write path.
