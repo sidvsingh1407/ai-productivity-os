@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
-from dependencies import get_current_user, get_db
+from dependencies import get_current_user, get_db, get_current_org
 from models.user import User
+from models.organization import Organization
 from projects.schemas import (
     ProjectCreate, ProjectUpdate, ProjectListResponse, ProjectDetailResponse,
     SavedPromptCreate, SavedPromptResponse
@@ -17,9 +18,10 @@ service = ProjectsService()
 async def create_project(
     request: ProjectCreate,
     current_user: User = Depends(get_current_user),
+    current_org: Organization = Depends(get_current_org),
     db: AsyncSession = Depends(get_db)
 ):
-    project = await service.create_project(db, current_user.id, request.name, request.description)
+    project = await service.create_project(db, current_user.id, current_org.id, request.name, request.description)
     return project
 
 @router.get("/projects", response_model=List[ProjectListResponse])

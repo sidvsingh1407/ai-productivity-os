@@ -4,18 +4,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func
 from projects.models import Project, SavedPrompt
-from billing.service import get_user_subscription_status
+from billing.service import get_org_subscription_status
 from fastapi import HTTPException
 
 class ProjectsService:
-    async def create_project(self, db: AsyncSession, user_id: uuid.UUID, name: str, description: str = None) -> Project:
+    async def create_project(self, db: AsyncSession, user_id: uuid.UUID, org_id: uuid.UUID, name: str, description: str = None) -> Project:
         # Check limits
         stmt = select(func.count(Project.id)).where(Project.user_id == user_id)
         result = await db.execute(stmt)
         project_count = result.scalar()
 
-        sub_status = get_user_subscription_status(user_id)
-        if sub_status == "free" and project_count >= 3:
+        sub_status = await get_org_subscription_status(db, org_id)
+        if sub_status.tier in ["free", "starter"] and project_count >= 3:
             raise HTTPException(
                 status_code=402,
                 detail={"detail": "limit_reached", "module": "projects", "limit": 3, "used": project_count}
