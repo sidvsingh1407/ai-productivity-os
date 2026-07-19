@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, DateTime, ForeignKey, Text, func, Integer, Float, Boolean
+from sqlalchemy import String, DateTime, ForeignKey, Text, func, Integer, Float, Boolean, Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.types import JSON
@@ -72,6 +72,15 @@ class AISystem(Base):
     rbac_enabled: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     encryption_status: Mapped[str | None] = mapped_column(String, nullable=True)
     incident_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+    applicable_regulations: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
+    obligations: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
+    evidence_status: Mapped[str | None] = mapped_column(String, nullable=True)
+    cost: Mapped[float | None] = mapped_column(Numeric, nullable=True)
+    roi_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    licensing_type: Mapped[str | None] = mapped_column(String, nullable=True)
+    planned_changes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    roadmap_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     # onupdate is enforced at the ORM level; this table has no direct SQL write path.
