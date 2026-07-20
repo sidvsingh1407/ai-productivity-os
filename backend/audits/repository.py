@@ -4,6 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from fastapi import HTTPException, status
 from models.audit import Audit, AuditVersion, AuditStatus
+from models.ai_system import AISystem
+from models.system_finding import SystemFinding
 
 async def create_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Optional[Dict[str, Any]] = None, industry_type: Optional[str] = None) -> Audit:
     db_audit = Audit(
@@ -82,3 +84,30 @@ async def get_all_completed_audits(db: AsyncSession) -> List[Audit]:
     stmt = select(Audit).where(Audit.status == AuditStatus.complete)
     result = await db.execute(stmt)
     return list(result.scalars().all())
+
+async def get_ai_systems_by_org(db: AsyncSession, org_id: uuid.UUID) -> List[AISystem]:
+    stmt = select(AISystem).where(AISystem.organization_id == org_id)
+    result = await db.execute(stmt)
+    return list(result.scalars().all())
+
+async def create_system_finding(
+    db: AsyncSession,
+    audit_id: uuid.UUID,
+    ai_system_id: uuid.UUID,
+    findings: List[Dict[str, Any]],
+    recommendations: List[Dict[str, Any]],
+    executive_summary: Optional[str],
+    dimension_scores: Dict[str, Any]
+) -> SystemFinding:
+    db_system_finding = SystemFinding(
+        audit_id=audit_id,
+        ai_system_id=ai_system_id,
+        findings=findings,
+        recommendations=recommendations,
+        executive_summary=executive_summary,
+        dimension_scores=dimension_scores
+    )
+    db.add(db_system_finding)
+    await db.commit()
+    await db.refresh(db_system_finding)
+    return db_system_finding

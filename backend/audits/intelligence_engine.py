@@ -20,7 +20,7 @@ from audits.coi_engine import generate_cost_of_inaction
 from failure_intelligence import detect_failure_patterns
 from .industry_intelligence_engine import adapt_findings, adapt_recommendations, adapt_executive_summary, adapt_risk_projection
 
-def generate_findings(scores: Dict[str, Any]) -> List[Dict[str, Any]]:
+def generate_findings(scores: Dict[str, Any], system_context: Dict[str, Any] | None = None) -> List[Dict[str, Any]]:
     """
     Generates structured findings based on assessment scores.
     """
@@ -89,7 +89,54 @@ def generate_findings(scores: Dict[str, Any]) -> List[Dict[str, Any]]:
             "rationale": rationale
         })
 
+    if system_context is not None:
+        _apply_system_context_weighting(findings, system_context)
+
     return findings
+
+def _apply_system_context_weighting(findings: List[Dict[str, Any]], system_context: Dict[str, Any]):
+    """
+    Applies severity bumps to existing findings based on AI system context.
+    Severity scale: Advisory -> Moderate -> Major -> Critical.
+    Bumps only apply once per finding per call to avoid inflation.
+    """
+    severity_order = ["Advisory", "Moderate", "Major", "Critical"]
+    def bump_severity(current_severity: str) -> str:
+        try:
+            idx = severity_order.index(current_severity)
+            if idx < len(severity_order) - 1:
+                return severity_order[idx + 1]
+        except ValueError:
+            pass
+        return current_severity
+
+    bumped_findings = set()
+
+    criticality = (system_context.get("criticality") or "").lower()
+    if criticality in ("high", "critical"):
+        for finding in findings:
+            if finding.get("type") == "dimension" and finding.get("dimension") in ("governance", "security", "oversight"):
+                if finding["title"] not in bumped_findings:
+                    finding["severity"] = bump_severity(finding["severity"])
+                    bumped_findings.add(finding["title"])
+
+    role = (system_context.get("decision_making_role") or "").lower()
+    if role in ("automated", "autonomous"):
+        for finding in findings:
+            if finding.get("type") == "dimension" and finding.get("dimension") == "governance":
+                if finding["title"] not in bumped_findings:
+                    finding["severity"] = bump_severity(finding["severity"])
+                    bumped_findings.add(finding["title"])
+
+    data_types = system_context.get("data_types") or []
+    sensitive_types = {"personal", "sensitive", "financial", "healthcare", "phi", "pii"}
+    has_sensitive = any((dt or "").lower() in sensitive_types for dt in data_types)
+    if has_sensitive:
+        for finding in findings:
+            if finding.get("type") == "compliance":
+                if finding["title"] not in bumped_findings:
+                    finding["severity"] = bump_severity(finding["severity"])
+                    bumped_findings.add(finding["title"])
 
 def generate_recommendations(findings: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
@@ -249,13 +296,13 @@ def generate_executive_summary(scores: Dict[str, Any], recommendations: List[Dic
 
     return summary
 
-def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = None, form_response: Dict[str, Any] | None = None) -> Dict[str, Any]:
+def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = None, form_response: Dict[str, Any] | None = None, system_context: Dict[str, Any] | None = None) -> Dict[str, Any]:
     """
     Entrypoint for intelligence generation.
     Takes a raw scores dictionary and returns a structure with findings, recommendations, executive summary,
     target state, roadmap, and dashboard payload.
     """
-    findings = generate_findings(scores)
+    findings = generate_findings(scores, system_context=system_context)
     recommendations = generate_recommendations(findings)
     executive_summary = generate_executive_summary(scores, recommendations)
 
