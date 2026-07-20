@@ -132,11 +132,18 @@ def _apply_system_context_weighting(findings: List[Dict[str, Any]], system_conte
     sensitive_types = {"personal", "sensitive", "financial", "healthcare", "phi", "pii"}
     has_sensitive = any((dt or "").lower() in sensitive_types for dt in data_types)
     if has_sensitive:
+        compliance_found = False
         for finding in findings:
             if finding.get("type") == "compliance":
+                compliance_found = True
                 if finding["title"] not in bumped_findings:
                     finding["severity"] = bump_severity(finding["severity"])
                     bumped_findings.add(finding["title"])
+        if not compliance_found:
+            # No compliance-related finding found for sensitive data_types — per ticket 3.2b,
+            # do not fabricate a new finding type here. This is a known gap; a dedicated
+            # data-handling finding type is a separate design decision, not in scope for this ticket.
+            pass
 
 def generate_recommendations(findings: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """

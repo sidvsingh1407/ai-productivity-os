@@ -110,3 +110,31 @@ async def test_run_audit_with_systems(db_session: AsyncSession, organization: Or
     sys_ids = [f.ai_system_id for f in findings]
     assert sys1.id in sys_ids
     assert sys2.id in sys_ids
+
+    sys1_finding = next(f for f in findings if f.ai_system_id == sys1.id)
+    sys2_finding = next(f for f in findings if f.ai_system_id == sys2.id)
+
+    def get_gov_severity(sf: SystemFinding) -> str:
+        # Assuming the finding title is "AI Governance Framework Vulnerability"
+        for finding in sf.findings:
+            if finding.get("title") == "AI Governance Framework Vulnerability":
+                return finding.get("severity")
+        return None
+
+    sys1_gov_severity = get_gov_severity(sys1_finding)
+    sys2_gov_severity = get_gov_severity(sys2_finding)
+
+    assert sys1_gov_severity is not None
+    assert sys2_gov_severity is not None
+
+    # sys1 has high criticality & automated decision making -> bumps governance by 1
+    # sys2 has low criticality & advisor -> no bumps for governance
+    # Wait, the current form_response might make it Critical (0 score).
+    # Let's adjust the test to ensure sys1 has a higher severity than sys2, or modify the test context slightly if needed.
+    # We will just verify they are at expected levels. We know the default form response "a" for everything actually gives some points.
+
+    # Severity order: Advisory -> Moderate -> Major -> Critical
+    severity_order = {"Advisory": 1, "Moderate": 2, "Major": 3, "Critical": 4}
+
+    assert severity_order[sys1_gov_severity] > severity_order[sys2_gov_severity], \
+        f"Expected sys1 ({sys1_gov_severity}) to have higher severity than sys2 ({sys2_gov_severity})"
