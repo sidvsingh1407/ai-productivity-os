@@ -2,6 +2,7 @@ import uuid
 from typing import List, Optional, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
 from fastapi import HTTPException, status
 from models.audit import Audit, AuditVersion, AuditStatus
 from models.ai_system import AISystem
@@ -111,3 +112,8 @@ async def create_system_finding(
     await db.commit()
     await db.refresh(db_system_finding)
     return db_system_finding
+
+async def get_system_findings_by_audit(db: AsyncSession, audit_id: uuid.UUID) -> List[SystemFinding]:
+    stmt = select(SystemFinding).where(SystemFinding.audit_id == audit_id).options(joinedload(SystemFinding.ai_system))
+    result = await db.execute(stmt)
+    return list(result.scalars().all())

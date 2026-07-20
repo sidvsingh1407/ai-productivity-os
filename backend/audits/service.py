@@ -106,6 +106,20 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
                     dimension_scores=scores_dict.get('dimensions', {})
                 )
 
+        # Fetch per-system findings
+        db_system_findings = await repository.get_system_findings_by_audit(db, audit.id)
+        system_findings_responses = [
+            {
+                "ai_system_id": sf.ai_system_id,
+                "ai_system_name": sf.ai_system.name,
+                "findings": sf.findings,
+                "recommendations": sf.recommendations,
+                "executive_summary": sf.executive_summary,
+                "dimension_scores": sf.dimension_scores
+            }
+            for sf in db_system_findings
+        ]
+
         # 5. return AuditResponse
         return AuditResponse(
             id=audit.id,
@@ -124,6 +138,7 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
             missing_data_flags=scores_dict.get('missing_data_flags', []),
             intelligence=intelligence,
             narrative_source=narrative_source,
+            system_findings=system_findings_responses,
             status=audit.status,
             industry_type=audit.industry_type,
             created_at=audit.created_at

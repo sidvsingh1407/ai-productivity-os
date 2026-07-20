@@ -138,3 +138,84 @@ async def test_run_audit_with_systems(db_session: AsyncSession, organization: Or
 
     assert severity_order[sys1_gov_severity] > severity_order[sys2_gov_severity], \
         f"Expected sys1 ({sys1_gov_severity}) to have higher severity than sys2 ({sys2_gov_severity})"
+
+from auth.jwt_utils import create_access_token
+
+@pytest_asyncio.fixture
+async def auth_client(user: User):
+    token = create_access_token(data={"sub": str(user.id)})
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+        ac.headers.update({"Authorization": f"Bearer {token}"})
+        yield ac
+
+@pytest.mark.asyncio
+async def test_api_audit_with_system_findings(auth_client: AsyncClient, db_session: AsyncSession, organization: Organization, user: User):
+    # 1. Create an AI system
+    sys1 = AISystem(
+        organization_id=organization.id,
+        name="Test System Endpoint",
+        data_types=["personal"],
+        decision_making_role="automated",
+        status="active",
+        criticality="high"
+    )
+    db_session.add(sys1)
+    await db_session.commit()
+
+    form_response = {
+        "q2_1": "a", "q2_2": "a", "q2_3": "a",
+        "q3_1": "a", "q3_2": "a", "q3_3": "a",
+        "q4_1": "a", "q4_2": "a", "q4_3": "a",
+        "q5_1": "a", "q5_2": "a", "q5_3": "a"
+    }
+
+    # 2. POST /api/v1/audits/
+    post_resp = await auth_client.post("/audits/", json={"form_response": form_response})
+    assert post_resp.status_code == 200
+    post_data = post_resp.json()
+
+    assert "system_findings" in post_data
+    assert isinstance(post_data["system_findings"], list)
+    assert len(post_data["system_findings"]) == 1
+    assert post_data["system_findings"][0]["ai_system_name"] == "Test System Endpoint"
+
+    audit_id = post_data["id"]
+
+    # 3. GET /api/v1/audits/{id}
+    get_resp = await auth_client.get(f"/audits/{audit_id}")
+    assert get_resp.status_code == 200
+    get_data = get_resp.json()
+
+    assert "system_findings" in get_data
+    assert isinstance(get_data["system_findings"], list)
+    assert len(get_data["system_findings"]) == 1
+    assert get_data["system_findings"][0]["ai_system_name"] == "Test System Endpoint"
+
+@pytest.mark.asyncio
+async def test_api_audit_no_system_findings(auth_client: AsyncClient, db_session: AsyncSession, organization: Organization, user: User):
+    form_response = {
+        "q2_1": "a", "q2_2": "a", "q2_3": "a",
+        "q3_1": "a", "q3_2": "a", "q3_3": "a",
+        "q4_1": "a", "q4_2": "a", "q4_3": "a",
+        "q5_1": "a", "q5_2": "a", "q5_3": "a"
+    }
+
+    # POST /api/v1/audits/
+    post_resp = await auth_client.post("/audits/", json={"form_response": form_response})
+    assert post_resp.status_code == 200
+    post_data = post_resp.json()
+
+    assert "system_findings" in post_data
+    assert isinstance(post_data["system_findings"], list)
+    assert len(post_data["system_findings"]) == 0  # Should be empty list
+
+    audit_id = post_data["id"]
+
+    # GET /api/v1/audits/{id}
+    get_resp = await auth_client.get(f"/audits/{audit_id}")
+    assert get_resp.status_code == 200
+    get_data = get_resp.json()
+
+    assert "system_findings" in get_data
+    assert isinstance(get_data["system_findings"], list)
+    assert len(get_data["system_findings"]) == 0
