@@ -53,7 +53,7 @@ class GeminiClientManager:
                 response = await asyncio.to_thread(
                     model.generate_content,
                     prompt,
-                    generation_config={"temperature": 0.4, "max_output_tokens": 2048}
+                    generation_config={"temperature": 0, "max_output_tokens": 2048}
                 )
                 return response.text
             except Exception as e:
