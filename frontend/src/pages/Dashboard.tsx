@@ -2,13 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import apiClient from '@/api/client';
 import { useNavigate } from 'react-router-dom';
 import { BenchmarkIntelligenceCards } from '@/components/dashboard/BenchmarkIntelligenceCards';
+import { AuditResponse } from '@/api/audits';
 
 export function Dashboard() {
   const navigate = useNavigate();
 
   const { data: latestAudits, isLoading } = useQuery({
     queryKey: ['latestAudits'],
-    queryFn: async () => {
+    queryFn: async (): Promise<AuditResponse[]> => {
       const response = await apiClient.get('/audits/?limit=1');
       return response.data?.items || [];
     },
@@ -215,6 +216,12 @@ export function Dashboard() {
                   {lastAudit.total_score !== null && lastAudit.total_score !== undefined && (
                      <span className="font-mono text-data text-text-primary">Score: {lastAudit.total_score}/100</span>
                   )}
+                  {lastAudit.system_findings && lastAudit.system_findings.length > 0 && (
+                    <span className="text-body font-medium text-accent-blue px-3 py-1 bg-accent-blue/10 border border-accent-blue/20 rounded-full">
+                      {lastAudit.system_findings.length} AI {lastAudit.system_findings.length === 1 ? 'system' : 'systems'} assessed
+                    </span>
+                  )}
+
                 </div>
 
                 <p className="text-body text-text-secondary max-w-3xl">
