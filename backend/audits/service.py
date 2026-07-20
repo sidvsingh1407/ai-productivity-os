@@ -75,6 +75,37 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
             if "recommendations" in narrative:
                 intelligence["recommendations"] = narrative["recommendations"]
 
+        # 4.8 Generate and save per-system intelligence
+        ai_systems = await repository.get_ai_systems_by_org(db, org_id)
+        if ai_systems:
+            # We must not modify the original scores_dict since it's already used
+            for sys in ai_systems:
+                system_context = {
+                    "criticality": sys.criticality,
+                    "ai_type": sys.ai_type,
+                    "decision_making_role": sys.decision_making_role,
+                    "data_types": sys.data_types,
+                }
+
+                # generate per-system intelligence
+                sys_intel = generate_intelligence(
+                    scores_dict,
+                    industry_type_str,
+                    form_response,
+                    system_context=system_context
+                )
+
+                # save to database
+                await repository.create_system_finding(
+                    db=db,
+                    audit_id=audit.id,
+                    ai_system_id=sys.id,
+                    findings=sys_intel.get("findings", []),
+                    recommendations=sys_intel.get("recommendations", []),
+                    executive_summary=sys_intel.get("executive_summary", {}).get("overall_assessment"),
+                    dimension_scores=scores_dict.get('dimensions', {})
+                )
+
         # 5. return AuditResponse
         return AuditResponse(
             id=audit.id,
