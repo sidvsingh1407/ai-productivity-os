@@ -121,6 +121,15 @@ class BenchmarkPayload(BaseModel):
     dimension_comparisons: Optional[Dict[str, BenchmarkDimension]] = None
     insights: Optional[List[str]] = None
 
+
+class SystemFindingResponse(BaseModel):
+    ai_system_id: uuid.UUID
+    ai_system_name: str
+    findings: List[Dict[str, Any]]
+    recommendations: List[Dict[str, Any]]
+    executive_summary: Optional[str] = None
+    dimension_scores: Dict[str, Any]
+
 class AuditIntelligenceResponse(BaseModel):
     operational_health: Optional[OperationalHealth] = None
     executive_summary: ExecutiveSummary
@@ -155,6 +164,7 @@ class AuditResponse(BaseModel):
     # Consolidated Intelligence Payload
     intelligence: Optional[AuditIntelligenceResponse] = None
     narrative_source: Optional[str] = None
+    system_findings: List[SystemFindingResponse] = []
 
     status: AuditStatus
     industry_type: Optional[IndustryType] = None

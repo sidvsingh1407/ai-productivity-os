@@ -120,6 +120,21 @@ async def get_single_audit(
 
     audit_dict["intelligence"] = intelligence
 
+    # Fetch per-system findings
+    db_system_findings = await repository.get_system_findings_by_audit(db, id)
+    system_findings_responses = [
+        {
+            "ai_system_id": sf.ai_system_id,
+            "ai_system_name": sf.ai_system.name,
+            "findings": sf.findings,
+            "recommendations": sf.recommendations,
+            "executive_summary": sf.executive_summary,
+            "dimension_scores": sf.dimension_scores
+        }
+        for sf in db_system_findings
+    ]
+    audit_dict["system_findings"] = system_findings_responses
+
     return schemas.AuditResponse(**audit_dict)
 
 @router.get("/{id}/versions", response_model=List[schemas.AuditVersionResponse], dependencies=[Depends(require_role("viewer"))])
