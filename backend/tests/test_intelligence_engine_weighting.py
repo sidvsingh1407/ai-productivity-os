@@ -91,6 +91,27 @@ def test_generate_intelligence_with_data_types_bump():
     comp_finding = next(f for f in findings if f["title"] == "Regulatory & Compliance Exposure")
     assert comp_finding["severity"] == "Critical"
 
+def test_generate_intelligence_critical_stays_critical():
+    scores = {
+        "dimensions": {
+            "governance": 5, # 5*5 = 25 -> Critical
+        }
+    }
+
+    system_context = {
+        "criticality": "high", # Triggers bump on governance
+        "decision_making_role": "automated", # Triggers bump on governance
+        "data_types": []
+    }
+
+    result = generate_intelligence(scores, system_context=system_context)
+    findings = result["findings"]
+
+    gov_finding = next(f for f in findings if f["title"] == "AI Governance Framework Vulnerability")
+
+    # Critical is the ceiling, shouldn't error or exceed Critical
+    assert gov_finding["severity"] == "Critical"
+
 def test_generate_intelligence_no_multiple_bumps():
     scores = {
         "dimensions": {
