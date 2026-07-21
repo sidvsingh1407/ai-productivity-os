@@ -5,7 +5,7 @@ from fastapi import HTTPException, status
 from audits import repository
 from audits.scoring_engine import score_response
 from audits.schemas import AuditResponse
-from audits.intelligence_engine import generate_intelligence
+from audits.intelligence_engine import generate_intelligence, aggregate_top_findings_and_recommendations
 from audits.roadmap_engine import generate_system_driven_roadmap
 from benchmarking.adapter import get_api_benchmark_payload
 from services.narrative_service import generate_audit_narrative
@@ -119,6 +119,7 @@ async def run_audit(
                     industry_type_str,
                     form_response,
                     system_context=system_context,
+                    retain_linked_finding=True,
                 )
 
                 # save to database
@@ -136,6 +137,21 @@ async def run_audit(
 
         # Fetch per-system findings
         db_system_findings = await repository.get_system_findings_by_audit(db, audit.id)
+
+        # We need raw dictionaries for aggregation so `linked_finding` is preserved
+        raw_system_findings = [
+            {
+                "findings": sf.findings,
+                "recommendations": sf.recommendations,
+            }
+            for sf in db_system_findings
+        ]
+
+        if raw_system_findings:
+            aggregated_data = aggregate_top_findings_and_recommendations(raw_system_findings)
+            intelligence["findings"] = aggregated_data["findings"]
+            intelligence["recommendations"] = aggregated_data["recommendations"]
+
         system_findings_responses = [
             {
                 "ai_system_id": sf.ai_system_id,
@@ -147,6 +163,12 @@ async def run_audit(
             }
             for sf in db_system_findings
         ]
+
+        # Ensure linked_finding does not leak to the frontend in system_findings_responses
+        for sf_resp in system_findings_responses:
+            for rec in sf_resp.get("recommendations", []):
+                if "linked_finding" in rec:
+                    rec.pop("linked_finding", None)
 
         # Overwrite roadmap with per-system synthesized roadmap
         ai_system_ids = [sf.ai_system_id for sf in db_system_findings]

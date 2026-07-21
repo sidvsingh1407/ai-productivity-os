@@ -179,6 +179,11 @@ async def test_api_audit_with_system_findings(auth_client: AsyncClient, db_sessi
     assert len(post_data["system_findings"]) == 1
     assert post_data["system_findings"][0]["ai_system_name"] == "Test System Endpoint"
 
+    # Ensure linked_finding is stripped
+    for sf in post_data["system_findings"]:
+        for rec in sf.get("recommendations", []):
+            assert "linked_finding" not in rec
+
     audit_id = post_data["id"]
 
     # 3. GET /api/v1/audits/{id}
@@ -190,6 +195,70 @@ async def test_api_audit_with_system_findings(auth_client: AsyncClient, db_sessi
     assert isinstance(get_data["system_findings"], list)
     assert len(get_data["system_findings"]) == 1
     assert get_data["system_findings"][0]["ai_system_name"] == "Test System Endpoint"
+
+    # Ensure intelligence.findings is properly aggregated and there's findings
+    assert "intelligence" in get_data
+    assert "findings" in get_data["intelligence"]
+    assert len(get_data["intelligence"]["findings"]) > 0
+
+    # Ensure linked_finding is stripped from top-level intelligence recommendations
+    for rec in get_data["intelligence"]["recommendations"]:
+        assert "linked_finding" not in rec
+
+
+@pytest.mark.asyncio
+async def test_aggregate_top_findings_behavior(auth_client: AsyncClient, db_session: AsyncSession, organization: Organization, user: User):
+    # Create multiple AI systems to test deduplication and system counting
+    sys1 = AISystem(
+        organization_id=organization.id,
+        name="Sys 1 (Critical)",
+        data_types=["personal"],
+        decision_making_role="automated",
+        status="active",
+        criticality="high"
+    )
+    sys2 = AISystem(
+        organization_id=organization.id,
+        name="Sys 2 (Advisory)",
+        data_types=["public"],
+        decision_making_role="advisor",
+        status="active",
+        criticality="low"
+    )
+    db_session.add(sys1)
+    db_session.add(sys2)
+    await db_session.commit()
+
+    form_response = {
+        "q2_1": "a", "q2_2": "a", "q2_3": "a",
+        "q3_1": "a", "q3_2": "a", "q3_3": "a",
+        "q4_1": "a", "q4_2": "a", "q4_3": "a",
+        "q5_1": "a", "q5_2": "a", "q5_3": "a"
+    }
+
+    # POST /api/v1/audits/
+    post_resp = await auth_client.post("/audits/", json={"form_response": form_response})
+    assert post_resp.status_code == 200
+    data = post_resp.json()
+
+    # Get aggregated intelligence findings
+    agg_findings = data["intelligence"]["findings"]
+    agg_recs = data["intelligence"]["recommendations"]
+
+    assert len(agg_findings) > 0
+    assert len(agg_findings) <= 5  # TOP_FINDINGS_COUNT
+
+    # Re-verify that recommendations were actually populated correctly
+    assert len(agg_recs) > 0
+
+    # Ensure system_count is stripped from output schema
+    for f in agg_findings:
+        assert "system_count" not in f
+
+    # Linked findings should be stripped
+    for rec in agg_recs:
+        assert "linked_finding" not in rec
+
 
 @pytest.mark.asyncio
 async def test_api_audit_no_system_findings(auth_client: AsyncClient, db_session: AsyncSession, organization: Organization, user: User):

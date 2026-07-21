@@ -20,6 +20,8 @@ from audits.coi_engine import generate_cost_of_inaction
 from failure_intelligence import detect_failure_patterns
 from .industry_intelligence_engine import adapt_findings, adapt_recommendations, adapt_executive_summary, adapt_risk_projection
 
+TOP_FINDINGS_COUNT = 5
+
 def generate_findings(scores: Dict[str, Any], system_context: Dict[str, Any] | None = None) -> List[Dict[str, Any]]:
     """
     Generates structured findings based on assessment scores.
@@ -303,7 +305,92 @@ def generate_executive_summary(scores: Dict[str, Any], recommendations: List[Dic
 
     return summary
 
-def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = None, form_response: Dict[str, Any] | None = None, system_context: Dict[str, Any] | None = None) -> Dict[str, Any]:
+def aggregate_top_findings_and_recommendations(system_findings_list: List[Dict[str, Any]], n: int = TOP_FINDINGS_COUNT) -> Dict[str, List[Dict[str, Any]]]:
+    """
+    Aggregates per-system findings and recommendations into top N deduped lists.
+    Sorts by: 1. Severity, 2. System Count, 3. Alphabetical Title.
+    """
+    severity_order = {"Critical": 4, "Major": 3, "Moderate": 2, "Advisory": 1}
+
+    # Track findings by title
+    findings_by_title = {}
+    recommendations_by_finding_title = {}
+
+    for sys_data in system_findings_list:
+        sys_findings = sys_data.get("findings", [])
+        sys_recs = sys_data.get("recommendations", [])
+
+        # Process Findings
+        for finding in sys_findings:
+            title = finding.get("title")
+            if not title:
+                continue
+
+            if title not in findings_by_title:
+                # Store a copy to mutate
+                findings_by_title[title] = dict(finding)
+                findings_by_title[title]["system_count"] = 1
+            else:
+                findings_by_title[title]["system_count"] += 1
+                # If severity is somehow different (due to different system contexts),
+                # keep the highest severity seen for this finding type.
+                current_sev = findings_by_title[title].get("severity")
+                new_sev = finding.get("severity")
+                if severity_order.get(new_sev, 0) > severity_order.get(current_sev, 0):
+                    findings_by_title[title]["severity"] = new_sev
+                    findings_by_title[title]["impact"] = finding.get("impact")
+                    findings_by_title[title]["rationale"] = finding.get("rationale")
+
+        # Process Recommendations (pairing)
+        for rec in sys_recs:
+            linked_title = rec.get("linked_finding")
+            if not linked_title:
+                continue
+            if linked_title not in recommendations_by_finding_title:
+                recommendations_by_finding_title[linked_title] = dict(rec)
+
+    # Sort Findings
+    sorted_findings = sorted(
+        findings_by_title.values(),
+        key=lambda f: (
+            severity_order.get(f.get("severity"), 0),
+            f.get("system_count", 0)
+        ),
+        reverse=True
+    )
+
+    # Secondary sort: Title ascending (needs to be done separately or by negating numeric keys)
+    # Re-sort with title correctly
+    sorted_findings = sorted(
+        findings_by_title.values(),
+        key=lambda f: (
+            -severity_order.get(f.get("severity"), 0),
+            -f.get("system_count", 0),
+            f.get("title", "")
+        )
+    )
+
+    top_findings = sorted_findings[:n]
+
+    # Clean up system_count from findings so schema remains identical
+    for f in top_findings:
+        f.pop("system_count", None)
+
+    # Gather paired recommendations
+    top_recommendations = []
+    for f in top_findings:
+        title = f.get("title")
+        if title in recommendations_by_finding_title:
+            rec = dict(recommendations_by_finding_title[title])
+            rec.pop("linked_finding", None)
+            top_recommendations.append(rec)
+
+    return {
+        "findings": top_findings,
+        "recommendations": top_recommendations
+    }
+
+def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = None, form_response: Dict[str, Any] | None = None, system_context: Dict[str, Any] | None = None, retain_linked_finding: bool = False) -> Dict[str, Any]:
     """
     Entrypoint for intelligence generation.
     Takes a raw scores dictionary and returns a structure with findings, recommendations, executive summary,
@@ -431,8 +518,9 @@ def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = No
     )
 
     # Remove 'linked_finding' from recommendations before final output
-    for r in clean_recommendations:
-        r.pop("linked_finding", None)
+    if not retain_linked_finding:
+        for r in clean_recommendations:
+            r.pop("linked_finding", None)
 
     return {
         "operational_health": operational_health,
