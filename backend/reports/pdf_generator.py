@@ -228,6 +228,21 @@ def create_compliance_alert(compliance_flag, compliance_reasons):
     return alert_para
 
 
+def _render_findings_list(story, findings, styles):
+    """Helper to render a list of findings with consistent formatting."""
+    for finding in findings:
+        story.append(Paragraph(f"<b>{finding.get('severity', '')}</b>", styles['BodyText']))
+        story.append(Paragraph(f"{finding.get('title', '')}", styles['BodyText']))
+        story.append(Spacer(1, 5))
+
+        story.append(Paragraph("<b>Impact:</b>", styles['BodyText']))
+        story.append(Paragraph(finding.get('impact', ''), styles['BodyText']))
+        story.append(Spacer(1, 5))
+
+        story.append(Paragraph("<b>Rationale:</b>", styles['BodyText']))
+        story.append(Paragraph(finding.get('rationale', ''), styles['BodyText']))
+        story.append(Spacer(1, 15))
+
 def create_recommendations_table(recommendations):
     """Create prioritized recommendations table."""
     data = [
@@ -550,19 +565,7 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
     findings = intelligence.get('findings', [])
     if findings:
         story.append(Paragraph("Findings", styles['SectionHeading']))
-
-        for finding in findings:
-            story.append(Paragraph(f"<b>{finding.get('severity', '')}</b>", styles['BodyText']))
-            story.append(Paragraph(f"{finding.get('title', '')}", styles['BodyText']))
-            story.append(Spacer(1, 5))
-
-            story.append(Paragraph("<b>Impact:</b>", styles['BodyText']))
-            story.append(Paragraph(finding.get('impact', ''), styles['BodyText']))
-            story.append(Spacer(1, 5))
-
-            story.append(Paragraph("<b>Rationale:</b>", styles['BodyText']))
-            story.append(Paragraph(finding.get('rationale', ''), styles['BodyText']))
-            story.append(Spacer(1, 15))
+        _render_findings_list(story, findings, styles)
 
     story.append(PageBreak())
 
@@ -588,6 +591,33 @@ def generate_audit_pdf(audit_data: dict, output_path: str) -> str:
                 for action in actions:
                     story.append(Paragraph(f"• {action.get('action', '')}", styles['BodyText']))
                 story.append(Spacer(1, 10))
+
+    # Per-System Findings
+    system_findings = audit_data.get('system_findings', [])
+    if system_findings:
+        story.append(Spacer(1, 20))
+        story.append(Paragraph("Per-System Findings", styles['SectionHeading']))
+        for sys_finding in system_findings:
+            ai_system_name = sys_finding.get('ai_system_name', 'Unknown System')
+            story.append(Paragraph(ai_system_name, styles['Heading2']))
+
+            # Findings
+            s_findings = sys_finding.get('findings', [])
+            if s_findings:
+                _render_findings_list(story, s_findings, styles)
+            else:
+                story.append(Paragraph("No findings.", styles['BodyText']))
+                story.append(Spacer(1, 15))
+
+            # Recommendations
+            s_recs = sys_finding.get('recommendations', [])
+            if s_recs:
+                story.append(Paragraph("<b>Recommendations</b>", styles['SubHeading']))
+                story.append(create_recommendations_table(s_recs))
+                story.append(Spacer(1, 20))
+            else:
+                story.append(Paragraph("No specific recommendations provided.", styles['BodyText']))
+                story.append(Spacer(1, 20))
 
     # Footer
     story.append(Spacer(1, 50))
