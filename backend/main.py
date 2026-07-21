@@ -53,6 +53,7 @@ from prompt_engineer_subscriptions.router import router as prompt_engineer_subsc
 from api_platform.router import router as api_platform_router
 from regulation.router import router as regulation_router
 from api_platform.management_router import router as api_platform_management_router  # noqa: E402
+from monitoring.router import router as monitoring_router  # noqa: E402
 from config import settings  # noqa: E402
 import re  # noqa: E402
 
@@ -191,6 +192,7 @@ app.include_router(prompt_engineer_subscriptions_router, prefix="/api")
 app.include_router(api_platform_router, prefix="/api/v1")
 app.include_router(regulation_router, prefix="/regulation")
 app.include_router(api_platform_management_router, prefix="/api/platform")
+app.include_router(monitoring_router, prefix="/api/monitoring")
 
 
 @app.get("/")
