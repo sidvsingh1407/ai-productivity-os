@@ -49,6 +49,7 @@ from sample.router import router as sample_router  # noqa: E402
 from prompt_intelligence.router import router as prompt_intelligence_router # noqa: E402
 from projects.router import router as projects_router # noqa: E402
 from ai_systems.router import router as ai_systems_router # noqa: E402
+from adoption.router import router as adoption_router # noqa: E402
 from prompt_engineer_subscriptions.router import router as prompt_engineer_subscriptions_router # noqa: E402
 from api_platform.router import router as api_platform_router
 from regulation.router import router as regulation_router
@@ -188,6 +189,7 @@ app.include_router(sample_router)
 app.include_router(prompt_intelligence_router, prefix="/api")
 app.include_router(projects_router, prefix="/api")
 app.include_router(ai_systems_router, prefix="/api")
+app.include_router(adoption_router, prefix="/api")
 app.include_router(prompt_engineer_subscriptions_router, prefix="/api")
 app.include_router(api_platform_router, prefix="/api/v1")
 app.include_router(regulation_router, prefix="/regulation")

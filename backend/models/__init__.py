@@ -12,5 +12,6 @@ from models.system_finding import SystemFinding
 from models.risk_classification import RiskClassification
 from models.monitoring_plan import MonitoringPlan
 from models.monitoring_check_result import MonitoringCheckResult
+from models.adoption_record import AdoptionRecord
 
-__all__ = ["AISystem", "Base", "User", "UserToken", "Organization", "OrgMember", "Invitation", "Project", "SavedPrompt", "PromptHistory", "PromptEngineerSubscription", "PromptEngineerUsage", "RegulationChunk", "SystemFinding", "RiskClassification", "MonitoringPlan", "MonitoringCheckResult"]
+__all__ = ["AISystem", "Base", "User", "UserToken", "Organization", "OrgMember", "Invitation", "Project", "SavedPrompt", "PromptHistory", "PromptEngineerSubscription", "PromptEngineerUsage", "RegulationChunk", "SystemFinding", "RiskClassification", "MonitoringPlan", "MonitoringCheckResult", "AdoptionRecord"]
