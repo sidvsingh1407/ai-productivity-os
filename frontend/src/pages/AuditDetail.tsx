@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import apiClient from '@/api/client';
+import { AuditResponse } from '@/api/audits';
 import { ShieldAlert } from 'lucide-react';
 
 import {
@@ -24,7 +25,7 @@ export default function AuditDetail() {
   const navigate = useNavigate();
   const [downloadJobId, setDownloadJobId] = useState<string | null>(null);
 
-  const { data: audit, isLoading, isError } = useQuery({
+  const { data: audit, isLoading, isError } = useQuery<AuditResponse>({
     queryKey: ['audit', id],
     queryFn: async () => {
       const response = await apiClient.get(`/audits/${id}`);
@@ -67,7 +68,8 @@ export default function AuditDetail() {
     compliance_risk_flag,
     compliance_risk_reasons,
     intelligence,
-    created_at
+    created_at,
+    system_findings
   } = audit;
 
   const date = created_at ? new Date(created_at).toLocaleDateString('en-US', {
@@ -318,6 +320,56 @@ export default function AuditDetail() {
                 expectedImpact={rec.expected_impact}
                 implementationEffort={rec.implementation_effort}
               />
+            ))}
+          </div>
+        </div>
+      )}
+
+
+      {system_findings && system_findings.length > 0 && (
+        <div className="mb-12">
+          <h2 className="text-h2 font-semibold text-text-primary mb-6 border-b border-border-light pb-4">Per-System Findings</h2>
+          <div className="flex flex-col gap-12">
+            {system_findings.map((system) => (
+              <div key={system.ai_system_id}>
+                <h3 className="text-h3 font-medium text-text-primary mb-4">{system.ai_system_name}</h3>
+
+                {system.findings && system.findings.length > 0 && (
+                  <div className="mb-6">
+                    <h4 className="text-label text-text-secondary uppercase tracking-wider mb-4">Findings</h4>
+                    <div>
+                      {system.findings.map((finding: any, idx: number) => (
+                        <FindingCard
+                          key={idx}
+                          number={idx + 1}
+                          title={finding.title}
+                          severity={finding.severity}
+                          impact={finding.impact}
+                          rationale={finding.rationale}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {system.recommendations && system.recommendations.length > 0 && (
+                  <div>
+                    <h4 className="text-label text-text-secondary uppercase tracking-wider mb-4">Recommendations</h4>
+                    <div>
+                      {system.recommendations.map((rec: any, idx: number) => (
+                        <RecommendationCard
+                          key={idx}
+                          number={idx + 1}
+                          recommendation={rec.recommendation}
+                          priority={rec.priority}
+                          expectedImpact={rec.expected_impact}
+                          implementationEffort={rec.implementation_effort}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
