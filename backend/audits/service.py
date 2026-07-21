@@ -6,12 +6,23 @@ from audits import repository
 from audits.scoring_engine import score_response
 from audits.schemas import AuditResponse
 from audits.intelligence_engine import generate_intelligence
+from audits.roadmap_engine import generate_system_driven_roadmap
 from benchmarking.adapter import get_api_benchmark_payload
 from services.narrative_service import generate_audit_narrative
 
-async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, form_response: Dict[str, Any], evidence_response: Dict[str, Any] = None, industry_type: str = None) -> AuditResponse:
+
+async def run_audit(
+    db: AsyncSession,
+    org_id: uuid.UUID,
+    user_id: uuid.UUID,
+    form_response: Dict[str, Any],
+    evidence_response: Dict[str, Any] = None,
+    industry_type: str = None,
+) -> AuditResponse:
     # 1. create audit record (status: running)
-    audit = await repository.create_audit(db, org_id, user_id, form_response, evidence_response, industry_type)
+    audit = await repository.create_audit(
+        db, org_id, user_id, form_response, evidence_response, industry_type
+    )
 
     try:
         # 2. call scoring_engine.score_response(form_response)
@@ -24,8 +35,14 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
         await repository.create_audit_version(db, audit.id, 1, scores_dict)
 
         # 4.5 generate intelligence dynamically
-        industry_type_str = audit.industry_type.value if hasattr(audit.industry_type, 'value') else audit.industry_type
-        intelligence = generate_intelligence(scores_dict, industry_type_str, form_response)
+        industry_type_str = (
+            audit.industry_type.value
+            if hasattr(audit.industry_type, "value")
+            else audit.industry_type
+        )
+        intelligence = generate_intelligence(
+            scores_dict, industry_type_str, form_response
+        )
 
         # 4.6 append benchmark intelligence
         completed_audits = await repository.get_all_completed_audits(db)
@@ -35,18 +52,20 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
             organization_total_score=org_total_score,
             organization_dimension_scores=org_dimension_scores,
             assessments=completed_audits,
-            industry_type=industry_type_str
+            industry_type=industry_type_str,
         )
         intelligence["benchmark"] = benchmark_payload
 
         # 4.7 Generate dynamic narrative
         company_context = {
             "company_name": form_response.get("companyName", "the organization"),
-            "industry": form_response.get("industry", industry_type_str or "unspecified"),
+            "industry": form_response.get(
+                "industry", industry_type_str or "unspecified"
+            ),
             "company_size": form_response.get("companySize", "unspecified"),
             "region": form_response.get("region", "unspecified"),
             "ai_usage_description": form_response.get("primaryAiUsage", "unspecified"),
-            "governance_status": form_response.get("governanceMaturity", "unspecified")
+            "governance_status": form_response.get("governanceMaturity", "unspecified"),
         }
 
         narrative_scores = {
@@ -65,9 +84,16 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
             narrative_source = "dynamic"
             if "executive_summary" in narrative:
                 # Update executive summary fields if present
-                for key in ["overall_assessment", "critical_risk", "primary_opportunity", "recommended_first_action"]:
+                for key in [
+                    "overall_assessment",
+                    "critical_risk",
+                    "primary_opportunity",
+                    "recommended_first_action",
+                ]:
                     if key in narrative["executive_summary"]:
-                        intelligence["executive_summary"][key] = narrative["executive_summary"][key]
+                        intelligence["executive_summary"][key] = narrative[
+                            "executive_summary"
+                        ][key]
 
             if "roadmap" in narrative:
                 intelligence["roadmap"] = narrative["roadmap"]
@@ -92,7 +118,7 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
                     scores_dict,
                     industry_type_str,
                     form_response,
-                    system_context=system_context
+                    system_context=system_context,
                 )
 
                 # save to database
@@ -102,8 +128,10 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
                     ai_system_id=sys.id,
                     findings=sys_intel.get("findings", []),
                     recommendations=sys_intel.get("recommendations", []),
-                    executive_summary=sys_intel.get("executive_summary", {}).get("overall_assessment"),
-                    dimension_scores=scores_dict.get('dimensions', {})
+                    executive_summary=sys_intel.get("executive_summary", {}).get(
+                        "overall_assessment"
+                    ),
+                    dimension_scores=scores_dict.get("dimensions", {}),
                 )
 
         # Fetch per-system findings
@@ -115,10 +143,31 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
                 "findings": sf.findings,
                 "recommendations": sf.recommendations,
                 "executive_summary": sf.executive_summary,
-                "dimension_scores": sf.dimension_scores
+                "dimension_scores": sf.dimension_scores,
             }
             for sf in db_system_findings
         ]
+
+        # Overwrite roadmap with per-system synthesized roadmap
+        ai_system_ids = [sf.ai_system_id for sf in db_system_findings]
+        db_risk_classifications = await repository.get_risk_classifications_by_audit(
+            db, audit.id
+        )
+        db_monitoring_plans = await repository.get_monitoring_plans_by_systems(
+            db, ai_system_ids
+        )
+
+        risk_class_map = {
+            str(rc.ai_system_id): rc.risk_level for rc in db_risk_classifications
+        }
+        monitoring_plan_map = {
+            str(mp.ai_system_id): mp.review_cadence for mp in db_monitoring_plans
+        }
+
+        new_roadmap_payload = generate_system_driven_roadmap(
+            system_findings_responses, risk_class_map, monitoring_plan_map
+        )
+        intelligence["roadmap"] = new_roadmap_payload.get("roadmap", {})
 
         # 5. return AuditResponse
         return AuditResponse(
@@ -135,13 +184,13 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
             compliance_risk_flag=audit.compliance_risk_flag,
             compliance_risk_reasons=audit.compliance_risk_reasons,
             contradictions=audit.contradictions,
-            missing_data_flags=scores_dict.get('missing_data_flags', []),
+            missing_data_flags=scores_dict.get("missing_data_flags", []),
             intelligence=intelligence,
             narrative_source=narrative_source,
             system_findings=system_findings_responses,
             status=audit.status,
             industry_type=audit.industry_type,
-            created_at=audit.created_at
+            created_at=audit.created_at,
         )
 
     except Exception as e:
@@ -150,5 +199,5 @@ async def run_audit(db: AsyncSession, org_id: uuid.UUID, user_id: uuid.UUID, for
         await db.commit()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Audit failed: {str(e)}"
+            detail=f"Audit failed: {str(e)}",
         )
