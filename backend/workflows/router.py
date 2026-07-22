@@ -24,11 +24,16 @@ async def create_and_run_workflow(
     """
     Run a diagnostic workflow pipeline.
     """
+    steps_input = None
+    if payload.steps_input is not None:
+        steps_input = [step.model_dump() for step in payload.steps_input]
+
     return await service.run_workflow(
         db=db,
         org_id=org.id,
         user_id=user.id,
-        input_config=payload.input_config
+        input_config=payload.input_config,
+        steps_input=steps_input
     )
 
 @router.get("/", response_model=List[WorkflowResponse], dependencies=[Depends(require_role("viewer"))])
