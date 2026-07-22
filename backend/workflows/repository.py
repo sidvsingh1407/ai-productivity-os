@@ -4,14 +4,22 @@ from typing import List, Dict, Any, Optional
 
 from models.workflow import Workflow, Blueprint
 
-async def create_workflow(db: AsyncSession, org_id: str, user_id: str, input_config: Dict[str, Any]) -> Workflow:
+async def create_workflow(db: AsyncSession, org_id: str, user_id: str, input_config: Dict[str, Any], steps_input: Optional[List[Dict[str, Any]]] = None) -> Workflow:
     workflow = Workflow(
         org_id=org_id,
         user_id=user_id,
         status="running",
-        input_config=input_config
+        input_config=input_config,
+        steps_input=steps_input
     )
     db.add(workflow)
+    await db.commit()
+    await db.refresh(workflow)
+    return workflow
+
+async def update_workflow_diagnostics(db: AsyncSession, workflow: Workflow, scores: Dict[str, int], findings: Dict[str, Any]) -> Workflow:
+    workflow.scores = scores
+    workflow.findings = findings
     await db.commit()
     await db.refresh(workflow)
     return workflow

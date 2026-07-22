@@ -5,6 +5,12 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import JSON
 from database import Base
 import enum
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.ext.compiler import compiles
+
+@compiles(JSONB, "sqlite")
+def compile_jsonb_sqlite(type_, compiler, **kw):
+    return "JSON"
 
 class WorkflowStatus(str, enum.Enum):
     pending = "pending"
@@ -32,6 +38,12 @@ class Workflow(Base):
     org_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("organizations.id"), nullable=False)
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
     input_config: Mapped[dict] = mapped_column(JSON, nullable=False)
+
+    # New diagnostic fields
+    steps_input: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    scores: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    findings: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+
     status: Mapped[WorkflowStatus] = mapped_column(Enum(WorkflowStatus), default=WorkflowStatus.pending, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

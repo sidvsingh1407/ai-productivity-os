@@ -2,8 +2,16 @@ from pydantic import BaseModel, ConfigDict
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 
+class DiagnosticStepInput(BaseModel):
+    step_name: str
+    owner_role: str
+    requires_approval: bool = False
+    system_tool: Optional[str] = None
+    manual_handoff: bool = False
+
 class WorkflowCreate(BaseModel):
     input_config: Dict[str, Any]
+    steps_input: Optional[List[DiagnosticStepInput]] = None
 
 from uuid import UUID
 
@@ -13,6 +21,9 @@ class WorkflowResponse(BaseModel):
     user_id: UUID
     status: str
     input_config: Dict[str, Any]
+    steps_input: Optional[List[Dict[str, Any]]] = None
+    scores: Optional[Dict[str, int]] = None
+    findings: Optional[Dict[str, List[str]]] = None
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
