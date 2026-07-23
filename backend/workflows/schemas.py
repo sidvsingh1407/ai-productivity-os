@@ -10,6 +10,7 @@ class DiagnosticStepInput(BaseModel):
     manual_handoff: bool = False
 
 class WorkflowCreate(BaseModel):
+    # DEPRECATED fields in input_config: organizationType, industry, department, workflowCategory, teamSize, currentToolsUsed, workflowDescription, currentChallenges
     input_config: Dict[str, Any]
     steps_input: Optional[List[DiagnosticStepInput]] = None
 
@@ -75,15 +76,16 @@ class ExecutiveSummary(BaseModel):
     workflow_maturity: str
 
 class WorkflowIntelligence(BaseModel):
+    # DEPRECATED: This entire schema and its usage is deprecated in favor of the new diagnostic engine (scores/findings).
     executive_summary: ExecutiveSummary
     workflow_maturity: str
     workflow_risk_level: str
     most_critical_bottleneck: str
-    primary_root_cause: str
-    highest_priority_intervention: str
+    primary_root_cause: str  # DEPRECATED field
+    highest_priority_intervention: str  # DEPRECATED field
     bottlenecks: List[Bottleneck]
-    risks: List[Risk]
-    recommendations: List[Recommendation]
+    risks: List[Risk]  # DEPRECATED field
+    recommendations: List[Recommendation]  # DEPRECATED field
 
 class WorkflowDetailResponse(WorkflowResponse):
     blueprints: List[BlueprintResponse] = []

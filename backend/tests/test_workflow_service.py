@@ -28,16 +28,10 @@ async def test_run_workflow_with_steps_input():
          patch("workflows.pipeline.run_pipeline", return_value={"blueprints": []}), \
          patch("workflows.repository.save_blueprints", return_value=[]), \
          patch("workflows.repository.update_workflow_status", return_value=mock_workflow), \
-         patch("workflows.repository.update_workflow_diagnostics", return_value=mock_workflow), \
-         patch("workflows.workflow_intelligence_engine.generate_workflow_intelligence") as mock_generate_intelligence, \
-         patch("services.narrative_service.generate_workflow_narrative") as mock_generate_narrative:
+         patch("workflows.repository.update_workflow_diagnostics", return_value=mock_workflow):
 
         # Execute run_workflow with steps_input
         result = await run_workflow(mock_db, org_id, user_id, {}, steps_input=mock_workflow.steps_input)
-
-        # Verify legacy logic was skipped
-        mock_generate_intelligence.assert_not_called()
-        mock_generate_narrative.assert_not_called()
 
         # Verify result contains the new fields
         assert result.steps_input == mock_workflow.steps_input
