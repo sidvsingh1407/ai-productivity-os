@@ -63,6 +63,11 @@ export default function AiSystemForm() {
     data_sensitivity: '',
     data_sources: '', // Comma-separated string
     data_destinations: '', // Comma-separated string
+    data_quality_notes: '',
+    data_owner: '',
+    data_freshness: '',
+    data_accessibility: '', // Comma-separated string
+    data_availability: '',
 
     // Operations
     lifecycle_status: '',
@@ -136,6 +141,11 @@ export default function AiSystemForm() {
         data_sensitivity: existingSystem.data_sensitivity || '',
         data_sources: existingSystem.data_sources ? existingSystem.data_sources.join(', ') : '',
         data_destinations: existingSystem.data_destinations ? existingSystem.data_destinations.join(', ') : '',
+        data_quality_notes: existingSystem.data_quality_notes || '',
+        data_owner: existingSystem.data_owner || '',
+        data_freshness: existingSystem.data_freshness || '',
+        data_accessibility: existingSystem.data_accessibility ? existingSystem.data_accessibility.join(', ') : '',
+        data_availability: existingSystem.data_availability || '',
 
         lifecycle_status: existingSystem.lifecycle_status || '',
         usage_frequency: existingSystem.usage_frequency || '',
@@ -243,6 +253,11 @@ export default function AiSystemForm() {
       data_sensitivity: parseString(formData.data_sensitivity),
       data_sources: parseCommaSeparated(formData.data_sources),
       data_destinations: parseCommaSeparated(formData.data_destinations),
+      data_quality_notes: parseString(formData.data_quality_notes),
+      data_owner: parseString(formData.data_owner),
+      data_freshness: parseString(formData.data_freshness),
+      data_accessibility: parseCommaSeparated(formData.data_accessibility),
+      data_availability: parseString(formData.data_availability),
 
       lifecycle_status: parseString(formData.lifecycle_status),
       usage_frequency: parseString(formData.usage_frequency),
@@ -423,6 +438,20 @@ export default function AiSystemForm() {
                   {renderInput('data_sensitivity', 'Data Sensitivity')}
                   {renderCommaSeparated('data_sources', 'Data Sources')}
                   {renderCommaSeparated('data_destinations', 'Data Destinations')}
+
+                  {renderInput('data_quality_notes', 'Data Quality Notes')}
+                  {renderInput('data_owner', 'Data Owner')}
+                  {renderSelect('data_freshness', 'Data Freshness', [
+                    { value: '', label: 'Select Freshness...' },
+                    { value: 'real_time', label: 'Real Time' },
+                    { value: 'daily', label: 'Daily' },
+                    { value: 'weekly', label: 'Weekly' },
+                    { value: 'monthly', label: 'Monthly' },
+                    { value: 'static', label: 'Static' },
+                    { value: 'unknown', label: 'Unknown' },
+                  ])}
+                  {renderCommaSeparated('data_accessibility', 'Data Accessibility')}
+                  {renderInput('data_availability', 'Data Availability')}
                 </div>
               </TabsContent>
 

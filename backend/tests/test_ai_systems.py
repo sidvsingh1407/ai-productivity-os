@@ -124,7 +124,12 @@ def system_payload():
         "roi_notes": "positive",
         "licensing_type": "commercial",
         "planned_changes": "none",
-        "roadmap_notes": "Q4 update"
+        "roadmap_notes": "Q4 update",
+        "data_quality_notes": "Good data",
+        "data_owner": "Data Team",
+        "data_freshness": "daily",
+        "data_accessibility": ["internal_system"],
+        "data_availability": "highly available"
     }
 
 @pytest.fixture
