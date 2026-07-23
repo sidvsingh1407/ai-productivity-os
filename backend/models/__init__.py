@@ -13,5 +13,6 @@ from models.risk_classification import RiskClassification
 from models.monitoring_plan import MonitoringPlan
 from models.monitoring_check_result import MonitoringCheckResult
 from models.adoption_record import AdoptionRecord
+from models.engineering_record import EngineeringRecord
 
-__all__ = ["AISystem", "Base", "User", "UserToken", "Organization", "OrgMember", "Invitation", "Project", "SavedPrompt", "PromptHistory", "PromptEngineerSubscription", "PromptEngineerUsage", "RegulationChunk", "SystemFinding", "RiskClassification", "MonitoringPlan", "MonitoringCheckResult", "AdoptionRecord"]
+__all__ = ["AISystem", "Base", "User", "UserToken", "Organization", "OrgMember", "Invitation", "Project", "SavedPrompt", "PromptHistory", "PromptEngineerSubscription", "PromptEngineerUsage", "RegulationChunk", "SystemFinding", "RiskClassification", "MonitoringPlan", "MonitoringCheckResult", "AdoptionRecord", "EngineeringRecord"]
