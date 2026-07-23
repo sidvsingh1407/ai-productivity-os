@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
-import { AlertCircle, PlaySquare } from 'lucide-react';
+import { AlertCircle, PlaySquare, CheckCircle, AlertTriangle, TrendingUp } from 'lucide-react';
 
 export default function WorkflowDetail() {
   const { id } = useParams<{ id: string }>();
@@ -39,7 +39,6 @@ export default function WorkflowDetail() {
       return response.data;
     },
     onSuccess: (data) => {
-      // Route removed from customer-facing navigation; originally went to /integrations/${data.id}
       navigate(`/app/workflows/${data.id}`);
     },
   });
@@ -60,11 +59,15 @@ export default function WorkflowDetail() {
     }
   };
 
+  const hasNewDiagnosticResults = workflow.scores && workflow.findings;
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Workflow Intelligence</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+            {workflow.input_config?.workflow_name || 'Workflow Intelligence'}
+          </h1>
           <p className="text-slate-500">ID: {id}</p>
         </div>
         <Badge variant={workflow.status === 'completed' ? 'default' : 'secondary'} className="text-sm px-3 py-1">
@@ -72,7 +75,87 @@ export default function WorkflowDetail() {
         </Badge>
       </div>
 
-      {workflow.intelligence && (
+      {hasNewDiagnosticResults && (
+        <Card className="mb-6 border-l-4 border-l-indigo-600">
+          <CardHeader>
+            <CardTitle>Diagnostic Results</CardTitle>
+            <CardDescription>Deterministic scoring and findings based on step analysis</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="p-4 bg-slate-50 rounded-lg text-center border">
+                <div className="text-sm text-slate-500 mb-1">Health</div>
+                <div className="font-semibold text-2xl text-slate-900">{workflow.scores.health}</div>
+              </div>
+              <div className="p-4 bg-slate-50 rounded-lg text-center border">
+                <div className="text-sm text-slate-500 mb-1">Bottleneck</div>
+                <div className="font-semibold text-2xl text-slate-900">{workflow.scores.bottleneck}</div>
+              </div>
+              <div className="p-4 bg-slate-50 rounded-lg text-center border">
+                <div className="text-sm text-slate-500 mb-1">Ambiguity</div>
+                <div className="font-semibold text-2xl text-slate-900">{workflow.scores.ambiguity}</div>
+              </div>
+              <div className="p-4 bg-slate-50 rounded-lg text-center border">
+                <div className="text-sm text-slate-500 mb-1">Governance</div>
+                <div className="font-semibold text-2xl text-slate-900">{workflow.scores.governance}</div>
+              </div>
+              <div className="p-4 bg-slate-50 rounded-lg text-center border">
+                <div className="text-sm text-slate-500 mb-1">Risk</div>
+                <div className="font-semibold text-2xl text-slate-900">{workflow.scores.risk}</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-3">
+                <h3 className="font-semibold flex items-center text-green-700">
+                  <CheckCircle className="w-5 h-5 mr-2" /> Strengths
+                </h3>
+                {workflow.findings.strengths && workflow.findings.strengths.length > 0 ? (
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-slate-700">
+                    {workflow.findings.strengths.map((s: string, idx: number) => (
+                      <li key={idx}>{s}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-slate-500 italic">No specific strengths identified.</p>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="font-semibold flex items-center text-amber-700">
+                  <AlertTriangle className="w-5 h-5 mr-2" /> Weaknesses
+                </h3>
+                {workflow.findings.weaknesses && workflow.findings.weaknesses.length > 0 ? (
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-slate-700">
+                    {workflow.findings.weaknesses.map((w: string, idx: number) => (
+                      <li key={idx}>{w}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-slate-500 italic">No significant weaknesses identified.</p>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="font-semibold flex items-center text-blue-700">
+                  <TrendingUp className="w-5 h-5 mr-2" /> Priority Actions
+                </h3>
+                {workflow.findings.priority_actions && workflow.findings.priority_actions.length > 0 ? (
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-slate-700">
+                    {workflow.findings.priority_actions.map((p: string, idx: number) => (
+                      <li key={idx}>{p}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-slate-500 italic">No priority actions recommended.</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {!hasNewDiagnosticResults && workflow.intelligence && (
         <Card className="mb-6 border-l-4 border-l-blue-600">
           <CardHeader>
             <CardTitle>Workflow Intelligence Summary</CardTitle>
