@@ -64,6 +64,11 @@ class AISystem(Base):
     users_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
     uptime: Mapped[float | None] = mapped_column(Float, nullable=True)
     approvals_required: Mapped[bool | None] = mapped_column(Boolean, nullable=True, default=False)
+    data_quality_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    data_owner: Mapped[str | None] = mapped_column(String, nullable=True)
+    data_freshness: Mapped[str | None] = mapped_column(String, nullable=True)
+    data_accessibility: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
+    data_availability: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     risk_classification: Mapped[str | None] = mapped_column(String, nullable=True)
     oversight_status: Mapped[str | None] = mapped_column(String, nullable=True)

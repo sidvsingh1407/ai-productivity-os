@@ -44,6 +44,11 @@ export interface AISystem {
   data_sensitivity?: string;
   data_sources?: string[];
   data_destinations?: string[];
+  data_quality_notes?: string;
+  data_owner?: string;
+  data_freshness?: string;
+  data_accessibility?: string[];
+  data_availability?: string;
   usage_frequency?: string;
   users_count?: number;
   uptime?: number;

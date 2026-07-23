@@ -52,6 +52,11 @@ class AISystemBase(BaseModel):
     users_count: Optional[int] = None
     uptime: Optional[float] = None
     approvals_required: Optional[bool] = None
+    data_quality_notes: Optional[str] = None
+    data_owner: Optional[str] = None
+    data_freshness: Optional[Literal['real_time', 'daily', 'weekly', 'monthly', 'static', 'unknown']] = None
+    data_accessibility: Optional[List[str]] = Field(default_factory=list)
+    data_availability: Optional[str] = None
     risk_classification: Optional[str] = None
     oversight_status: Optional[str] = None
     documentation_status: Optional[str] = None
@@ -115,6 +120,11 @@ class AISystemUpdate(BaseModel):
     users_count: Optional[int] = None
     uptime: Optional[float] = None
     approvals_required: Optional[bool] = None
+    data_quality_notes: Optional[str] = None
+    data_owner: Optional[str] = None
+    data_freshness: Optional[Literal['real_time', 'daily', 'weekly', 'monthly', 'static', 'unknown']] = None
+    data_accessibility: Optional[List[str]] = Field(default_factory=list)
+    data_availability: Optional[str] = None
     risk_classification: Optional[str] = None
     oversight_status: Optional[str] = None
     documentation_status: Optional[str] = None

@@ -39,6 +39,8 @@ export default function AiSystemsList() {
               <TableHead>Criticality</TableHead>
               <TableHead>Lifecycle Status</TableHead>
               <TableHead>Department</TableHead>
+              <TableHead>Data Owner</TableHead>
+              <TableHead>Data Freshness</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -46,7 +48,7 @@ export default function AiSystemsList() {
           <TableBody>
             {!systems || systems.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center text-slate-500 py-8">
+                <TableCell colSpan={10} className="text-center text-slate-500 py-8">
                   No AI systems found.
                 </TableCell>
               </TableRow>
@@ -78,6 +80,12 @@ export default function AiSystemsList() {
                     </TableCell>
                     <TableCell className="max-w-[120px] truncate" title={system.department}>
                       {system.department || 'N/A'}
+                    </TableCell>
+                    <TableCell className="max-w-[120px] truncate" title={system.data_owner}>
+                      {system.data_owner || 'N/A'}
+                    </TableCell>
+                    <TableCell className="max-w-[120px] truncate capitalize" title={system.data_freshness}>
+                      {system.data_freshness ? system.data_freshness.replace('_', ' ') : 'N/A'}
                     </TableCell>
                     <TableCell>
                       <Badge variant={statusVariant} className="capitalize">
