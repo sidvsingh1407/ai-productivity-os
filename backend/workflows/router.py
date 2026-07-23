@@ -67,6 +67,7 @@ async def get_workflow(
 
     blueprints = await repository.get_workflow_blueprints(db=db, workflow_id=workflow_id)
 
+    # DEPRECATED: Generating legacy intelligence dynamically for old workflows that don't have new-shape scores/findings
     intelligence_payload = generate_workflow_intelligence(workflow.input_config)
     intelligence = WorkflowIntelligence(**intelligence_payload)
 
