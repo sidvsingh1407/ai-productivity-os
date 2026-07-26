@@ -31,6 +31,7 @@ class AdoptionRecordResponse(AdoptionRecordBase):
     organization_id: uuid.UUID
     created_at: datetime
     updated_at: datetime
+    adoption_score: float = Field(default=0.0, description="Dynamically calculated score 0-100")
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -39,5 +40,6 @@ class AdoptionRecordListResponse(AdoptionRecordBase):
     organization_id: uuid.UUID
     created_at: datetime
     updated_at: datetime
+    adoption_score: float = Field(default=0.0, description="Dynamically calculated score 0-100")
 
     model_config = ConfigDict(from_attributes=True)

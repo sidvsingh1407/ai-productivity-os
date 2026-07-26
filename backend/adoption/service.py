@@ -6,10 +6,25 @@ from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 
 from models.adoption_record import AdoptionRecord
-from adoption.schemas import AdoptionRecordCreate, AdoptionRecordUpdate
+from adoption.schemas import AdoptionRecordCreate, AdoptionRecordUpdate, AdoptionRecordResponse, AdoptionRecordListResponse
+from adoption.scoring import calculate_adoption_score
 
 class AdoptionRecordsService:
-    async def create_record(self, db: AsyncSession, organization_id: uuid.UUID, data: AdoptionRecordCreate) -> AdoptionRecord:
+    def _to_response(self, record: AdoptionRecord) -> AdoptionRecordResponse:
+        score = calculate_adoption_score(record)
+        return AdoptionRecordResponse(
+            **{c.name: getattr(record, c.name) for c in record.__table__.columns},
+            adoption_score=score
+        )
+
+    def _to_list_response(self, record: AdoptionRecord) -> AdoptionRecordListResponse:
+        score = calculate_adoption_score(record)
+        return AdoptionRecordListResponse(
+            **{c.name: getattr(record, c.name) for c in record.__table__.columns},
+            adoption_score=score
+        )
+
+    async def create_record(self, db: AsyncSession, organization_id: uuid.UUID, data: AdoptionRecordCreate) -> AdoptionRecordResponse:
         new_record = AdoptionRecord(
             organization_id=organization_id,
             **data.model_dump()
@@ -29,7 +44,7 @@ class AdoptionRecordsService:
                 )
             raise e
 
-        return new_record
+        return self._to_response(new_record)
 
     async def list_records(
         self,
@@ -39,7 +54,7 @@ class AdoptionRecordsService:
         department: Optional[str] = None,
         limit: int = 50,
         offset: int = 0
-    ) -> List[AdoptionRecord]:
+    ) -> List[AdoptionRecordListResponse]:
 
         stmt = (
             select(AdoptionRecord)
@@ -55,9 +70,10 @@ class AdoptionRecordsService:
         stmt = stmt.order_by(AdoptionRecord.created_at.desc()).offset(offset).limit(limit)
 
         result = await db.execute(stmt)
-        return result.scalars().all()
+        records = result.scalars().all()
+        return [self._to_list_response(r) for r in records]
 
-    async def get_record(self, db: AsyncSession, organization_id: uuid.UUID, record_id: uuid.UUID) -> AdoptionRecord:
+    async def get_record(self, db: AsyncSession, organization_id: uuid.UUID, record_id: uuid.UUID) -> AdoptionRecordResponse:
         stmt = select(AdoptionRecord).where(
             AdoptionRecord.id == record_id,
             AdoptionRecord.organization_id == organization_id
@@ -68,10 +84,18 @@ class AdoptionRecordsService:
         if not record:
             raise HTTPException(status_code=404, detail="Adoption record not found")
 
-        return record
+        return self._to_response(record)
 
-    async def update_record(self, db: AsyncSession, organization_id: uuid.UUID, record_id: uuid.UUID, data: AdoptionRecordUpdate) -> AdoptionRecord:
-        record = await self.get_record(db, organization_id, record_id)
+    async def update_record(self, db: AsyncSession, organization_id: uuid.UUID, record_id: uuid.UUID, data: AdoptionRecordUpdate) -> AdoptionRecordResponse:
+        stmt = select(AdoptionRecord).where(
+            AdoptionRecord.id == record_id,
+            AdoptionRecord.organization_id == organization_id
+        )
+        result = await db.execute(stmt)
+        record = result.scalar_one_or_none()
+
+        if not record:
+            raise HTTPException(status_code=404, detail="Adoption record not found")
 
         update_data = data.model_dump(exclude_unset=True)
         for key, value in update_data.items():
@@ -79,10 +103,18 @@ class AdoptionRecordsService:
 
         await db.commit()
         await db.refresh(record)
-        return record
+        return self._to_response(record)
 
     async def delete_record(self, db: AsyncSession, organization_id: uuid.UUID, record_id: uuid.UUID):
-        record = await self.get_record(db, organization_id, record_id)
+        stmt = select(AdoptionRecord).where(
+            AdoptionRecord.id == record_id,
+            AdoptionRecord.organization_id == organization_id
+        )
+        result = await db.execute(stmt)
+        record = result.scalar_one_or_none()
+
+        if not record:
+            raise HTTPException(status_code=404, detail="Adoption record not found")
 
         await db.delete(record)
         await db.commit()

@@ -168,6 +168,12 @@ class AISystemResponse(AISystemBase):
     created_at: datetime
     updated_at: datetime
 
+    data_score: float = Field(default=0.0, description="Dynamically calculated score 0-100")
+    roi_score: Optional[float] = Field(default=None, description="Dynamically calculated ROI score")
+    roi_score_unavailable_reason: Optional[str] = Field(default=None, description="Reason if ROI score is unavailable")
+    cost_is_partial: Optional[bool] = Field(default=False, description="Flag indicating if cost calculation is partial")
+    cost_missing_components: Optional[List[str]] = Field(default_factory=list, description="List of missing cost fields")
+
     model_config = ConfigDict(from_attributes=True)
 
 class AISystemListResponse(AISystemBase):
@@ -175,5 +181,11 @@ class AISystemListResponse(AISystemBase):
     organization_id: uuid.UUID
     created_at: datetime
     updated_at: datetime
+
+    data_score: float = Field(default=0.0, description="Dynamically calculated score 0-100")
+    roi_score: Optional[float] = Field(default=None, description="Dynamically calculated ROI score")
+    roi_score_unavailable_reason: Optional[str] = Field(default=None, description="Reason if ROI score is unavailable")
+    cost_is_partial: Optional[bool] = Field(default=False, description="Flag indicating if cost calculation is partial")
+    cost_missing_components: Optional[List[str]] = Field(default_factory=list, description="List of missing cost fields")
 
     model_config = ConfigDict(from_attributes=True)
