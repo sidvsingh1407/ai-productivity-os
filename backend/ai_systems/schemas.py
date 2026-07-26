@@ -67,11 +67,21 @@ class AISystemBase(BaseModel):
     applicable_regulations: Optional[List[str]] = Field(default_factory=list)
     obligations: Optional[List[str]] = Field(default_factory=list)
     evidence_status: Optional[str] = None
+
+    # DEPRECATED: use granular cost fields instead (licensing_cost, cloud_cost, etc.)
     cost: Optional[float] = None
     roi_notes: Optional[str] = None
     licensing_type: Optional[str] = None
     planned_changes: Optional[str] = None
     roadmap_notes: Optional[str] = None
+
+    # Financial tracking fields
+    licensing_cost: Optional[float] = None
+    cloud_cost: Optional[float] = None
+    inference_cost: Optional[float] = None
+    maintenance_cost: Optional[float] = None
+    cost_currency: Optional[str] = 'USD'
+    expected_benefits: Optional[str] = None
 
 class AISystemCreate(AISystemBase):
     pass
@@ -135,11 +145,22 @@ class AISystemUpdate(BaseModel):
     applicable_regulations: Optional[List[str]] = None
     obligations: Optional[List[str]] = None
     evidence_status: Optional[str] = None
+
+    # DEPRECATED: use granular cost fields instead (licensing_cost, cloud_cost, etc.)
     cost: Optional[float] = None
     roi_notes: Optional[str] = None
     licensing_type: Optional[str] = None
     planned_changes: Optional[str] = None
     roadmap_notes: Optional[str] = None
+
+    # Financial tracking fields
+    licensing_cost: Optional[float] = None
+    cloud_cost: Optional[float] = None
+    inference_cost: Optional[float] = None
+    maintenance_cost: Optional[float] = None
+    cost_currency: Optional[str] = 'USD'
+    expected_benefits: Optional[str] = None
+
 
 class AISystemResponse(AISystemBase):
     id: uuid.UUID
