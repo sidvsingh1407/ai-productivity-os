@@ -81,11 +81,21 @@ class AISystem(Base):
     applicable_regulations: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
     obligations: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
     evidence_status: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    # DEPRECATED: use granular cost fields instead (licensing_cost, cloud_cost, etc.)
     cost: Mapped[float | None] = mapped_column(Numeric, nullable=True)
     roi_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     licensing_type: Mapped[str | None] = mapped_column(String, nullable=True)
     planned_changes: Mapped[str | None] = mapped_column(Text, nullable=True)
     roadmap_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    # Financial tracking fields
+    licensing_cost: Mapped[float | None] = mapped_column(Numeric, nullable=True)
+    cloud_cost: Mapped[float | None] = mapped_column(Numeric, nullable=True)
+    inference_cost: Mapped[float | None] = mapped_column(Numeric, nullable=True)
+    maintenance_cost: Mapped[float | None] = mapped_column(Numeric, nullable=True)
+    cost_currency: Mapped[str | None] = mapped_column(String, nullable=True, default='USD')
+    expected_benefits: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     # onupdate is enforced at the ORM level; this table has no direct SQL write path.
