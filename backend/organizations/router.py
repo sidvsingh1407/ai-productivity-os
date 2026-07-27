@@ -15,7 +15,7 @@ router = APIRouter(tags=["organizations"])
 @router.get("/me", response_model=OrgResponse)
 async def get_my_org(current_org: Organization = Depends(get_current_org), db: AsyncSession = Depends(get_db)):
     org_service = OrganizationService(db)
-    return await org_service.get_org_with_operational_score(current_org)
+    return await org_service.get_org_with_scores(current_org)
 
 @router.get("/members", response_model=List[OrgMemberResponse], dependencies=[Depends(require_role("admin"))])
 async def list_members(current_org: Organization = Depends(get_current_org), db: AsyncSession = Depends(get_db)):

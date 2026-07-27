@@ -19,6 +19,10 @@ class OrgResponse(BaseModel):
     missing_components: List[str] = []
     score_unavailable_reason: Optional[str] = None
 
+    readiness_score: Optional[float] = None
+    readiness_is_partial: bool = False
+    readiness_missing_components: List[str] = []
+
     model_config = ConfigDict(from_attributes=True)
 
 class OrgMemberResponse(BaseModel):
