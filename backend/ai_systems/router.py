@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from dependencies import get_db, get_current_org, get_current_user
 from models.user import User
 from models.organization import Organization
-from ai_systems.schemas import AISystemCreate, AISystemUpdate, AISystemResponse, AISystemListResponse
+from ai_systems.schemas import AISystemCreate, AISystemUpdate, AISystemResponse, AISystemListResponse, CapabilityMapResponse
 from ai_systems.service import AISystemsService
 
 router = APIRouter(tags=["AI Systems"])
@@ -20,6 +20,15 @@ async def create_ai_system(
     db: AsyncSession = Depends(get_db)
 ):
     return await service.create_system(db, current_org.id, data)
+
+@router.get("/ai-systems/capability-map", response_model=List[CapabilityMapResponse])
+async def get_capability_map(
+    current_user: User = Depends(get_current_user),
+    current_org: Organization = Depends(get_current_org),
+    db: AsyncSession = Depends(get_db)
+):
+    return await service.get_capability_map(db, current_org.id)
+
 
 @router.get("/ai-systems", response_model=List[AISystemListResponse])
 async def list_ai_systems(

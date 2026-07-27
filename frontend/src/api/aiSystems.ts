@@ -88,7 +88,31 @@ export const aiSystemsApi = {
     return data;
   },
 
+  getCapabilityMap: async (): Promise<CapabilityMapResponse[]> => {
+    const { data } = await apiClient.get("/api/ai-systems/capability-map");
+    return data;
+  },
+
   delete: async (id: string): Promise<void> => {
     await apiClient.delete(`/api/ai-systems/${id}`);
   }
 };
+
+export interface CapabilityMapResponse {
+  id: string;
+  name: string;
+  ai_type?: string;
+  criticality?: string;
+  lifecycle_status?: string;
+  department?: string;
+  owner?: string;
+  adoption_score?: number;
+  data_score?: number;
+  roi_score?: number;
+  roi_score_unavailable_reason?: string;
+  cost_is_partial?: boolean;
+  cost_missing_components?: string[];
+  data_types?: string[];
+  data_sources?: string[];
+  data_destinations?: string[];
+}

@@ -176,6 +176,29 @@ class AISystemResponse(AISystemBase):
 
     model_config = ConfigDict(from_attributes=True)
 
+class CapabilityMapResponse(BaseModel):
+    id: uuid.UUID
+    name: str
+    ai_type: Optional[str] = None
+    criticality: Optional[str] = None
+    lifecycle_status: Optional[str] = None
+    department: Optional[str] = None
+    owner: Optional[str] = None
+
+    adoption_score: Optional[float] = Field(default=None, description="Dynamically calculated average adoption score")
+    data_score: Optional[float] = Field(default=None, description="Dynamically calculated data score")
+    roi_score: Optional[float] = Field(default=None, description="Dynamically calculated ROI score")
+    roi_score_unavailable_reason: Optional[str] = Field(default=None, description="Reason if ROI score is unavailable")
+    cost_is_partial: Optional[bool] = Field(default=False, description="Flag indicating if cost calculation is partial")
+    cost_missing_components: Optional[List[str]] = Field(default_factory=list, description="List of missing cost fields")
+
+    data_types: Optional[List[str]] = Field(default_factory=list)
+    data_sources: Optional[List[str]] = Field(default_factory=list)
+    data_destinations: Optional[List[str]] = Field(default_factory=list)
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class AISystemListResponse(AISystemBase):
     id: uuid.UUID
     organization_id: uuid.UUID

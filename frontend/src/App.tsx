@@ -55,6 +55,7 @@ import { DeveloperDashboard } from "./pages/DeveloperDashboard";
 import PromptImprover from './pages/PromptImprover';
 import SettingsPage from './pages/Settings/SettingsPage';
 import AiSystemsList from './pages/AiSystemsList';
+import CapabilityMap from './pages/CapabilityMap';
 import AiSystemForm from './pages/AiSystemForm';
 import { AdminRoute } from './components/admin/AdminRoute';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -135,6 +136,7 @@ function App() {
           <Route path="developers" element={<DeveloperDashboard />} />
           <Route path="prompt-improver" element={<PromptImprover />} />
           <Route path="ai-systems" element={<AiSystemsList />} />
+          <Route path="ai-systems/capability-map" element={<CapabilityMap />} />
           <Route path="ai-systems/new" element={<AiSystemForm />} />
           <Route path="ai-systems/:id/edit" element={<AiSystemForm />} />
           <Route path="settings" element={<SettingsPage />} />

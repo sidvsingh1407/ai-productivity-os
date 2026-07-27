@@ -682,3 +682,90 @@ async def test_ai_system_reproducibility(db_session: AsyncSession, user, healthc
 
         # Assert all remaining fields are identical
         assert data1 == data2
+
+from models.adoption_record import AdoptionRecord
+import uuid
+from httpx import AsyncClient, ASGITransport
+from main import app
+
+@pytest.mark.asyncio
+async def test_capability_map_missing_scores(db_session, user, organization):
+    sys_id = uuid.uuid4()
+    sys_empty = AISystem(
+        id=sys_id,
+        organization_id=organization.id,
+        name="Empty Score System",
+        ai_type="predictive",
+        criticality="low",
+        lifecycle_status="development"
+    )
+    db_session.add(sys_empty)
+    await db_session.commit()
+
+    headers = get_auth_headers(user)
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.get("/api/ai-systems/capability-map", headers=headers)
+
+    assert response.status_code == 200
+    data = response.json()
+    sys_data = next((s for s in data if s["id"] == str(sys_id)), None)
+    assert sys_data is not None
+
+    assert sys_data["name"] == "Empty Score System"
+    assert sys_data["adoption_score"] is None
+    assert sys_data["data_score"] is None
+    assert sys_data["roi_score"] is None
+    assert sys_data["cost_is_partial"] is True
+
+@pytest.mark.asyncio
+async def test_capability_map_populated_scores(db_session, user, organization):
+    sys_id = uuid.uuid4()
+    sys_populated = AISystem(
+        id=sys_id,
+        organization_id=organization.id,
+        name="Populated Score System",
+        ai_type="generative",
+        criticality="high",
+        lifecycle_status="deployed",
+        data_types=["text", "images"],
+        data_sources=["crm", "public"],
+        data_destinations=["internal_db"],
+        expected_benefits=50000.0,
+        cloud_cost=1000.0,
+        licensing_cost=500.0,
+        maintenance_cost=200.0,
+        inference_cost=300.0,
+        cost_currency="USD"
+    )
+    db_session.add(sys_populated)
+    await db_session.flush()
+
+    ar = AdoptionRecord(
+        id=uuid.uuid4(),
+        ai_system_id=sys_id,
+        department="Engineering",
+        organization_id=organization.id,
+        user_count=100,
+        training_status="completed",
+    )
+    db_session.add(ar)
+    await db_session.commit()
+
+    headers = get_auth_headers(user)
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.get("/api/ai-systems/capability-map", headers=headers)
+
+    assert response.status_code == 200
+    data = response.json()
+    sys_data = next((s for s in data if s["id"] == str(sys_id)), None)
+    assert sys_data is not None
+
+    assert sys_data["name"] == "Populated Score System"
+    assert sys_data["adoption_score"] == 95.0
+    assert sys_data["data_score"] is not None
+    assert sys_data["roi_score"] is None
+    assert sys_data["cost_is_partial"] is False
+    assert len(sys_data["cost_missing_components"]) == 0
+    assert "text" in sys_data["data_types"]

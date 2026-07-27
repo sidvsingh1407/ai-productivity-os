@@ -40,6 +40,12 @@ export function Sidebar() {
               Command Center
             </Button>
           </Link>
+          <Link to="/app/ai-systems/capability-map">
+            <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
+              <Server className="w-4 h-4" />
+              Capability Map
+            </Button>
+          </Link>
           <Link to="/app/ai-systems">
             <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
               <Server className="w-4 h-4" />
