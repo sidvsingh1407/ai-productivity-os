@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, ConfigDict
@@ -13,6 +13,11 @@ class OrgResponse(BaseModel):
     slug: str
     created_at: datetime
     updated_at: datetime
+
+    operational_score: Optional[float] = None
+    is_partial: bool = False
+    missing_components: List[str] = []
+    score_unavailable_reason: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
 
