@@ -35,30 +35,29 @@ def test_adoption_score():
     assert calculate_adoption_score(low_record) == 0.0
 
 def test_data_score():
-    # 1. High Score Scenario (base 100, medium sensitivity (no penalty), real_time freshness (no penalty), owner present (no penalty))
+    # 1. High Score Scenario (all 5 fields meaningfully populated)
     high_system = {
         "data_sensitivity": "medium",
         "data_freshness": "real_time",
-        "data_owner": "user@example.com"
+        "data_owner": "user@example.com",
+        "data_accessibility": ["internal_only"],
+        "data_types": ["PII"]
     }
     assert calculate_data_score(high_system) == 100.0
 
-    # 2. Medium Score Scenario (base 100, stale data (-20), owner missing (-15), total 65)
+    # 2. Medium Score Scenario (3 of 5 fields populated)
     medium_system = {
-        "data_sensitivity": "low",
-        "data_freshness": "stale",
-        "data_owner": None
+        "data_owner": "user@example.com",
+        "data_types": ["PII"],
+        "data_sources": ["DB1"] # data_sources + data_types only gives one 20pt bump
     }
-    assert calculate_data_score(medium_system) == 65.0
+    assert calculate_data_score(medium_system) == 40.0
 
-    # 3. Low/Penalized Score Scenario (base 100, high sensitivity with public access (-25), static freshness (-20), owner missing (-15), total 40)
+    # 3. Low Score Scenario (1 of 5 fields populated)
     low_system = {
-        "data_sensitivity": "high",
-        "data_accessibility": ["public"],
-        "data_freshness": "static",
-        "data_owner": ""
+        "data_types": ["Financial"]
     }
-    assert calculate_data_score(low_system) == 40.0
+    assert calculate_data_score(low_system) == 20.0
 
 def test_roi_score_structural_output():
     # 1. Full cost data
