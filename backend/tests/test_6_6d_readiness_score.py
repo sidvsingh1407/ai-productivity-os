@@ -1,5 +1,4 @@
 import pytest
-import pytest_asyncio
 import uuid
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
@@ -17,6 +16,7 @@ from models.ai_system import AISystem
 from models.adoption_record import AdoptionRecord
 from sqlalchemy.future import select
 from auth.password_service import PasswordService
+import pytest_asyncio
 
 @pytest_asyncio.fixture
 async def db_session() -> AsyncSession:
@@ -71,8 +71,6 @@ async def test_readiness_score_high(db_session, organization, user):
     )
     db_session.add(eng)
 
-    # Operational Score will be: (90 * 0.5) + (100 * 0.5) = 95.0
-
     # Add System Data (High Score)
     system = AISystem(
         organization_id=organization.id,
@@ -107,16 +105,23 @@ async def test_readiness_score_high(db_session, organization, user):
     db_session.add(adoption)
     await db_session.commit()
 
-    # System scores: Adoption=100, Data=100 (due to many fields), ROI=100 ((50000 - 15000)/15000 -> capped at 100)
-    # Average System score = ~100
-
-    # Total Readiness Score = (95.0 * 0.5) + (100 * 0.5) = 97.5
+    # -- MATH BREAKDOWN --
+    # Operational Score:
+    # Workflow (90.0) and Engineering (75.0) -> Average = (90 * 0.5) + (75 * 0.5) = 82.5
+    #
+    # System Scores (skipping ROI, which is unconditionally None due to text schema):
+    # - Adoption = 100.0 (user_count=100 -> 75 base, daily freq * 1.2, training completed + 20 = 110 clamped to 100)
+    # - Data = 100.0 (data_owner exists, no stale data, accessibility exists -> no deductions from 100.0 base)
+    # Average System score = (100.0 + 100.0) / 2 = 100.0
+    #
+    # Total Readiness Score = (100.0 (System) * 0.5) + (82.5 (Operational) * 0.5) = 91.25
 
     score_data = await service.get_readiness_score_data(organization.id)
 
     assert score_data["readiness_score"] == 91.25
     assert score_data["readiness_is_partial"] is True
     assert len(score_data["readiness_missing_components"]) == 1
+    assert "avg_roi_score" in score_data["readiness_missing_components"]
 
 @pytest.mark.asyncio
 async def test_readiness_score_low(db_session, organization, user):
@@ -138,8 +143,6 @@ async def test_readiness_score_low(db_session, organization, user):
         has_dedicated_devops=False,
     )
     db_session.add(eng)
-
-    # Operational Score will be: (10 * 0.5) + (0 * 0.5) = 5.0
 
     # Add System Data (Low Score)
     system = AISystem(
@@ -169,15 +172,23 @@ async def test_readiness_score_low(db_session, organization, user):
     db_session.add(adoption)
     await db_session.commit()
 
-    # Expected: System scores: Adoption=0, Data=15 (just type), ROI=0 (loss)
-    # Average System score = 5.0
-    # Total Readiness = (5.0 * 0.5) + (5.0 * 0.5) = 5.0
+    # -- MATH BREAKDOWN --
+    # Operational Score:
+    # Workflow (10.0) and Engineering (0.0) -> Average = (10 * 0.5) + (0 * 0.5) = 5.0
+    #
+    # System Scores (skipping ROI, which is unconditionally None due to text schema):
+    # - Adoption = 12.5 (user_count=1 -> 25 base, rare freq * 0.5, training none + 0 = 12.5)
+    # - Data = 85.0 (Base 100.0. No data_owner -> -15 penalty. data_freshness and data_sensitivity are None so no penalties for them. 100 - 15 = 85.0)
+    # Average System score = (12.5 + 85.0) / 2 = 48.75
+    #
+    # Total Readiness Score = (48.75 (System) * 0.5) + (5.0 (Operational) * 0.5) = 26.875
 
     score_data = await service.get_readiness_score_data(organization.id)
 
     assert score_data["readiness_score"] == 26.875
     assert score_data["readiness_is_partial"] is True
     assert len(score_data["readiness_missing_components"]) == 1
+    assert "avg_roi_score" in score_data["readiness_missing_components"]
 
 @pytest.mark.asyncio
 async def test_readiness_score_partial_data(db_session, organization, user):
@@ -208,9 +219,15 @@ async def test_readiness_score_partial_data(db_session, organization, user):
     db_session.add(adoption)
     await db_session.commit()
 
-    # System scores: Adoption=50, Data=15, ROI=None
-    # System avg: 32.5
-    # Since operational is None, readiness should be the system average = 32.5
+    # -- MATH BREAKDOWN --
+    # Operational Score: None
+    #
+    # System Scores (skipping ROI, which is unconditionally None due to text schema):
+    # - Adoption = 60.0 (user_count=50 -> 50 base, weekly freq * 1.0, training in_progress + 10 = 60.0)
+    # - Data = 85.0 (Base 100.0. No data_owner -> -15 penalty. Others resolve safely to 85.0)
+    # Average System score = (60.0 + 85.0) / 2 = 72.5
+    #
+    # Total Readiness Score = System average (fallback redistribution scaling 100% since operational is None) = 72.5
 
     score_data = await service.get_readiness_score_data(organization.id)
 
