@@ -12,6 +12,7 @@ from models.workflow import Workflow, WorkflowStatus
 from models.engineering_record import EngineeringRecord
 from sqlalchemy.future import select
 from engineering.service import EngineeringRecordsService
+from ai_systems.service import AISystemsService
 
 class OrganizationService:
     def __init__(self, session: AsyncSession):
@@ -136,8 +137,66 @@ class OrganizationService:
             "score_unavailable_reason": unavailable_reason
         }
 
-    async def get_org_with_operational_score(self, org: Organization) -> OrgResponse:
+    async def get_readiness_score_data(self, org_id: uuid.UUID) -> dict:
+        # 1. Get Operational Score
+        op_score_data = await self.get_operational_score(org_id)
+        operational_score = op_score_data.get("operational_score")
+
+        # 2. Get AI Systems (Capability Map)
+        ai_systems_service = AISystemsService()
+        capability_map = await ai_systems_service.get_capability_map(self.session, org_id)
+
+        adoption_scores = [s.adoption_score for s in capability_map if s.adoption_score is not None]
+        data_scores = [s.data_score for s in capability_map if s.data_score is not None]
+        roi_scores = [s.roi_score for s in capability_map if s.roi_score is not None]
+
+        avg_adoption = sum(adoption_scores) / len(adoption_scores) if adoption_scores else None
+        avg_data = sum(data_scores) / len(data_scores) if data_scores else None
+        avg_roi = sum(roi_scores) / len(roi_scores) if roi_scores else None
+
+        system_scores = []
+        if avg_adoption is not None:
+            system_scores.append(avg_adoption)
+        if avg_data is not None:
+            system_scores.append(avg_data)
+        if avg_roi is not None:
+            system_scores.append(avg_roi)
+
+        system_score = sum(system_scores) / len(system_scores) if system_scores else None
+
+        # 3. Combine System Score and Operational Score (50/50)
+        readiness_score = None
+        readiness_is_partial = False
+        readiness_missing_components = []
+
+        if avg_adoption is None:
+            readiness_missing_components.append("avg_adoption_score")
+        if avg_data is None:
+            readiness_missing_components.append("avg_data_score")
+        if avg_roi is None:
+            readiness_missing_components.append("avg_roi_score")
+        if operational_score is None:
+            readiness_missing_components.append("operational_score")
+
+        if system_score is not None and operational_score is not None:
+            readiness_score = (system_score * 0.5) + (operational_score * 0.5)
+        elif system_score is not None:
+            readiness_score = system_score
+        elif operational_score is not None:
+            readiness_score = operational_score
+
+        if readiness_missing_components:
+            readiness_is_partial = True
+
+        return {
+            "readiness_score": readiness_score,
+            "readiness_is_partial": readiness_is_partial,
+            "readiness_missing_components": readiness_missing_components
+        }
+
+    async def get_org_with_scores(self, org: Organization) -> OrgResponse:
         score_data = await self.get_operational_score(org.id)
+        readiness_data = await self.get_readiness_score_data(org.id)
 
         return OrgResponse(
             id=org.id,
@@ -148,5 +207,8 @@ class OrganizationService:
             operational_score=score_data["operational_score"],
             is_partial=score_data["is_partial"],
             missing_components=score_data["missing_components"],
-            score_unavailable_reason=score_data["score_unavailable_reason"]
+            score_unavailable_reason=score_data["score_unavailable_reason"],
+            readiness_score=readiness_data["readiness_score"],
+            readiness_is_partial=readiness_data["readiness_is_partial"],
+            readiness_missing_components=readiness_data["readiness_missing_components"]
         )
