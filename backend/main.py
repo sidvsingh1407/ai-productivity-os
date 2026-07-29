@@ -56,6 +56,7 @@ from api_platform.router import router as api_platform_router
 from regulation.router import router as regulation_router
 from api_platform.management_router import router as api_platform_management_router  # noqa: E402
 from monitoring.router import router as monitoring_router  # noqa: E402
+from dependency_map.router import router as dependency_map_router # noqa: E402
 from config import settings  # noqa: E402
 import re  # noqa: E402
 
@@ -153,9 +154,17 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):  # noqa: E501
     logger.error(f"Validation Error: {exc.errors()}")
+    # Convert error messages to strings if they are exception instances
+    errors = []
+    for error in exc.errors():
+        new_error = dict(error)
+        if "ctx" in new_error and "error" in new_error["ctx"]:
+            new_error["ctx"]["error"] = str(new_error["ctx"]["error"])
+        errors.append(new_error)
+
     return JSONResponse(
         status_code=422,
-        content={"detail": exc.errors(), "status_code": 422},
+        content={"detail": errors, "status_code": 422},
         headers=cors_error_headers(request)
     )
 
@@ -197,6 +206,7 @@ app.include_router(api_platform_router, prefix="/api/v1")
 app.include_router(regulation_router, prefix="/regulation")
 app.include_router(api_platform_management_router, prefix="/api/platform")
 app.include_router(monitoring_router, prefix="/api/monitoring")
+app.include_router(dependency_map_router, prefix="/api/dependency-map")
 
 
 @app.get("/")

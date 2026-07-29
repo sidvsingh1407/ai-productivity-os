@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { authApi } from '@/api/auth';
-import { LayoutDashboard, Target, GitBranch, Sparkles, FileText, Settings, LogOut, Code2, Shield, Server } from "lucide-react";
+import { LayoutDashboard, Target, GitBranch, Sparkles, FileText, Settings, LogOut, Code2, Shield, Server, Network } from "lucide-react";
 import { Button } from '../ui/button';
 
 export function Sidebar() {
@@ -50,6 +50,12 @@ export function Sidebar() {
             <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
               <Server className="w-4 h-4" />
               AI System Inventory
+            </Button>
+          </Link>
+          <Link to="/app/dependency-map">
+            <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
+              <Network className="w-4 h-4" />
+              Dependency Map
             </Button>
           </Link>
           <Link to="/app/audits/new">
