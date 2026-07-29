@@ -5,7 +5,7 @@ from typing import Optional, Literal
 
 NodeType = Literal['ai_system', 'workflow', 'audit']
 # Placeholder enum for edge types, to be expanded in future tickets.
-EdgeType = Literal['data_flow', 'dependency', 'integration']
+EdgeType = Literal['uses', 'depends_on', 'feeds_into', 'integration', 'escalates_to']
 
 class DependencyNodeBase(BaseModel):
     node_type: NodeType
