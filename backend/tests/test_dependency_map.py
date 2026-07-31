@@ -246,3 +246,100 @@ async def test_organization_isolation(user_token: str, user_token2: str, ai_syst
         # Should be 404 because validate_edge_organization_scope looks up nodes and won't find them in user2's org, or 403 if it finds them but wrong org.
         # Given how the single select(DependencyNode).where(id.in_) works, if the nodes aren't found for the org, we throw 404/403. Our validation actually fetches regardless of org, then checks org!
         assert res_create_edge_invalid.status_code in [403, 404]
+
+@pytest.mark.asyncio
+async def test_impact_analysis_traversal_and_weighting(user_token: str, db_session: AsyncSession, organization: Organization):
+    from models.risk_classification import RiskClassification
+    from models.system_finding import SystemFinding
+    from models.workflow import Workflow
+    from models.audit import Audit
+    from dependency_map.schemas import DependencyNodeCreate, DependencyEdgeCreate
+    from dependency_map.service import create_node, create_edge
+
+    # Create 2 AI Systems
+    sys_high = AISystem(name="High Risk Sys", organization_id=organization.id, criticality="critical")
+    sys_low = AISystem(name="Low Risk Sys", organization_id=organization.id, criticality="low")
+    db_session.add(sys_high)
+    db_session.add(sys_low)
+
+    # Create 1 Workflow and 1 Audit
+    from models.user import User
+    # User is needed for workflow
+    u = User(email=f"test_wf_{uuid.uuid4()}@example.com", full_name="Wf User", hashed_password="fake")
+    db_session.add(u)
+    await db_session.commit()
+    await db_session.refresh(u)
+
+    wf = Workflow(org_id=organization.id, user_id=u.id, input_config={}, status="complete")
+    aud = Audit(org_id=organization.id, user_id=u.id, form_response={}, status="complete")
+    db_session.add(wf)
+    db_session.add(aud)
+    await db_session.commit()
+
+    # Add Risk and Findings to High Sys
+    rc = RiskClassification(audit_id=aud.id, ai_system_id=sys_high.id, risk_level="high_risk", rationale="", citation_reference="")
+    sf = SystemFinding(audit_id=aud.id, ai_system_id=sys_high.id, findings=[{"severity": "Critical"}], dimension_scores={})
+    db_session.add(rc)
+    db_session.add(sf)
+    await db_session.commit()
+
+    # Create nodes
+    node_high = await create_node(db_session, organization.id, DependencyNodeCreate(node_type='ai_system', ai_system_id=sys_high.id))
+    node_low = await create_node(db_session, organization.id, DependencyNodeCreate(node_type='ai_system', ai_system_id=sys_low.id))
+    node_wf = await create_node(db_session, organization.id, DependencyNodeCreate(node_type='workflow', workflow_id=wf.id))
+    node_aud = await create_node(db_session, organization.id, DependencyNodeCreate(node_type='audit', audit_id=aud.id))
+
+    # Create edges:
+    # node_high -> depends_on -> node_low
+    # node_wf -> uses -> node_high
+    # node_aud -> uses -> node_low
+    await create_edge(db_session, organization.id, DependencyEdgeCreate(source_node_id=node_high.id, target_node_id=node_low.id, edge_type="depends_on"))
+    await create_edge(db_session, organization.id, DependencyEdgeCreate(source_node_id=node_wf.id, target_node_id=node_high.id, edge_type="uses"))
+    await create_edge(db_session, organization.id, DependencyEdgeCreate(source_node_id=node_aud.id, target_node_id=node_low.id, edge_type="uses"))
+
+    # Analyze Impact on High Sys
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        res = await ac.get(f"/api/dependency-map/nodes/{node_high.id}/impact", headers=headers)
+        assert res.status_code == 200
+        data = res.json()
+
+        # Check Origin (sys_high)
+        # critical = 30, high_risk = 25, Critical = 40 => 95
+        assert data["origin_impact"]["total_score"] == 95
+        assert data["origin_impact"]["criticality_score"] == 30
+        assert data["origin_impact"]["findings_score"] == 40
+        assert data["origin_impact"]["risk_level_score"] == 25
+
+        # Outward (depends_on) should be sys_low
+        assert len(data["depends_on"]) == 1
+        assert data["depends_on"][0]["id"] == str(node_low.id)
+        assert data["depends_on"][0]["impact"]["total_score"] == 0 # no risk, no finding, low criticality (0)
+
+        # Inward (used_by) should be node_wf
+        assert len(data["used_by"]) == 1
+        assert data["used_by"][0]["id"] == str(node_wf.id)
+        # Workflow connected to high sys (in subgraph) gets max score (95)
+        assert data["used_by"][0]["impact"]["total_score"] == 95
+
+    # Analyze Impact on Audit (Depth 2 to reach high_sys via low_sys)
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+        headers = {"Authorization": f"Bearer {user_token}"}
+        # aud -> low (depth 1), low is used by high (depth 2) -> so high is at depth 2 from aud in a undirected sense?
+        # Wait, edges:
+        # high -> low (high depends on low)
+        # aud -> low (aud uses low)
+        # From Aud outward (aud->low). Outward depth 1: low. Outward depth 2: none.
+        # From Aud inward: none.
+        # So aud only sees low.
+        res = await ac.get(f"/api/dependency-map/nodes/{node_aud.id}/impact", headers=headers)
+        assert res.status_code == 200
+        data = res.json()
+
+        # Origin is audit. Subgraph has aud and low.
+        # low has 0 score. So audit gets 0 score.
+        assert data["origin_impact"]["total_score"] == 0
+        assert data["origin_impact"]["is_unscored_node"] == False
+
+        assert len(data["depends_on"]) == 1
+        assert data["depends_on"][0]["id"] == str(node_low.id)

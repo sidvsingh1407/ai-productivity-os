@@ -57,6 +57,13 @@ async def get_node(db: AsyncSession, organization_id: uuid.UUID, node_id: uuid.U
         raise HTTPException(status_code=404, detail="Dependency node not found")
     return node
 
+from dependency_map.impact_engine import traverse_and_analyze
+from dependency_map.schemas import ImpactAnalysisResponse
+
+async def analyze_impact(db: AsyncSession, organization_id: uuid.UUID, node_id: uuid.UUID, depth: int = 2) -> ImpactAnalysisResponse:
+    node = await get_node(db, organization_id, node_id)
+    return await traverse_and_analyze(db, organization_id, node, depth)
+
 async def create_node(db: AsyncSession, organization_id: uuid.UUID, node_data: DependencyNodeCreate) -> DependencyNode:
     new_node = DependencyNode(
         organization_id=organization_id,
