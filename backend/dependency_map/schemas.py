@@ -36,6 +36,26 @@ class DependencyNodeResponse(DependencyNodeBase):
     model_config = ConfigDict(from_attributes=True)
 
 
+class ImpactScore(BaseModel):
+    total_score: int = Field(default=0, description="Total impact score 0-100")
+    criticality_score: int = Field(default=0, description="Score derived from AI System criticality")
+    findings_score: int = Field(default=0, description="Score derived from max finding severity")
+    risk_level_score: int = Field(default=0, description="Score derived from latest risk classification")
+    is_unscored_node: bool = Field(default=False, description="Flag indicating if the node could not be scored (e.g. workflow without connected AI systems)")
+
+
+class TraversedNode(DependencyNodeResponse):
+    impact: ImpactScore
+    depth: int = Field(..., description="Depth of this node from the traversal origin")
+
+
+class ImpactAnalysisResponse(BaseModel):
+    origin_node: DependencyNodeResponse
+    origin_impact: ImpactScore
+    depends_on: list[TraversedNode] = Field(default_factory=list, description="Nodes that the origin node depends on (outward traversal)")
+    used_by: list[TraversedNode] = Field(default_factory=list, description="Nodes that depend on the origin node (inward traversal)")
+
+
 class DependencyEdgeBase(BaseModel):
     source_node_id: uuid.UUID
     target_node_id: uuid.UUID

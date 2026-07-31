@@ -50,6 +50,17 @@ async def get_node(
     return await service.get_node(db, organization_id=org.id, node_id=node_id)
 
 
+@router.get("/nodes/{node_id}/impact", response_model=schemas.ImpactAnalysisResponse, dependencies=[Depends(require_role("viewer"))])
+async def get_node_impact(
+    node_id: uuid.UUID,
+    depth: int = 2,
+    org: Organization = Depends(get_current_org),
+    db: AsyncSession = Depends(get_db)
+):
+    """Analyze the dependency impact of a specific node."""
+    return await service.analyze_impact(db, organization_id=org.id, node_id=node_id, depth=depth)
+
+
 @router.delete("/nodes/{node_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_role("member"))])
 async def delete_node(
     node_id: uuid.UUID,
