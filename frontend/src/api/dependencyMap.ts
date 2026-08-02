@@ -37,6 +37,26 @@ export interface DependencyEdgeCreate {
   edge_type: EdgeType;
 }
 
+export interface ImpactScore {
+  total_score: number;
+  criticality_score: number;
+  findings_score: number;
+  risk_level_score: number;
+  is_unscored_node: boolean;
+}
+
+export interface TraversedNode extends DependencyNode {
+  impact: ImpactScore;
+  depth: number;
+}
+
+export interface ImpactAnalysisResponse {
+  origin_node: DependencyNode;
+  origin_impact: ImpactScore;
+  depends_on: TraversedNode[];
+  used_by: TraversedNode[];
+}
+
 export const dependencyMapApi = {
   // Nodes
   listNodes: async (): Promise<DependencyNode[]> => {
@@ -61,6 +81,11 @@ export const dependencyMapApi = {
 
   deleteNode: async (id: string): Promise<void> => {
     await apiClient.delete(`/api/dependency-map/nodes/${id}`);
+  },
+
+  getImpactAnalysis: async (id: string, depth: number = 3): Promise<ImpactAnalysisResponse> => {
+    const response = await apiClient.get(`/api/dependency-map/nodes/${id}/impact`, { params: { depth } });
+    return response.data;
   },
 
   // Edges
