@@ -58,6 +58,7 @@ import AiSystemsList from './pages/AiSystemsList';
 import CapabilityMap from './pages/CapabilityMap';
 import AiSystemForm from './pages/AiSystemForm';
 import DependencyMapList from './pages/DependencyMapList';
+import OpportunitiesList from './pages/OpportunitiesList';
 import DependencyMapForm from './pages/DependencyMapForm';
 import { AdminRoute } from './components/admin/AdminRoute';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -142,6 +143,7 @@ function App() {
           <Route path="ai-systems/new" element={<AiSystemForm />} />
           <Route path="ai-systems/:id/edit" element={<AiSystemForm />} />
           <Route path="dependency-map" element={<DependencyMapList />} />
+          <Route path="opportunities" element={<OpportunitiesList />} />
           <Route path="dependency-map/new" element={<DependencyMapForm />} />
           <Route path="settings" element={<SettingsPage />} />
 

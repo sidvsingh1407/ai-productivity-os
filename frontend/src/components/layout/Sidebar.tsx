@@ -58,6 +58,12 @@ export function Sidebar() {
               Dependency Map
             </Button>
           </Link>
+          <Link to="/app/opportunities">
+            <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
+              <Sparkles className="w-4 h-4" />
+              Opportunity Discovery
+            </Button>
+          </Link>
           <Link to="/app/audits/new">
             <Button variant="ghost" className="w-full justify-start gap-2 text-text-secondary hover:text-text-primary">
               <Target className="w-4 h-4" />

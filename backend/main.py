@@ -57,6 +57,7 @@ from regulation.router import router as regulation_router
 from api_platform.management_router import router as api_platform_management_router  # noqa: E402
 from monitoring.router import router as monitoring_router  # noqa: E402
 from dependency_map.router import router as dependency_map_router # noqa: E402
+from opportunities.router import router as opportunities_router # noqa: E402
 from config import settings  # noqa: E402
 import re  # noqa: E402
 
@@ -207,6 +208,7 @@ app.include_router(regulation_router, prefix="/regulation")
 app.include_router(api_platform_management_router, prefix="/api/platform")
 app.include_router(monitoring_router, prefix="/api/monitoring")
 app.include_router(dependency_map_router, prefix="/api/dependency-map")
+app.include_router(opportunities_router, prefix="/api")
 
 
 @app.get("/")
