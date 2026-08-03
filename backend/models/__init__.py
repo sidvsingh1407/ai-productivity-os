@@ -15,5 +15,6 @@ from models.monitoring_check_result import MonitoringCheckResult
 from models.adoption_record import AdoptionRecord
 from models.engineering_record import EngineeringRecord
 from models.dependency_map import DependencyNode, DependencyEdge
+from models.opportunity import Opportunity
 
-__all__ = ["AISystem", "Base", "User", "UserToken", "Organization", "OrgMember", "Invitation", "Project", "SavedPrompt", "PromptHistory", "PromptEngineerSubscription", "PromptEngineerUsage", "RegulationChunk", "SystemFinding", "RiskClassification", "MonitoringPlan", "MonitoringCheckResult", "AdoptionRecord", "EngineeringRecord", "DependencyNode", "DependencyEdge"]
+__all__ = ["AISystem", "Base", "User", "UserToken", "Organization", "OrgMember", "Invitation", "Project", "SavedPrompt", "PromptHistory", "PromptEngineerSubscription", "PromptEngineerUsage", "RegulationChunk", "SystemFinding", "RiskClassification", "MonitoringPlan", "MonitoringCheckResult", "AdoptionRecord", "EngineeringRecord", "DependencyNode", "DependencyEdge", "Opportunity"]
