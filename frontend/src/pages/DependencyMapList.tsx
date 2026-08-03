@@ -7,8 +7,19 @@ import { workflowsApi } from '@/api/workflows';
 import { auditsApi } from '@/api/audits';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Trash2, Network } from 'lucide-react';
+import { Trash2, Network, List, LayoutTemplate } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import DependencyGraph from '@/components/dependency-map/DependencyGraph';
+import { ReactFlowProvider } from '@xyflow/react';
+import { useState } from 'react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 export default function DependencyMapList() {
   const navigate = useNavigate();
@@ -28,6 +39,8 @@ export default function DependencyMapList() {
   const { data: workflows = [] } = useQuery({ queryKey: ['workflows'], queryFn: workflowsApi.listWorkflows });
   const { data: auditsData } = useQuery({ queryKey: ['audits'], queryFn: auditsApi.listAudits });
   const audits = auditsData?.items || [];
+
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
   const deleteEdgeMutation = useMutation({
     mutationFn: dependencyMapApi.deleteEdge,
@@ -56,10 +69,41 @@ export default function DependencyMapList() {
     return nodeId;
   };
 
+  const getSelectedNodeDetails = () => {
+    if (!selectedNodeId || !nodes) return null;
+    const node = nodes.find(n => n.id === selectedNodeId);
+    if (!node) return null;
+
+    let title = 'Unknown Node';
+    let type = node.node_type;
+    let description = '';
+    let detailLink = '';
+
+    if (node.node_type === 'ai_system' && node.ai_system_id) {
+      const sys = systems.find((s: any) => s.id === node.ai_system_id);
+      title = sys ? sys.name : 'AI System';
+      description = sys ? sys.description : '';
+      detailLink = `/app/ai-systems/${node.ai_system_id}/edit`;
+    } else if (node.node_type === 'workflow' && node.workflow_id) {
+      const wf = workflows.find((w: any) => w.id === node.workflow_id);
+      title = wf ? wf.name : 'Workflow';
+      description = wf ? wf.description : '';
+      detailLink = `/app/workflows/${node.workflow_id}`;
+    } else if (node.node_type === 'audit' && node.audit_id) {
+      const audit = audits.find((a: any) => a.id === node.audit_id);
+      title = audit ? (audit.system_name || 'Audit') : 'Audit';
+      detailLink = `/app/audits/${node.audit_id}`;
+    }
+
+    return { node, title, type, description, detailLink };
+  };
+
+  const selectedNodeDetails = getSelectedNodeDetails();
+
   if (isLoading) return <div className="p-8 text-center text-slate-500">Loading Dependency Map...</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 h-full flex flex-col">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Dependency Map</h1>
@@ -70,9 +114,35 @@ export default function DependencyMapList() {
         </Button>
       </div>
 
-      <div className="rounded-md border bg-white">
-        <Table>
-          <TableHeader>
+      <Tabs defaultValue="map" className="w-full flex-grow flex flex-col min-h-[700px]">
+        <TabsList className="mb-4">
+          <TabsTrigger value="map" className="flex items-center gap-2">
+            <Network className="w-4 h-4" />
+            Visual Map
+          </TabsTrigger>
+          <TabsTrigger value="list" className="flex items-center gap-2">
+            <List className="w-4 h-4" />
+            List View
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="map" className="mt-0 flex-grow relative h-full">
+          <div className="bg-white rounded-md border p-4 h-[600px] absolute inset-0">
+            <ReactFlowProvider>
+              <DependencyGraph
+                nodes={nodes || []}
+                edges={edges || []}
+                getNodeLabel={getNodeDisplayLabel}
+                onNodeClick={setSelectedNodeId}
+              />
+            </ReactFlowProvider>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="list" className="mt-0">
+          <div className="rounded-md border bg-white">
+            <Table>
+              <TableHeader>
             <TableRow>
               <TableHead>Source Entity</TableHead>
               <TableHead>Relationship (Edge)</TableHead>
@@ -118,9 +188,45 @@ export default function DependencyMapList() {
                 </TableRow>
               ))
             )}
-          </TableBody>
-        </Table>
-      </div>
+              </TableBody>
+            </Table>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      <Sheet open={!!selectedNodeId} onOpenChange={(open) => !open && setSelectedNodeId(null)}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{selectedNodeDetails?.title}</SheetTitle>
+            <SheetDescription className="uppercase tracking-wider text-xs font-semibold mt-1">
+              {selectedNodeDetails?.type.replace('_', ' ')}
+            </SheetDescription>
+          </SheetHeader>
+          <div className="mt-6 space-y-4">
+            {selectedNodeDetails?.description && (
+              <div>
+                <h4 className="text-sm font-medium text-slate-900 mb-1">Description</h4>
+                <p className="text-sm text-slate-500">{selectedNodeDetails.description}</p>
+              </div>
+            )}
+
+            <div className="pt-4 border-t">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => {
+                  if (selectedNodeDetails?.detailLink) {
+                    navigate(selectedNodeDetails.detailLink);
+                  }
+                }}
+              >
+                View Full Details
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+
     </div>
   );
 }
