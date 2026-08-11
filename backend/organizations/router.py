@@ -7,6 +7,7 @@ from database import get_db
 from dependencies import get_current_user, get_current_org, require_role
 from organizations.schemas import OrgResponse, OrgMemberResponse, InviteCreate
 from organizations.service import OrganizationService
+from financial.schemas import FinancialIntelligenceResponse
 from models.user import User
 from models.organization import Organization
 
@@ -42,3 +43,11 @@ async def remove_member(
     org_service = OrganizationService(db)
     # Ensure not removing oneself if only admin, etc. Simplification for now:
     await org_service.remove_member(current_org.id, user_id)
+
+@router.get("/me/financial-intelligence", response_model=FinancialIntelligenceResponse)
+async def get_financial_intelligence(
+    current_org: Organization = Depends(get_current_org),
+    db: AsyncSession = Depends(get_db)
+):
+    org_service = OrganizationService(db)
+    return await org_service.get_financial_intelligence(current_org.id)
