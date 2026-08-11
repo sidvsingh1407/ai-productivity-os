@@ -82,6 +82,30 @@ def generate_opportunities(
                     "confidence_or_priority": "Medium"
                 })
 
+        steps_input = wf.get("steps_input") or []
+
+        if any(step.get("manual_handoff") is True and not step.get("system_tool") for step in steps_input):
+            opportunities.append({
+                "organization_id": org_id,
+                "ai_system_id": None,
+                "category": "manual_work",
+                "title": "Manual Step Without Tooling",
+                "description": "Workflow contains manual steps with no system of record, presenting a clear opportunity for digitization.",
+                "source_module": "workflow",
+                "confidence_or_priority": "High"
+            })
+
+        if any(step.get("requires_approval") is True and not step.get("system_tool") for step in steps_input):
+            opportunities.append({
+                "organization_id": org_id,
+                "ai_system_id": None,
+                "category": "repetitive_decisions",
+                "title": "Unrecorded Approval Decision",
+                "description": "Workflow contains approval steps without a system of record, presenting an opportunity for decision automation or system tracking.",
+                "source_module": "workflow",
+                "confidence_or_priority": "Medium"
+            })
+
     # 3. Data Intelligence (6.3)
     # Fields: data_quality_notes, data_freshness, data_accessibility
     for sys in ai_systems:
