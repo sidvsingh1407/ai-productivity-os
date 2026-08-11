@@ -13,6 +13,8 @@ from models.engineering_record import EngineeringRecord
 from sqlalchemy.future import select
 from engineering.service import EngineeringRecordsService
 from ai_systems.service import AISystemsService
+from models.ai_system import AISystem
+from financial.calculator import calculate_org_cost, calculate_cost_by_criticality
 
 class OrganizationService:
     def __init__(self, session: AsyncSession):
@@ -192,6 +194,19 @@ class OrganizationService:
             "readiness_score": readiness_score,
             "readiness_is_partial": readiness_is_partial,
             "readiness_missing_components": readiness_missing_components
+        }
+
+    async def get_financial_intelligence(self, org_id: uuid.UUID) -> dict:
+        stmt = select(AISystem).where(AISystem.organization_id == org_id)
+        result = await self.session.execute(stmt)
+        systems = result.scalars().all()
+
+        org_cost = calculate_org_cost(systems)
+        cost_by_criticality = calculate_cost_by_criticality(systems)
+
+        return {
+            "org_cost": org_cost,
+            "cost_by_criticality": cost_by_criticality
         }
 
     async def get_org_with_scores(self, org: Organization) -> OrgResponse:
