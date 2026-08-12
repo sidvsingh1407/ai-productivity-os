@@ -223,3 +223,22 @@ async def run_audit(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Audit failed: {str(e)}",
         )
+
+
+async def update_system_finding(
+    db: AsyncSession,
+    audit_id: uuid.UUID,
+    org_id: uuid.UUID,
+    system_finding_id: uuid.UUID,
+    finding_title: str,
+    update_data: Dict[str, Any]
+):
+    # Verify the audit belongs to the org
+    await repository.get_audit(db, audit_id, org_id)
+
+    # Update the finding
+    updated_system_finding = await repository.update_system_finding_finding(
+        db, audit_id, system_finding_id, finding_title, update_data
+    )
+
+    return updated_system_finding
