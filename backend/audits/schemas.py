@@ -1,5 +1,5 @@
 from typing import Dict, Any, List, Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, model_validator
 import uuid
 from datetime import datetime
 from models.audit import AuditStatus, IndustryType
@@ -14,6 +14,18 @@ class Finding(BaseModel):
     severity: str
     impact: str
     rationale: str
+    lifecycle_stage: Optional[str] = None
+    ethical_dimension: Optional[str] = None
+
+class FindingPatchUpdate(BaseModel):
+    lifecycle_stage: Optional[str] = None
+    ethical_dimension: Optional[str] = None
+
+    @model_validator(mode='after')
+    def check_at_least_one_field(self) -> 'FindingPatchUpdate':
+        if self.lifecycle_stage is None and self.ethical_dimension is None:
+            raise ValueError('At least one of lifecycle_stage or ethical_dimension must be provided.')
+        return self
 
 class Recommendation(BaseModel):
     recommendation: str

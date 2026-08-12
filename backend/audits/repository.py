@@ -178,3 +178,48 @@ async def get_monitoring_plans_by_systems(
     stmt = select(MonitoringPlan).where(MonitoringPlan.ai_system_id.in_(ai_system_ids))
     result = await db.execute(stmt)
     return list(result.scalars().all())
+
+
+async def update_system_finding_finding(
+    db: AsyncSession,
+    audit_id: uuid.UUID,
+    system_finding_id: uuid.UUID,
+    finding_title: str,
+    update_data: Dict[str, Any]
+) -> SystemFinding:
+    from sqlalchemy.orm.attributes import flag_modified
+
+    stmt = select(SystemFinding).where(
+        SystemFinding.id == system_finding_id,
+        SystemFinding.audit_id == audit_id
+    )
+    result = await db.execute(stmt)
+    db_system_finding = result.scalar_one_or_none()
+
+    if not db_system_finding:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="System finding not found or does not belong to the given audit"
+        )
+
+    found = False
+    for finding in db_system_finding.findings:
+        if finding.get("title") == finding_title:
+            if "lifecycle_stage" in update_data:
+                finding["lifecycle_stage"] = update_data["lifecycle_stage"]
+            if "ethical_dimension" in update_data:
+                finding["ethical_dimension"] = update_data["ethical_dimension"]
+            found = True
+            break
+
+    if not found:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Finding with title '{finding_title}' not found in this system finding"
+        )
+
+    flag_modified(db_system_finding, "findings")
+    await db.commit()
+    await db.refresh(db_system_finding)
+
+    return db_system_finding

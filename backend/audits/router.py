@@ -150,3 +150,33 @@ async def get_audit_versions(
     # Then get versions
     versions = await repository.list_audit_versions(db, id)
     return versions
+
+@router.patch("/{id}/system-findings/{system_finding_id}/findings/{finding_title}", response_model=schemas.SystemFindingResponse, dependencies=[Depends(require_role("member"))])
+async def update_system_finding_finding_route(
+    id: uuid.UUID,
+    system_finding_id: uuid.UUID,
+    finding_title: str,
+    update_data: schemas.FindingPatchUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_org: Organization = Depends(get_current_org)
+):
+    """Update a specific finding within a system finding."""
+    update_dict = update_data.model_dump(exclude_unset=True)
+
+    updated_sf = await service.update_system_finding(
+        db=db,
+        audit_id=id,
+        org_id=current_org.id,
+        system_finding_id=system_finding_id,
+        finding_title=finding_title,
+        update_data=update_dict
+    )
+
+    return {
+        "ai_system_id": updated_sf.ai_system_id,
+        "ai_system_name": updated_sf.ai_system.name if hasattr(updated_sf, 'ai_system') and updated_sf.ai_system else "",
+        "findings": updated_sf.findings,
+        "recommendations": updated_sf.recommendations,
+        "executive_summary": updated_sf.executive_summary,
+        "dimension_scores": updated_sf.dimension_scores
+    }
