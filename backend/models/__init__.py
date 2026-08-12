@@ -20,5 +20,6 @@ from models.dependency_map import DependencyNode, DependencyEdge
 from models.opportunity import Opportunity
 from models.agent_recommendation import AgentRecommendation
 from models.workflow_recommendation import WorkflowRecommendation
+from models.roadmap_item import RoadmapItem
 
-__all__ = ["AISystem", "Base", "User", "UserToken", "Organization", "OrgMember", "Invitation", "Project", "SavedPrompt", "PromptHistory", "PromptEngineerSubscription", "PromptEngineerUsage", "RegulationChunk", "Audit", "SystemFinding", "RiskClassification", "MonitoringPlan", "MonitoringCheckResult", "AdoptionRecord", "EngineeringRecord", "Workflow", "DependencyNode", "DependencyEdge", "Opportunity", "AgentRecommendation", "WorkflowRecommendation"]
+__all__ = ["AISystem", "Base", "User", "UserToken", "Organization", "OrgMember", "Invitation", "Project", "SavedPrompt", "PromptHistory", "PromptEngineerSubscription", "PromptEngineerUsage", "RegulationChunk", "Audit", "SystemFinding", "RiskClassification", "MonitoringPlan", "MonitoringCheckResult", "AdoptionRecord", "EngineeringRecord", "Workflow", "DependencyNode", "DependencyEdge", "Opportunity", "AgentRecommendation", "WorkflowRecommendation", "RoadmapItem"]
