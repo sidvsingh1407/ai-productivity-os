@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger(__name__)
 import uuid
 from typing import List
 from sqlalchemy import delete, select
@@ -9,6 +11,7 @@ from models.workflow_recommendation import WorkflowRecommendation
 from models.ai_system import AISystem
 from models.risk_classification import RiskClassification
 from models.dependency_map import DependencyNode, DependencyEdge
+from financial.calculator import calculate_system_cost
 from sqlalchemy import or_, func
 
 TIME_HORIZON_MAPPING = {
@@ -202,6 +205,131 @@ async def generate_governance_roadmap_items(db_session: AsyncSession, organizati
                 owner=None
             )
             roadmap_items.append(item)
+
+    if roadmap_items:
+        db_session.add_all(roadmap_items)
+
+    return roadmap_items
+
+
+async def generate_investment_roadmap_items(db_session: AsyncSession, organization_id: uuid.UUID) -> List[RoadmapItem]:
+    # 1. Idempotency: clear existing "investment" category roadmap items for this org
+    stmt = delete(RoadmapItem).where(
+        RoadmapItem.organization_id == organization_id,
+        RoadmapItem.category == "investment"
+    )
+    await db_session.execute(stmt)
+
+    roadmap_items = []
+
+    # 2. Fetch Systems and Compute Cost
+    sys_stmt = select(AISystem).where(AISystem.organization_id == organization_id)
+    sys_result = await db_session.execute(sys_stmt)
+    systems = sys_result.scalars().all()
+
+    for system in systems:
+        cost_data = calculate_system_cost(system)
+
+        # Skip if total cost is 0.0 or not present
+        if cost_data.get("total", 0.0) <= 0.0:
+            continue
+
+        # Determine description suffix if partial
+        description_suffix = ""
+        if cost_data.get("is_partial"):
+            missing = ", ".join(cost_data.get("missing_components", []))
+            description_suffix = f"\n\nNote: based on partial cost data — missing: {missing}"
+
+        # 3. Generate Roadmap Items for Systems with Cost
+        # Look for Phase 7 records (Opportunity, AgentRecommendation, WorkflowRecommendation)
+
+        # A) Opportunities
+        opp_stmt = select(Opportunity).where(Opportunity.ai_system_id == system.id)
+        opp_result = await db_session.execute(opp_stmt)
+        opportunities = opp_result.scalars().all()
+
+        has_source = False
+
+        for opp in opportunities:
+            priority = opp.confidence_or_priority
+            if priority in TIME_HORIZON_MAPPING:
+                has_source = True
+                time_horizon = TIME_HORIZON_MAPPING[priority]
+                desc = (opp.description or "") + description_suffix
+
+                item = RoadmapItem(
+                    organization_id=organization_id,
+                    source_type="opportunity",
+                    opportunity_id=opp.id,
+                    agent_recommendation_id=None,
+                    workflow_recommendation_id=None,
+                    category="investment",
+                    time_horizon=time_horizon,
+                    title=opp.title,
+                    description=desc,
+                    department=None,
+                    owner=None
+                )
+                roadmap_items.append(item)
+
+            # B) Agent Recommendations connected to this Opportunity
+            ar_stmt = select(AgentRecommendation).where(AgentRecommendation.opportunity_id == opp.id)
+            ar_result = await db_session.execute(ar_stmt)
+            agent_recs = ar_result.scalars().all()
+
+            for ar in agent_recs:
+                ar_priority = ar.confidence
+                if ar_priority in TIME_HORIZON_MAPPING:
+                    has_source = True
+                    ar_time_horizon = TIME_HORIZON_MAPPING[ar_priority]
+                    ar_desc = (ar.rationale or "") + description_suffix
+
+                    ar_item = RoadmapItem(
+                        organization_id=organization_id,
+                        source_type="agent_recommendation",
+                        opportunity_id=None,
+                        agent_recommendation_id=ar.id,
+                        workflow_recommendation_id=None,
+                        category="investment",
+                        time_horizon=ar_time_horizon,
+                        title=ar.agent_type,
+                        description=ar_desc,
+                        department=None,
+                        owner=None
+                    )
+                    roadmap_items.append(ar_item)
+
+            # C) Workflow Recommendations connected to this Opportunity
+            wr_stmt = select(WorkflowRecommendation).where(WorkflowRecommendation.opportunity_id == opp.id)
+            wr_result = await db_session.execute(wr_stmt)
+            workflow_recs = wr_result.scalars().all()
+
+            for wr in workflow_recs:
+                wr_priority = wr.confidence
+                if wr_priority in TIME_HORIZON_MAPPING:
+                    has_source = True
+                    wr_time_horizon = TIME_HORIZON_MAPPING[wr_priority]
+                    wr_desc = (wr.rationale or "") + description_suffix
+
+                    wr_item = RoadmapItem(
+                        organization_id=organization_id,
+                        source_type="workflow_recommendation",
+                        opportunity_id=None,
+                        agent_recommendation_id=None,
+                        workflow_recommendation_id=wr.id,
+                        category="investment",
+                        time_horizon=wr_time_horizon,
+                        title=wr.recommendation_type,
+                        description=wr_desc,
+                        department=None,
+                        owner=None
+                    )
+                    roadmap_items.append(wr_item)
+
+        if not has_source:
+            # Known gap: System has real cost data but no Phase 7 source record
+            # to attach an investment roadmap item to. We skip in this case.
+            logger.info(f"System {system.id} has real cost data but no Phase 7 source record to attach an investment roadmap item to.")
 
     if roadmap_items:
         db_session.add_all(roadmap_items)
