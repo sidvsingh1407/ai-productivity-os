@@ -191,6 +191,7 @@ async def generate_governance_roadmap_items(db_session: AsyncSession, organizati
             if not source_type:
                 # Known gap: structurally possible for a system to be governance-flag-worthy with no Phase 7 source record
                 # to attach to; roadmap_items schema currently requires one. We skip in this case.
+                logger.info(f"System {system.id} flagged for governance but skipped due to missing Phase 7 source record.")
                 continue
 
             item = RoadmapItem(
@@ -378,7 +379,7 @@ async def generate_training_roadmap_items(db_session: AsyncSession, organization
                 has_source = True
                 time_horizon = TIME_HORIZON_MAPPING[priority]
 
-                desc = f"Training intervention required: High resistance detected in {ar.department or 'unspecified'} department.\n\n{opp.description or ''}"
+                desc = f"Training intervention required: High resistance detected in {ar.department or 'unspecified'} department; training_status: {ar.training_status}.\n\n{opp.description or ''}"
 
                 item = RoadmapItem(
                     organization_id=organization_id,
@@ -407,7 +408,7 @@ async def generate_training_roadmap_items(db_session: AsyncSession, organization
                     has_source = True
                     agent_time_horizon = TIME_HORIZON_MAPPING[agent_priority]
 
-                    agent_desc = f"Training intervention required: High resistance detected in {ar.department or 'unspecified'} department.\n\n{agent_rec.rationale or ''}"
+                    agent_desc = f"Training intervention required: High resistance detected in {ar.department or 'unspecified'} department; training_status: {ar.training_status}.\n\n{agent_rec.rationale or ''}"
 
                     agent_item = RoadmapItem(
                         organization_id=organization_id,
@@ -438,7 +439,7 @@ async def generate_training_roadmap_items(db_session: AsyncSession, organization
                     has_source = True
                     wr_time_horizon = TIME_HORIZON_MAPPING[wr_priority]
 
-                    wr_desc = f"Training intervention required: High resistance detected in {ar.department or 'unspecified'} department.\n\n{wr.rationale or ''}"
+                    wr_desc = f"Training intervention required: High resistance detected in {ar.department or 'unspecified'} department; training_status: {ar.training_status}.\n\n{wr.rationale or ''}"
 
                     wr_item = RoadmapItem(
                         organization_id=organization_id,
@@ -462,6 +463,149 @@ async def generate_training_roadmap_items(db_session: AsyncSession, organization
             # Known gap: System/Department has high resistance but no Phase 7 source record
             # to attach a training roadmap item to. We skip in this case.
             logger.info(f"System {ar.ai_system_id} (dept: {ar.department}) has high resistance but no Phase 7 source record to attach a training roadmap item to.")
+
+    if roadmap_items:
+        db_session.add_all(roadmap_items)
+
+    return roadmap_items
+async def generate_department_roadmap_items(db_session: AsyncSession, organization_id: uuid.UUID) -> List[RoadmapItem]:
+    # 1. Idempotency: clear existing "department" category roadmap items for this org
+    stmt = delete(RoadmapItem).where(
+        RoadmapItem.organization_id == organization_id,
+        RoadmapItem.category == "department"
+    )
+    await db_session.execute(stmt)
+
+    roadmap_items = []
+
+    # 2. Opportunities
+    opp_stmt = select(Opportunity).where(Opportunity.organization_id == organization_id)
+    opp_result = await db_session.execute(opp_stmt)
+    opportunities = opp_result.scalars().all()
+
+    for opp in opportunities:
+        priority = opp.confidence_or_priority
+        if priority not in TIME_HORIZON_MAPPING:
+            continue
+
+        # Resolve AISystem department
+        if not opp.ai_system_id:
+            continue
+
+        sys_stmt = select(AISystem).where(AISystem.id == opp.ai_system_id)
+        sys_result = await db_session.execute(sys_stmt)
+        system = sys_result.scalar_one_or_none()
+
+        if not system or not system.department:
+            continue
+
+        normalized_dept = normalize_department(system.department)
+        time_horizon = TIME_HORIZON_MAPPING[priority]
+
+        item = RoadmapItem(
+            organization_id=organization_id,
+            source_type="opportunity",
+            opportunity_id=opp.id,
+            agent_recommendation_id=None,
+            workflow_recommendation_id=None,
+            category="department",
+            time_horizon=time_horizon,
+            title=opp.title,
+            description=opp.description,
+            department=normalized_dept,
+            owner=None
+        )
+        roadmap_items.append(item)
+
+    # 3. Agent Recommendations
+    ar_stmt = select(AgentRecommendation).where(AgentRecommendation.organization_id == organization_id)
+    ar_result = await db_session.execute(ar_stmt)
+    agent_recommendations = ar_result.scalars().all()
+
+    for ar in agent_recommendations:
+        priority = ar.confidence
+        if priority not in TIME_HORIZON_MAPPING:
+            continue
+
+        if not ar.opportunity_id:
+            continue
+
+        opp_stmt = select(Opportunity).where(Opportunity.id == ar.opportunity_id)
+        opp_result = await db_session.execute(opp_stmt)
+        opp = opp_result.scalar_one_or_none()
+
+        if not opp or not opp.ai_system_id:
+            continue
+
+        sys_stmt = select(AISystem).where(AISystem.id == opp.ai_system_id)
+        sys_result = await db_session.execute(sys_stmt)
+        system = sys_result.scalar_one_or_none()
+
+        if not system or not system.department:
+            continue
+
+        normalized_dept = normalize_department(system.department)
+        time_horizon = TIME_HORIZON_MAPPING[priority]
+
+        item = RoadmapItem(
+            organization_id=organization_id,
+            source_type="agent_recommendation",
+            opportunity_id=None,
+            agent_recommendation_id=ar.id,
+            workflow_recommendation_id=None,
+            category="department",
+            time_horizon=time_horizon,
+            title=ar.agent_type,
+            description=ar.rationale,
+            department=normalized_dept,
+            owner=None
+        )
+        roadmap_items.append(item)
+
+    # 4. Workflow Recommendations
+    wr_stmt = select(WorkflowRecommendation).where(WorkflowRecommendation.organization_id == organization_id)
+    wr_result = await db_session.execute(wr_stmt)
+    workflow_recommendations = wr_result.scalars().all()
+
+    for wr in workflow_recommendations:
+        priority = wr.confidence
+        if priority not in TIME_HORIZON_MAPPING:
+            continue
+
+        if not wr.opportunity_id:
+            continue
+
+        opp_stmt = select(Opportunity).where(Opportunity.id == wr.opportunity_id)
+        opp_result = await db_session.execute(opp_stmt)
+        opp = opp_result.scalar_one_or_none()
+
+        if not opp or not opp.ai_system_id:
+            continue
+
+        sys_stmt = select(AISystem).where(AISystem.id == opp.ai_system_id)
+        sys_result = await db_session.execute(sys_stmt)
+        system = sys_result.scalar_one_or_none()
+
+        if not system or not system.department:
+            continue
+
+        normalized_dept = normalize_department(system.department)
+        time_horizon = TIME_HORIZON_MAPPING[priority]
+
+        item = RoadmapItem(
+            organization_id=organization_id,
+            source_type="workflow_recommendation",
+            opportunity_id=None,
+            agent_recommendation_id=None,
+            workflow_recommendation_id=wr.id,
+            category="department",
+            time_horizon=time_horizon,
+            title=wr.recommendation_type,
+            description=wr.rationale,
+            department=normalized_dept,
+            owner=None
+        )
+        roadmap_items.append(item)
 
     if roadmap_items:
         db_session.add_all(roadmap_items)
