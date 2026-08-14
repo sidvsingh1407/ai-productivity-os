@@ -13,6 +13,8 @@ from models.risk_classification import RiskClassification
 from models.dependency_map import DependencyNode, DependencyEdge
 from financial.calculator import calculate_system_cost
 from sqlalchemy import or_, func
+from models.adoption_record import AdoptionRecord
+from agent_recommendations.engine import normalize_department
 
 TIME_HORIZON_MAPPING = {
     "High": "30_day",
@@ -330,6 +332,136 @@ async def generate_investment_roadmap_items(db_session: AsyncSession, organizati
             # Known gap: System has real cost data but no Phase 7 source record
             # to attach an investment roadmap item to. We skip in this case.
             logger.info(f"System {system.id} has real cost data but no Phase 7 source record to attach an investment roadmap item to.")
+
+    if roadmap_items:
+        db_session.add_all(roadmap_items)
+
+    return roadmap_items
+
+
+
+async def generate_training_roadmap_items(db_session: AsyncSession, organization_id: uuid.UUID) -> List[RoadmapItem]:
+    # 1. Idempotency: clear existing "training" category roadmap items for this org
+    stmt = delete(RoadmapItem).where(
+        RoadmapItem.organization_id == organization_id,
+        RoadmapItem.category == "training"
+    )
+    await db_session.execute(stmt)
+
+    roadmap_items = []
+
+    # 2. Fetch AdoptionRecords with high resistance
+    # We need to find systems & departments that have meaningful resistance
+    ar_stmt = select(AdoptionRecord).where(
+        AdoptionRecord.organization_id == organization_id,
+        AdoptionRecord.resistance_level == "high"
+    )
+    ar_result = await db_session.execute(ar_stmt)
+    adoption_records = ar_result.scalars().all()
+
+    for ar in adoption_records:
+        # 3. Generate Roadmap Items for Flagged Systems/Departments
+        # Look for Phase 7 records (Opportunity, AgentRecommendation, WorkflowRecommendation)
+
+        # A) Opportunities
+        opp_stmt = select(Opportunity).where(Opportunity.ai_system_id == ar.ai_system_id)
+        opp_result = await db_session.execute(opp_stmt)
+        opportunities = opp_result.scalars().all()
+
+        has_source = False
+
+        normalized_dept = normalize_department(ar.department)
+
+        for opp in opportunities:
+            priority = opp.confidence_or_priority
+            if priority in TIME_HORIZON_MAPPING:
+                has_source = True
+                time_horizon = TIME_HORIZON_MAPPING[priority]
+
+                desc = f"Training intervention required: High resistance detected in {ar.department or 'unspecified'} department.\n\n{opp.description or ''}"
+
+                item = RoadmapItem(
+                    organization_id=organization_id,
+                    source_type="opportunity",
+                    opportunity_id=opp.id,
+                    agent_recommendation_id=None,
+                    workflow_recommendation_id=None,
+                    category="training",
+                    time_horizon=time_horizon,
+                    title=f"Training: {opp.title}",
+                    description=desc.strip(),
+                    department=normalized_dept,
+                    owner=None
+                )
+                roadmap_items.append(item)
+                break # Just need ONE source for this department
+
+            # B) Agent Recommendations connected to this Opportunity
+            agent_stmt = select(AgentRecommendation).where(AgentRecommendation.opportunity_id == opp.id)
+            agent_result = await db_session.execute(agent_stmt)
+            agent_recs = agent_result.scalars().all()
+
+            for agent_rec in agent_recs:
+                agent_priority = agent_rec.confidence
+                if agent_priority in TIME_HORIZON_MAPPING:
+                    has_source = True
+                    agent_time_horizon = TIME_HORIZON_MAPPING[agent_priority]
+
+                    agent_desc = f"Training intervention required: High resistance detected in {ar.department or 'unspecified'} department.\n\n{agent_rec.rationale or ''}"
+
+                    agent_item = RoadmapItem(
+                        organization_id=organization_id,
+                        source_type="agent_recommendation",
+                        opportunity_id=None,
+                        agent_recommendation_id=agent_rec.id,
+                        workflow_recommendation_id=None,
+                        category="training",
+                        time_horizon=agent_time_horizon,
+                        title=f"Training: {agent_rec.agent_type}",
+                        description=agent_desc.strip(),
+                        department=normalized_dept,
+                        owner=None
+                    )
+                    roadmap_items.append(agent_item)
+                    break
+            if has_source:
+                break
+
+            # C) Workflow Recommendations connected to this Opportunity
+            wr_stmt = select(WorkflowRecommendation).where(WorkflowRecommendation.opportunity_id == opp.id)
+            wr_result = await db_session.execute(wr_stmt)
+            workflow_recs = wr_result.scalars().all()
+
+            for wr in workflow_recs:
+                wr_priority = wr.confidence
+                if wr_priority in TIME_HORIZON_MAPPING:
+                    has_source = True
+                    wr_time_horizon = TIME_HORIZON_MAPPING[wr_priority]
+
+                    wr_desc = f"Training intervention required: High resistance detected in {ar.department or 'unspecified'} department.\n\n{wr.rationale or ''}"
+
+                    wr_item = RoadmapItem(
+                        organization_id=organization_id,
+                        source_type="workflow_recommendation",
+                        opportunity_id=None,
+                        agent_recommendation_id=None,
+                        workflow_recommendation_id=wr.id,
+                        category="training",
+                        time_horizon=wr_time_horizon,
+                        title=f"Training: {wr.recommendation_type}",
+                        description=wr_desc.strip(),
+                        department=normalized_dept,
+                        owner=None
+                    )
+                    roadmap_items.append(wr_item)
+                    break
+            if has_source:
+                break
+
+        if not has_source:
+            # Known gap: System/Department has high resistance but no Phase 7 source record
+            # to attach a training roadmap item to. We skip in this case.
+            logger.info(f"System {ar.ai_system_id} (dept: {ar.department}) has high resistance but no Phase 7 source record to attach a training roadmap item to.")
 
     if roadmap_items:
         db_session.add_all(roadmap_items)
