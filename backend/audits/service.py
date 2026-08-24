@@ -8,6 +8,7 @@ from audits.schemas import AuditResponse
 from audits.intelligence_engine import generate_intelligence, aggregate_top_findings_and_recommendations
 from audits.roadmap_engine import generate_system_driven_roadmap
 from benchmarking.adapter import get_api_benchmark_payload
+from financial.calculator import calculate_system_cost
 from services.narrative_service import generate_audit_narrative
 
 
@@ -134,6 +135,21 @@ async def run_audit(
                     ),
                     dimension_scores=scores_dict.get("dimensions", {}),
                 )
+                # create cost snapshot
+                system_cost = calculate_system_cost(sys)
+                await repository.create_ai_system_cost_snapshot(
+                    db=db,
+                    organization_id=org_id,
+                    ai_system_id=sys.id,
+                    audit_id=audit.id,
+                    licensing_cost=sys.licensing_cost,
+                    cloud_cost=sys.cloud_cost,
+                    inference_cost=sys.inference_cost,
+                    maintenance_cost=sys.maintenance_cost,
+                    total_cost=system_cost.get("total"),
+                    is_partial=system_cost.get("is_partial", False)
+                )
+
 
         # Fetch per-system findings
         db_system_findings = await repository.get_system_findings_by_audit(db, audit.id)
