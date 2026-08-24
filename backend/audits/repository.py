@@ -9,6 +9,7 @@ from models.ai_system import AISystem
 from models.system_finding import SystemFinding
 from models.risk_classification import RiskClassification
 from models.monitoring_plan import MonitoringPlan
+from models.ai_system_cost_snapshot import AISystemCostSnapshot
 
 
 async def create_audit(
@@ -223,3 +224,32 @@ async def update_system_finding_finding(
     await db.refresh(db_system_finding)
 
     return db_system_finding
+
+
+async def create_ai_system_cost_snapshot(
+    db: AsyncSession,
+    organization_id: uuid.UUID,
+    ai_system_id: uuid.UUID,
+    audit_id: uuid.UUID,
+    licensing_cost: Optional[float],
+    cloud_cost: Optional[float],
+    inference_cost: Optional[float],
+    maintenance_cost: Optional[float],
+    total_cost: float,
+    is_partial: bool,
+) -> AISystemCostSnapshot:
+    db_snapshot = AISystemCostSnapshot(
+        organization_id=organization_id,
+        ai_system_id=ai_system_id,
+        audit_id=audit_id,
+        licensing_cost=licensing_cost,
+        cloud_cost=cloud_cost,
+        inference_cost=inference_cost,
+        maintenance_cost=maintenance_cost,
+        total_cost=total_cost,
+        is_partial=is_partial,
+    )
+    db.add(db_snapshot)
+    await db.commit()
+    await db.refresh(db_snapshot)
+    return db_snapshot
