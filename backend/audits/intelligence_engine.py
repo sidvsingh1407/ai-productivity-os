@@ -390,7 +390,7 @@ def aggregate_top_findings_and_recommendations(system_findings_list: List[Dict[s
         "recommendations": top_recommendations
     }
 
-def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = None, form_response: Dict[str, Any] | None = None, system_context: Dict[str, Any] | None = None, retain_linked_finding: bool = False) -> Dict[str, Any]:
+def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = None, form_response: Dict[str, Any] | None = None, system_context: Dict[str, Any] | None = None, retain_linked_finding: bool = False, risk_trend: str = "Stable") -> Dict[str, Any]:
     """
     Entrypoint for intelligence generation.
     Takes a raw scores dictionary and returns a structure with findings, recommendations, executive summary,
@@ -480,7 +480,7 @@ def generate_intelligence(scores: Dict[str, Any], industry_type: str | None = No
     }
 
     # Generate Risk Projection
-    risk_projection = generate_risk_projection(scores, clean_findings)
+    risk_projection = generate_risk_projection(scores, clean_findings, risk_trend=risk_trend)
     risk_projection = adapt_risk_projection(risk_projection, industry_type)
 
     # Generate Cost of Inaction

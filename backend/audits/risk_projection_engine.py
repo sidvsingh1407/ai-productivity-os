@@ -37,12 +37,7 @@ def determine_risk_level(risk_score: int) -> str:
         return "Moderate"
     return "Low"
 
-def determine_risk_trend(current_risk_score: int, projected_risk_score: int) -> str:
-    if projected_risk_score > current_risk_score + 5:
-        return "Increasing"
-    elif projected_risk_score < current_risk_score - 5:
-        return "Decreasing"
-    return "Stable"
+
 
 def generate_risk_explanation(risk_score: int, risk_level: str, dimension_scores: Dict[str, int], missing_data_count: int) -> str:
     reasons = []
@@ -151,7 +146,7 @@ def generate_risk_timeline(dimension_scores: Dict[str, int]) -> Dict[str, List[s
 
     return timeline
 
-def generate_risk_projection(scores: Dict[str, Any], findings: List[Dict[str, Any]]) -> Dict[str, Any]:
+def generate_risk_projection(scores: Dict[str, Any], findings: List[Dict[str, Any]], risk_trend: str = "Stable") -> Dict[str, Any]:
     """
     Orchestrates the generation of the risk projection payload.
     """
@@ -166,8 +161,7 @@ def generate_risk_projection(scores: Dict[str, Any], findings: List[Dict[str, An
     risk_level = determine_risk_level(risk_score)
     confidence = calculate_confidence_score(len(missing_data), len(contradictions), eqs)
 
-    # We will compute risk_trend in the intelligence engine later or assume stable if no history
-    risk_trend = "Stable"
+    # risk_trend is now passed in from the caller
 
     explanation = generate_risk_explanation(risk_score, risk_level, dimension_scores, len(missing_data))
 

@@ -3,6 +3,7 @@ from typing import Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status
 from audits import repository
+from audits.trend_calculator import calculate_risk_trend
 from audits.scoring_engine import score_response
 from audits.schemas import AuditResponse
 from audits.intelligence_engine import generate_intelligence, aggregate_top_findings_and_recommendations
@@ -114,6 +115,9 @@ async def run_audit(
                     "data_types": sys.data_types,
                 }
 
+                # calculate system risk trend
+                risk_trend = await calculate_risk_trend(db, sys.id)
+
                 # generate per-system intelligence
                 sys_intel = generate_intelligence(
                     scores_dict,
@@ -121,6 +125,7 @@ async def run_audit(
                     form_response,
                     system_context=system_context,
                     retain_linked_finding=True,
+                    risk_trend=risk_trend,
                 )
 
                 # save to database
