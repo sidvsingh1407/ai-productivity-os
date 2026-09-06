@@ -18,6 +18,7 @@ class AISystemBase(BaseModel):
     version: Optional[str] = None
     lifecycle_status: Optional[str] = None
     owner: Optional[str] = None
+    owner_user_id: Optional[uuid.UUID] = None
     department: Optional[str] = None
     business_capability: Optional[str] = None
     internal_external_users: Optional[str] = None
@@ -96,6 +97,7 @@ class AISystemUpdate(BaseModel):
     version: Optional[str] = None
     lifecycle_status: Optional[str] = None
     owner: Optional[str] = None
+    owner_user_id: Optional[uuid.UUID] = None
     department: Optional[str] = None
     business_capability: Optional[str] = None
     internal_external_users: Optional[str] = None
