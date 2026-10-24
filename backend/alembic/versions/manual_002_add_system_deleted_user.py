@@ -32,4 +32,19 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     if table_exists('users'):
-        op.execute("DELETE FROM users WHERE email = 'deleted@system.tarkax.local'")
+        op.execute("""
+            DO $$
+            DECLARE
+                system_user_id UUID;
+            BEGIN
+                SELECT id INTO system_user_id FROM users WHERE email = 'deleted@system.tarkax.local';
+
+                IF system_user_id IS NOT NULL THEN
+                    IF NOT EXISTS (SELECT 1 FROM ai_systems WHERE owner_user_id = system_user_id) AND
+                       NOT EXISTS (SELECT 1 FROM user_tokens WHERE user_id = system_user_id) AND
+                       NOT EXISTS (SELECT 1 FROM api_keys WHERE user_id = system_user_id) THEN
+                        DELETE FROM users WHERE id = system_user_id;
+                    END IF;
+                END IF;
+            END $$;
+        """)
