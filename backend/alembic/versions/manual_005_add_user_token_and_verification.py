@@ -61,3 +61,4 @@ def downgrade() -> None:
         if column_exists('users', 'email_verified'):
             op.drop_column('users', 'email_verified')
 
+ main-11068675611994421723
