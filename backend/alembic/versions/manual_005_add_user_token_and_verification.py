@@ -1,7 +1,7 @@
 """add user token and email verification schema
 
-Revision ID: manual_005_add_user_token_and_verification
-Revises: manual_004_add_export_job_fields
+Revision ID: manual_005
+Revises: manual_004
 Create Date: 2024-06-09 20:00:00.000000
 
 """
@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from migration_helpers import table_exists, column_exists, index_exists
 
 # revision identifiers, used by Alembic.
-revision: str = 'manual_005_add_user_token_and_verification'
+revision: str = 'manual_005'
 down_revision: Union[str, None] = 'manual_004'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -60,3 +60,5 @@ def downgrade() -> None:
             op.drop_column('users', 'email_verified_at')
         if column_exists('users', 'email_verified'):
             op.drop_column('users', 'email_verified')
+
+ main-11068675611994421723
