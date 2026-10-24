@@ -10,7 +10,10 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 from pgvector.sqlalchemy import Vector
-
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from migration_helpers import table_exists, column_exists, index_exists
 
 # revision identifiers, used by Alembic.
 revision: str = 'ca6463a714d3'
@@ -26,27 +29,30 @@ def upgrade() -> None:
     if bind.engine.name == 'postgresql':
         op.execute('CREATE EXTENSION IF NOT EXISTS vector')
 
-    op.create_table('regulation_chunks',
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('source', sa.String(), nullable=False),
-    sa.Column('article_number', sa.String(), nullable=True),
-    sa.Column('section_title', sa.String(), nullable=True),
-    sa.Column('content', sa.Text(), nullable=False),
-    sa.Column('embedding', Vector(768), nullable=True),
-    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_regulation_chunks_source'), 'regulation_chunks', ['source'], unique=False)
+    if not table_exists('regulation_chunks'):
+        op.create_table('regulation_chunks',
+        sa.Column('id', sa.UUID(), nullable=False),
+        sa.Column('source', sa.String(), nullable=False),
+        sa.Column('article_number', sa.String(), nullable=True),
+        sa.Column('section_title', sa.String(), nullable=True),
+        sa.Column('content', sa.Text(), nullable=False),
+        sa.Column('embedding', Vector(768), nullable=True),
+        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+        sa.PrimaryKeyConstraint('id')
+        )
+        op.create_index(op.f('ix_regulation_chunks_source'), 'regulation_chunks', ['source'], unique=False)
 
-    if bind.engine.name == 'postgresql':
-        # Add index for vector similarity search (cosine distance: vector_cosine_ops)
-        op.execute("CREATE INDEX ix_regulation_chunks_embedding ON regulation_chunks USING hnsw (embedding vector_cosine_ops)")
+        if bind.engine.name == 'postgresql':
+            # Add index for vector similarity search (cosine distance: vector_cosine_ops)
+            op.execute("CREATE INDEX IF NOT EXISTS ix_regulation_chunks_embedding ON regulation_chunks USING hnsw (embedding vector_cosine_ops)")
 
 
 def downgrade() -> None:
     """Downgrade schema."""
-    bind = op.get_bind()
-    if bind.engine.name == 'postgresql':
-        op.execute("DROP INDEX IF EXISTS ix_regulation_chunks_embedding")
-    op.drop_index(op.f('ix_regulation_chunks_source'), table_name='regulation_chunks')
-    op.drop_table('regulation_chunks')
+    if table_exists('regulation_chunks'):
+        bind = op.get_bind()
+        if bind.engine.name == 'postgresql':
+            op.execute("DROP INDEX IF EXISTS ix_regulation_chunks_embedding")
+        if index_exists('regulation_chunks', 'ix_regulation_chunks_source'):
+            op.drop_index(op.f('ix_regulation_chunks_source'), table_name='regulation_chunks')
+        op.drop_table('regulation_chunks')

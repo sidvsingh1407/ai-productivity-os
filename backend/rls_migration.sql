@@ -1,3 +1,4 @@
+-- DO NOT RUN: Edits alembic_version by hand. Alembic migrations replace it.
 BEGIN;
 
 -- Running upgrade manual_001 -> 7a8b9c0d1e2f
