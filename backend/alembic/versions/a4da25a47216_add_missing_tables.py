@@ -47,10 +47,10 @@ def upgrade() -> None:
             DO $$
             BEGIN
                 IF EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'anon') THEN
-                    REVOKE ALL ON public.risk_classifications FROM anon;
+                    EXECUTE 'REVOKE ALL ON public.risk_classifications FROM anon;';
                 END IF;
                 IF EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'authenticated') THEN
-                    REVOKE ALL ON public.risk_classifications FROM authenticated;
+                    EXECUTE 'REVOKE ALL ON public.risk_classifications FROM authenticated;';
                 END IF;
             END
             $$;
@@ -81,10 +81,10 @@ def upgrade() -> None:
             DO $$
             BEGIN
                 IF EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'anon') THEN
-                    REVOKE ALL ON public.opportunities FROM anon;
+                    EXECUTE 'REVOKE ALL ON public.opportunities FROM anon;';
                 END IF;
                 IF EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'authenticated') THEN
-                    REVOKE ALL ON public.opportunities FROM authenticated;
+                    EXECUTE 'REVOKE ALL ON public.opportunities FROM authenticated;';
                 END IF;
             END
             $$;
@@ -114,10 +114,10 @@ def upgrade() -> None:
             DO $$
             BEGIN
                 IF EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'anon') THEN
-                    REVOKE ALL ON public.agent_recommendations FROM anon;
+                    EXECUTE 'REVOKE ALL ON public.agent_recommendations FROM anon;';
                 END IF;
                 IF EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'authenticated') THEN
-                    REVOKE ALL ON public.agent_recommendations FROM authenticated;
+                    EXECUTE 'REVOKE ALL ON public.agent_recommendations FROM authenticated;';
                 END IF;
             END
             $$;
