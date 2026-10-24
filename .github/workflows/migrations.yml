@@ -1,0 +1,64 @@
+name: Migrations
+
+on:
+  pull_request:
+
+jobs:
+  check-migrations:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: Run Alembic migrations and check for drift
+        env:
+          DATABASE_URL: "postgresql+asyncpg://postgres:postgres@localhost:5432/postgres"
+          SECRET_KEY: "dummy_secret_for_ci"
+          STRIPE_SECRET_KEY: "dummy"
+          STRIPE_WEBHOOK_SECRET: "dummy"
+          OPENAI_API_KEY: "dummy"
+          SUPABASE_URL: "dummy"
+          SUPABASE_KEY: "dummy"
+        run: |
+          cd backend
+          alembic upgrade head
+          alembic check
+          alembic downgrade -1
+          alembic upgrade head
+
+      - name: Verify single head
+        run: |
+          cd backend
+          heads=$(alembic heads | wc -l)
+          echo "Number of heads: $heads"
+          if [ "$heads" -ne 1 ]; then
+            echo "Error: Expected exactly one Alembic head, but found $heads."
+            alembic heads
+            exit 1
+          fi

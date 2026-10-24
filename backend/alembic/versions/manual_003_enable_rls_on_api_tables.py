@@ -24,12 +24,21 @@ def upgrade() -> None:
         # Enable RLS on the table
         op.execute(f'ALTER TABLE {table} ENABLE ROW LEVEL SECURITY;')
 
-        # Create policy denying postgrest access
+        # Create policy denying postgrest access if it does not exist
         op.execute(f'''
-            CREATE POLICY "Allow backend access, deny postgrest" ON {table}
-            AS PERMISSIVE FOR ALL
-            USING (current_user NOT IN ('anon', 'authenticated'))
-            WITH CHECK (current_user NOT IN ('anon', 'authenticated'));
+            DO $$
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM pg_policies
+                    WHERE tablename = '{table}' AND policyname = 'Allow backend access, deny postgrest'
+                ) THEN
+                    CREATE POLICY "Allow backend access, deny postgrest" ON {table}
+                    AS PERMISSIVE FOR ALL
+                    USING (current_user NOT IN ('anon', 'authenticated'))
+                    WITH CHECK (current_user NOT IN ('anon', 'authenticated'));
+                END IF;
+            END
+            $$;
         ''')
 
 

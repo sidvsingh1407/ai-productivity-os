@@ -9,7 +9,10 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from migration_helpers import table_exists
 
 # revision identifiers, used by Alembic.
 revision: str = 'manual_002'
@@ -19,14 +22,14 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # We create a specific UUID for the deleted user so it's consistent and can be referenced
-    # Or we can insert it if it doesn't exist
-    op.execute("""
-        INSERT INTO users (id, email, hashed_password, full_name, is_superadmin, is_active, created_at, updated_at)
-        VALUES ('00000000-0000-0000-0000-000000000000', 'deleted@system.tarkax.local', '', 'Deleted User', false, false, NOW(), NOW())
-        ON CONFLICT (email) DO NOTHING;
-    """)
+    if table_exists('users'):
+        op.execute("""
+            INSERT INTO users (id, email, hashed_password, full_name, is_superadmin, is_active, created_at, updated_at)
+            VALUES ('00000000-0000-0000-0000-000000000000', 'deleted@system.tarkax.local', '', 'Deleted User', false, false, NOW(), NOW())
+            ON CONFLICT (email) DO NOTHING;
+        """)
 
 
 def downgrade() -> None:
-    op.execute("DELETE FROM users WHERE email = 'deleted@system.tarkax.local'")
+    if table_exists('users'):
+        op.execute("DELETE FROM users WHERE email = 'deleted@system.tarkax.local'")
