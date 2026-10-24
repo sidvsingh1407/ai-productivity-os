@@ -36,6 +36,10 @@ jobs:
           cd backend
           pip install -r requirements.txt
 
+      - name: Pre-create alembic_version table
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE TABLE IF NOT EXISTS alembic_version (version_num VARCHAR(64) PRIMARY KEY);"
+
       - name: Run Alembic migrations and check for drift
         env:
           DATABASE_URL: "postgresql+asyncpg://postgres:postgres@localhost:5432/postgres"

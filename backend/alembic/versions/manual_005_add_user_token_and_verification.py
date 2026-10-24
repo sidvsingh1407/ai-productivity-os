@@ -60,4 +60,3 @@ def downgrade() -> None:
             op.drop_column('users', 'email_verified_at')
         if column_exists('users', 'email_verified'):
             op.drop_column('users', 'email_verified')
-
