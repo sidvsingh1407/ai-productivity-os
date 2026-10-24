@@ -109,7 +109,7 @@ print(f"ALLOWED_ORIGINS: {ALLOWED_ORIGINS}", flush=True)
 def cors_error_headers(request: Request) -> dict:
     origin = request.headers.get("origin")
     if not origin:
-        return {"Access-Control-Allow-Origin": "*"}
+        return {}
 
     normalized_origin = origin.strip().rstrip("/")
     origin_allowed = normalized_origin in ALLOWED_ORIGINS
@@ -120,7 +120,7 @@ def cors_error_headers(request: Request) -> dict:
         ) is not None
 
     if not origin_allowed:
-        return {"Access-Control-Allow-Origin": "*"}
+        return {}
 
     return {
         "Access-Control-Allow-Origin": normalized_origin,
@@ -213,6 +213,11 @@ app.include_router(opportunities_router, prefix="/api")
 app.include_router(agent_recommendations_router, prefix="/api")
 
 
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import text
+from database import get_db
+
 @app.get("/")
 async def root():
     return {"message": "AI Productivity OS Backend", "version": "1.0.0"}
@@ -221,3 +226,13 @@ async def root():
 @app.get("/health")
 async def health():
     return {"status": "healthy"}
+
+
+@app.get("/ready")
+async def ready(db: AsyncSession = Depends(get_db)):
+    try:
+        await db.execute(text("SELECT 1"))
+        return {"status": "ready"}
+    except Exception as e:
+        logger.error("Readiness check failed: Database unavailable", exc_info=True)
+        return JSONResponse(status_code=503, content={"status": "unavailable"})
