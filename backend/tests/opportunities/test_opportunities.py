@@ -124,8 +124,12 @@ async def test_list_opportunities_filter(db_session: AsyncSession, organization:
     # Insert some fake opps
     import uuid
     from opportunities.repository import create_opportunity
+    from models.ai_system import AISystem
 
     sys_id1 = uuid.uuid4()
+    sys = AISystem(id=sys_id1, organization_id=org.id, name="Test Sys", criticality="High", ai_type="Generative", decision_making_role="autonomous", data_types=["PII"])
+    db_session.add(sys)
+    await db_session.commit()
 
     await create_opportunity(db_session, {
         "organization_id": org.id,

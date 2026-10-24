@@ -9,6 +9,7 @@ from database import engine, Base, async_session_maker
 from models.organization import Organization
 from models.ai_system import AISystem
 from models.audit import Audit, AuditStatus
+from models.user import User
 from models.monitoring_plan import MonitoringPlan
 from models.monitoring_check_result import MonitoringCheckResult
 from monitoring.service import run_due_monitoring_checks, _calculate_next_run_at
@@ -50,10 +51,24 @@ async def test_ai_system(db_session: AsyncSession, test_org: Organization):
     return system
 
 @pytest_asyncio.fixture
-async def test_audit(db_session: AsyncSession, test_org: Organization, test_ai_system: AISystem):
+async def test_user(db_session: AsyncSession):
+    user = User(
+        email=f"test-{uuid.uuid4().hex[:8]}@example.com",
+        hashed_password="fake",
+        full_name="Test User",
+        email_verified=True,
+        is_active=True
+    )
+    db_session.add(user)
+    await db_session.commit()
+    await db_session.refresh(user)
+    return user
+
+@pytest_asyncio.fixture
+async def test_audit(db_session: AsyncSession, test_org: Organization, test_ai_system: AISystem, test_user: User):
     audit = Audit(
         org_id=test_org.id,
-        user_id=uuid.uuid4(),
+        user_id=test_user.id,
         status=AuditStatus.complete,
         scores={"dimensions": {"governance": 10, "integration": 10}},
         form_response={"companyName": "Test"},
