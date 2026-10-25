@@ -1,8 +1,12 @@
 import logging
-import sentry_sdk
 from config import settings
 
 logger = logging.getLogger(__name__)
+
+try:
+    import sentry_sdk
+except ImportError:
+    sentry_sdk = None
 
 SENSITIVE_KEYS = {
     "password",
@@ -56,6 +60,10 @@ def init_sentry():
 
     if not dsn:
         logger.info("SENTRY_DSN is not set. Sentry monitoring is disabled.")
+        return False
+
+    if sentry_sdk is None:
+        logger.warning("sentry-sdk is not installed. Sentry monitoring is disabled.")
         return False
 
     try:
