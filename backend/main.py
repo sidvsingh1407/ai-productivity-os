@@ -4,7 +4,9 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import logging
+import asyncio
 from contextlib import asynccontextmanager
+from sqlalchemy import text
 
 from database import engine, Base
 import models  # noqa: F401
@@ -109,7 +111,7 @@ print(f"ALLOWED_ORIGINS: {ALLOWED_ORIGINS}", flush=True)
 def cors_error_headers(request: Request) -> dict:
     origin = request.headers.get("origin")
     if not origin:
-        return {"Access-Control-Allow-Origin": "*"}
+        return {}
 
     normalized_origin = origin.strip().rstrip("/")
     origin_allowed = normalized_origin in ALLOWED_ORIGINS
@@ -120,7 +122,7 @@ def cors_error_headers(request: Request) -> dict:
         ) is not None
 
     if not origin_allowed:
-        return {"Access-Control-Allow-Origin": "*"}
+        return {}
 
     return {
         "Access-Control-Allow-Origin": normalized_origin,
@@ -216,6 +218,22 @@ app.include_router(agent_recommendations_router, prefix="/api")
 @app.get("/")
 async def root():
     return {"message": "AI Productivity OS Backend", "version": "1.0.0"}
+
+
+READY_DB_TIMEOUT_SECONDS = 3
+
+async def _check_db_ready():
+    async with engine.connect() as conn:
+        await conn.execute(text("select 1"))
+
+@app.get("/ready")
+async def ready():
+    try:
+        await asyncio.wait_for(_check_db_ready(), READY_DB_TIMEOUT_SECONDS)
+        return {"status": "ready"}
+    except (TimeoutError, Exception) as e:
+        logger.error(f"DB readiness check failed: {e.__class__.__name__}")
+        return JSONResponse(status_code=503, content={"status": "unavailable"})
 
 
 @app.get("/health")
