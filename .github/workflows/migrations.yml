@@ -36,7 +36,7 @@ jobs:
           cd backend
           pip install -r requirements.txt
 
- main-11068675611994421723
+
       - name: Run Alembic migrations and check for drift
         env:
           DATABASE_URL: "postgresql+asyncpg://postgres:postgres@localhost:5432/postgres"
@@ -63,3 +63,16 @@ jobs:
             alembic heads
             exit 1
           fi
+
+      - name: Verify RLS is enabled on all public tables
+        env:
+          DATABASE_URL: "postgresql+asyncpg://postgres:postgres@localhost:5432/postgres"
+          SECRET_KEY: "dummy_secret_for_ci"
+          STRIPE_SECRET_KEY: "dummy"
+          STRIPE_WEBHOOK_SECRET: "dummy"
+          OPENAI_API_KEY: "dummy"
+          SUPABASE_URL: "dummy"
+          SUPABASE_KEY: "dummy"
+        run: |
+          cd backend
+          pytest tests/test_rls_security.py -v
