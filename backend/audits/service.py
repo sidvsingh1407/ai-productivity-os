@@ -6,7 +6,10 @@ from audits import repository
 from audits.trend_calculator import calculate_risk_trend
 from audits.scoring_engine import score_response
 from audits.schemas import AuditResponse
-from audits.intelligence_engine import generate_intelligence, aggregate_top_findings_and_recommendations
+from audits.intelligence_engine import (
+    generate_intelligence,
+    aggregate_top_findings_and_recommendations,
+)
 from audits.roadmap_engine import generate_system_driven_roadmap
 from benchmarking.adapter import get_api_benchmark_payload
 from financial.calculator import calculate_system_cost
@@ -82,26 +85,20 @@ async def run_audit(
         narrative = await generate_audit_narrative(narrative_scores, company_context)
 
         narrative_source = "static"
-        if narrative:
+        if narrative and "executive_summary" in narrative:
             narrative_source = "dynamic"
-            if "executive_summary" in narrative:
-                # Update executive summary fields if present
-                for key in [
-                    "overall_assessment",
-                    "critical_risk",
-                    "primary_opportunity",
-                    "recommended_first_action",
-                ]:
-                    if key in narrative["executive_summary"]:
-                        intelligence["executive_summary"][key] = narrative[
-                            "executive_summary"
-                        ][key]
 
-            if "roadmap" in narrative:
-                intelligence["roadmap"] = narrative["roadmap"]
-
-            if "recommendations" in narrative:
-                intelligence["recommendations"] = narrative["recommendations"]
+            # Update executive summary fields if present
+            for key in [
+                "overall_assessment",
+                "critical_risk",
+                "primary_opportunity",
+                "recommended_first_action",
+            ]:
+                if key in narrative["executive_summary"]:
+                    intelligence["executive_summary"][key] = narrative[
+                        "executive_summary"
+                    ][key]
 
         # 4.8 Generate and save per-system intelligence
         ai_systems = await repository.get_ai_systems_by_org(db, org_id)
@@ -152,9 +149,8 @@ async def run_audit(
                     inference_cost=sys.inference_cost,
                     maintenance_cost=sys.maintenance_cost,
                     total_cost=system_cost.get("total"),
-                    is_partial=system_cost.get("is_partial", False)
+                    is_partial=system_cost.get("is_partial", False),
                 )
-
 
         # Fetch per-system findings
         db_system_findings = await repository.get_system_findings_by_audit(db, audit.id)
@@ -169,7 +165,9 @@ async def run_audit(
         ]
 
         if raw_system_findings:
-            aggregated_data = aggregate_top_findings_and_recommendations(raw_system_findings)
+            aggregated_data = aggregate_top_findings_and_recommendations(
+                raw_system_findings
+            )
             intelligence["findings"] = aggregated_data["findings"]
             intelligence["recommendations"] = aggregated_data["recommendations"]
 
@@ -252,7 +250,7 @@ async def update_system_finding(
     org_id: uuid.UUID,
     system_finding_id: uuid.UUID,
     finding_title: str,
-    update_data: Dict[str, Any]
+    update_data: Dict[str, Any],
 ):
     # Verify the audit belongs to the org
     await repository.get_audit(db, audit_id, org_id)

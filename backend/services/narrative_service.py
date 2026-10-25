@@ -1,8 +1,30 @@
+from pydantic import BaseModel, Field, ValidationError
 import json
 import logging
 from .gemini_client import gemini_manager
 
 logger = logging.getLogger(__name__)
+
+
+class ExecutiveSummaryNarrative(BaseModel):
+    overall_assessment: str = Field(..., max_length=1000)
+    critical_risk: str = Field(..., max_length=1000)
+    primary_opportunity: str = Field(..., max_length=1000)
+    recommended_first_action: str = Field(..., max_length=1000)
+
+
+class DimensionNarratives(BaseModel):
+    awareness: str = Field(..., max_length=500)
+    adoption: str = Field(..., max_length=500)
+    integration: str = Field(..., max_length=500)
+    governance: str = Field(..., max_length=500)
+    roi: str = Field(..., max_length=500)
+
+
+class AuditNarrativePayload(BaseModel):
+    executive_summary: ExecutiveSummaryNarrative
+    dimension_narratives: DimensionNarratives
+
 
 def _parse_gemini_json(raw: str) -> dict | None:
     """Strip markdown fences and parse JSON defensively."""
@@ -16,6 +38,7 @@ def _parse_gemini_json(raw: str) -> dict | None:
     except Exception as e:
         logger.error(f"Failed to parse Gemini JSON response: {e}. Raw: {raw[:200]}")
         return None
+
 
 async def generate_audit_narrative(scores: dict, company_context: dict) -> dict | None:
     prompt = f"""
@@ -73,10 +96,22 @@ Respond ONLY with a valid JSON object. No preamble, no markdown, no explanation:
     raw = await gemini_manager.generate(prompt)
     if not raw:
         return None
-    return _parse_gemini_json(raw)
+
+    parsed = _parse_gemini_json(raw)
+    if not parsed:
+        return None
+
+    try:
+        validated = AuditNarrativePayload.model_validate(parsed)
+        return validated.model_dump()
+    except ValidationError as e:
+        logger.error(f"Narrative validation failed: {e}")
+        return None
 
 
-async def generate_workflow_narrative(scores: dict, workflow_context: dict) -> dict | None:
+async def generate_workflow_narrative(
+    scores: dict, workflow_context: dict
+) -> dict | None:
     prompt = f"""
 You are a senior operations consultant writing a confidential workflow diagnostic report.
 
