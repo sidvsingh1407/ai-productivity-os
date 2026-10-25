@@ -15,13 +15,40 @@ async def test_health():
 
 
 @pytest.mark.asyncio
-async def test_ready_success():
+async def test_ready_success(mocker):
+    # Mock out _verify_schema_and_migrations to avoid attempting to validate in-memory db tables vs full app models
+    mocker.patch("main._verify_schema_and_migrations", return_value=None)
+
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://test"
     ) as ac:
         response = await ac.get("/ready")
         assert response.status_code == 200
         assert response.json() == {"status": "ready"}
+
+@pytest.mark.asyncio
+async def test_ready_missing_tables(mocker):
+    mocker.patch(
+        "main._verify_schema_and_migrations", side_effect=Exception("Missing required tables")
+    )
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as ac:
+        response = await ac.get("/ready")
+        assert response.status_code == 503
+        assert response.json() == {"status": "unavailable"}
+
+@pytest.mark.asyncio
+async def test_ready_migration_drift(mocker):
+    mocker.patch(
+        "main._verify_schema_and_migrations", side_effect=Exception("Alembic migration drift detected")
+    )
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as ac:
+        response = await ac.get("/ready")
+        assert response.status_code == 503
+        assert response.json() == {"status": "unavailable"}
 
 
 @pytest.mark.asyncio

@@ -1,5 +1,14 @@
-import asyncio
+import sys
 import os
+
+if os.environ.get("ENVIRONMENT") == "production":
+    print("ERROR: Cannot run data mutation/schema creation script in production.")
+    sys.exit(1)
+elif not os.environ.get("I_KNOW_WHAT_I_AM_DOING") == "true" and os.environ.get("ENVIRONMENT") != "testing":
+    print("ERROR: Explicit opt-in required in non-production. Set I_KNOW_WHAT_I_AM_DOING=true.")
+    sys.exit(1)
+
+import asyncio
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 

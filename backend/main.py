@@ -19,19 +19,24 @@ try:
 except ImportError:
     pass
 
+import os
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print(
-        "SYSTEM LOG: Scanning models and verifying tables on Supabase...",
-        flush=True
-    )
-    try:
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        print("SYSTEM LOG: Database schema sync complete.", flush=True)
-    except Exception as e:
-        logger = logging.getLogger(__name__)
-        logger.error("SYSTEM ERROR: Failed to synchronize database schema during startup.", exc_info=True)
+    if os.environ.get("ENVIRONMENT") != "production":
+        print(
+            "SYSTEM LOG: Scanning models and verifying tables...",
+            flush=True
+        )
+        try:
+            async with engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+            print("SYSTEM LOG: Database schema sync complete.", flush=True)
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.error("SYSTEM ERROR: Failed to synchronize database schema during startup.", exc_info=True)
+    else:
+        print("SYSTEM LOG: Production environment detected. Skipping automatic schema sync (relying on migrations).", flush=True)
     yield
 
 # Import all routers
@@ -231,9 +236,57 @@ async def root():
 
 READY_DB_TIMEOUT_SECONDS = 3
 
+def _verify_schema_and_migrations(connection):
+    from sqlalchemy import inspect
+    from alembic.migration import MigrationContext
+    from alembic.config import Config
+    from alembic.script import ScriptDirectory
+
+    # 1. Verify required tables
+    inspector = inspect(connection)
+
+    # We only care about application tables (exclude system/alembic ones if any)
+    existing_tables = set(inspector.get_table_names(schema="public" if inspector.default_schema_name == "public" else None))
+
+    required_tables = set()
+    for table_name, table in Base.metadata.tables.items():
+        # Handle schema-qualified tables e.g. "public.users" -> "users"
+        parts = table_name.split(".")
+        actual_name = parts[-1]
+
+        # Check if table is explicitly excluded via info dict
+        if table.info.get('exclude_from_ready_check', False):
+            continue
+
+        required_tables.add(actual_name)
+
+    missing_tables = required_tables - existing_tables
+    if missing_tables:
+        raise Exception(f"Missing required tables")
+
+    # 2. Verify Alembic migration state
+    # Create alembic Config with script_location
+    import pathlib
+    backend_dir = pathlib.Path(__file__).parent.resolve()
+    alembic_cfg = Config(str(backend_dir / "alembic.ini"))
+    alembic_cfg.set_main_option("script_location", str(backend_dir / "alembic"))
+
+    script = ScriptDirectory.from_config(alembic_cfg)
+    expected_heads = set(script.get_heads())
+
+    context = MigrationContext.configure(connection)
+    current_heads = set(context.get_current_heads())
+
+    if not current_heads:
+        raise Exception("Missing alembic_version state (no migrations applied)")
+
+    if current_heads != expected_heads:
+        raise Exception("Alembic migration drift detected")
+
 async def _check_db_ready():
     async with engine.connect() as conn:
         await conn.execute(text("select 1"))
+        await conn.run_sync(_verify_schema_and_migrations)
 
 @app.get("/ready")
 async def ready():
