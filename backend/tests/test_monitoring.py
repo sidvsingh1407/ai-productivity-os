@@ -12,7 +12,11 @@ from models.audit import Audit, AuditStatus
 from models.user import User
 from models.monitoring_plan import MonitoringPlan
 from models.monitoring_check_result import MonitoringCheckResult
-from monitoring.service import run_due_monitoring_checks, _calculate_next_run_at
+from monitoring.service import (
+    run_due_monitoring_checks,
+    _calculate_next_run_at
+)
+
 
 @pytest_asyncio.fixture(autouse=True, scope="function")
 async def setup_db():
@@ -22,18 +26,24 @@ async def setup_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
 
+
 @pytest_asyncio.fixture
 async def db_session() -> AsyncSession:
     async with async_session_maker() as session:
         yield session
 
+
 @pytest_asyncio.fixture
 async def test_org(db_session: AsyncSession):
-    org = Organization(name="Test Org Monitoring", slug=f"test-org-{uuid.uuid4().hex[:8]}")
+    org = Organization(
+        name="Test Org Monitoring",
+        slug=f"test-org-{uuid.uuid4().hex[:8]}"
+    )
     db_session.add(org)
     await db_session.commit()
     await db_session.refresh(org)
     return org
+
 
 @pytest_asyncio.fixture
 async def test_ai_system(db_session: AsyncSession, test_org: Organization):
@@ -50,6 +60,7 @@ async def test_ai_system(db_session: AsyncSession, test_org: Organization):
     await db_session.refresh(system)
     return system
 
+
 @pytest_asyncio.fixture
 async def test_user(db_session: AsyncSession):
     user = User(
@@ -64,8 +75,14 @@ async def test_user(db_session: AsyncSession):
     await db_session.refresh(user)
     return user
 
+
 @pytest_asyncio.fixture
-async def test_audit(db_session: AsyncSession, test_org: Organization, test_ai_system: AISystem, test_user: User):
+async def test_audit(
+    db_session: AsyncSession,
+    test_org: Organization,
+    test_ai_system: AISystem,
+    test_user: User
+):
     audit = Audit(
         org_id=test_org.id,
         user_id=test_user.id,
@@ -79,8 +96,14 @@ async def test_audit(db_session: AsyncSession, test_org: Organization, test_ai_s
     await db_session.refresh(audit)
     return audit
 
+
 @pytest.mark.asyncio
-async def test_monitoring_execution_picks_up_due_plan(db_session: AsyncSession, test_org: Organization, test_ai_system: AISystem, test_audit: Audit):
+async def test_monitoring_execution_picks_up_due_plan(
+    db_session: AsyncSession,
+    test_org: Organization,
+    test_ai_system: AISystem,
+    test_audit: Audit
+):
     now = datetime.now(timezone.utc)
     past_date = now - timedelta(days=2)
 
@@ -111,7 +134,9 @@ async def test_monitoring_execution_picks_up_due_plan(db_session: AsyncSession, 
         assert plan.next_run_at > now
 
     # Check if MonitoringCheckResult was created
-    stmt = select(MonitoringCheckResult).where(MonitoringCheckResult.monitoring_plan_id == plan.id)
+    stmt = select(MonitoringCheckResult).where(
+        MonitoringCheckResult.monitoring_plan_id == plan.id
+    )
     result = await db_session.execute(stmt)
     check_result = result.scalar_one_or_none()
 
@@ -119,8 +144,13 @@ async def test_monitoring_execution_picks_up_due_plan(db_session: AsyncSession, 
     assert check_result.ai_system_id == test_ai_system.id
     assert isinstance(check_result.findings, list)
 
+
 @pytest.mark.asyncio
-async def test_monitoring_execution_ignores_not_due_plan(db_session: AsyncSession, test_org: Organization, test_ai_system: AISystem):
+async def test_monitoring_execution_ignores_not_due_plan(
+    db_session: AsyncSession,
+    test_org: Organization,
+    test_ai_system: AISystem
+):
     now = datetime.now(timezone.utc)
     future_date = now + timedelta(days=2)
 
@@ -152,13 +182,18 @@ async def test_monitoring_execution_ignores_not_due_plan(db_session: AsyncSessio
         assert plan.next_run_at == future_date
 
     # No check result should be created
-    stmt = select(MonitoringCheckResult).where(MonitoringCheckResult.monitoring_plan_id == plan.id)
+    stmt = select(MonitoringCheckResult).where(
+        MonitoringCheckResult.monitoring_plan_id == plan.id
+    )
     result = await db_session.execute(stmt)
     assert result.scalar_one_or_none() is None
+
 
 def test_calculate_next_run_at():
     now = datetime.now(timezone.utc)
     assert _calculate_next_run_at("daily", now) == now + timedelta(days=1)
     assert _calculate_next_run_at("weekly", now) == now + timedelta(weeks=1)
     assert _calculate_next_run_at("monthly", now) == now + timedelta(days=30)
-    assert _calculate_next_run_at("invalid", now) == now + timedelta(days=1) # Fallback
+
+    fallback = _calculate_next_run_at("invalid", now)
+    assert fallback == now + timedelta(days=1)  # Fallback

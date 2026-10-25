@@ -2,11 +2,10 @@ import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 from models.organization import Organization
 import uuid
-from models.opportunity import Opportunity
 from opportunities import service
 import pytest_asyncio
 from database import engine, Base, async_session_maker
-from models.audit import Audit
+
 
 @pytest_asyncio.fixture(autouse=True, scope="function")
 async def setup_db():
@@ -16,21 +15,29 @@ async def setup_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
 
+
 @pytest_asyncio.fixture
 async def db_session() -> AsyncSession:
     async with async_session_maker() as session:
         yield session
 
+
 @pytest_asyncio.fixture
 async def organization(db_session: AsyncSession):
-    org = Organization(name="Test Org", slug=f"test-org-{uuid.uuid4().hex[:8]}")
+    org = Organization(
+        name="Test Org",
+        slug=f"test-org-{uuid.uuid4().hex[:8]}"
+    )
     db_session.add(org)
     await db_session.commit()
     await db_session.refresh(org)
     return org
 
+
 @pytest.mark.asyncio
-async def test_generate_opportunities(db_session: AsyncSession, organization: Organization):
+async def test_generate_opportunities(
+    db_session: AsyncSession, organization: Organization
+):
     org = organization
 
     # We test the engine directly first
@@ -45,26 +52,31 @@ async def test_generate_opportunities(db_session: AsyncSession, organization: Or
         "shadow_ai_detected": False
     }]
 
-    # 2. Workflows (Heavy manual handoffs + bottleneck < 50) -> triggers automation_candidate
+    # 2. Workflows (Heavy manual handoffs) -> triggers automation_candidate
     workflows = [{
         "org_id": org.id,
         "scores": {"bottleneck": 30, "risk": 80},
-        "findings": {"weaknesses": ["Heavy manual handoffs delay everything"]}
+        "findings": {
+            "weaknesses": ["Heavy manual handoffs delay everything"]
+        }
     }]
 
-    # 3. AISystem (data intelligence, static/unknown + manual only) -> triggers knowledge_bottleneck
+    # 3. AISystem (data int) -> triggers knowledge_bottleneck
     ai_systems = [{
         "id": "00000000-0000-0000-0000-000000000001",
         "organization_id": org.id,
         "data_freshness": "static",
         "data_quality_notes": "very poor quality",
-        "data_accessibility": ["manual_export", "email_attachment"]
+        "data_accessibility": [
+            "manual_export",
+            "email_attachment"
+        ]
     }]
 
-    # 4. Engineering Intelligence (no MLOps, no monitoring) -> triggers department_pain
+    # 4. Engineering Intelligence (no MLOps) -> triggers department_pain
     engineering_records = [{
         "organization_id": org.id,
-        "team_size": 2, # Must be > 0 to trigger
+        "team_size": 2,  # Must be > 0 to trigger
         "has_mlops_pipeline": False,
         "monitoring_tooling": []
     }]
@@ -84,8 +96,11 @@ async def test_generate_opportunities(db_session: AsyncSession, organization: Or
     assert "knowledge_bottleneck" in categories
     assert "department_pain" in categories
 
+
 @pytest.mark.asyncio
-async def test_generate_opportunities_no_trigger_on_defaults(db_session: AsyncSession, organization: Organization):
+async def test_generate_opportunities_no_trigger_on_defaults(
+    db_session: AsyncSession, organization: Organization
+):
     org = organization
 
     from opportunities.engine import generate_opportunities
@@ -99,7 +114,7 @@ async def test_generate_opportunities_no_trigger_on_defaults(db_session: AsyncSe
         "shadow_ai_detected": False
     }]
 
-    # Engineering: team_size = 0 (no team assumed) -> no trigger even if mlops is False
+    # Engineering: team_size = 0 (no team assumed)
     engineering_records = [{
         "organization_id": org.id,
         "team_size": 0,
@@ -116,8 +131,11 @@ async def test_generate_opportunities_no_trigger_on_defaults(db_session: AsyncSe
 
     assert len(opps) == 0
 
+
 @pytest.mark.asyncio
-async def test_list_opportunities_filter(db_session: AsyncSession, organization: Organization):
+async def test_list_opportunities_filter(
+    db_session: AsyncSession, organization: Organization
+):
     # Tests the service list function (which is used by router)
     org = organization
 
@@ -127,7 +145,15 @@ async def test_list_opportunities_filter(db_session: AsyncSession, organization:
     from models.ai_system import AISystem
 
     sys_id1 = uuid.uuid4()
-    sys = AISystem(id=sys_id1, organization_id=org.id, name="Test Sys", criticality="High", ai_type="Generative", decision_making_role="autonomous", data_types=["PII"])
+    sys = AISystem(
+        id=sys_id1,
+        organization_id=org.id,
+        name="Test Sys",
+        criticality="High",
+        ai_type="Generative",
+        decision_making_role="autonomous",
+        data_types=["PII"]
+    )
     db_session.add(sys)
     await db_session.commit()
 
@@ -143,7 +169,7 @@ async def test_list_opportunities_filter(db_session: AsyncSession, organization:
 
     await create_opportunity(db_session, {
         "organization_id": org.id,
-        "ai_system_id": None, # Org level
+        "ai_system_id": None,  # Org level
         "category": "department_pain",
         "title": "T2",
         "description": "D2",
@@ -152,11 +178,15 @@ async def test_list_opportunities_filter(db_session: AsyncSession, organization:
     })
 
     # filter by null_filter (org-level)
-    res_null = await service.list_opportunities(db_session, org.id, ai_system_id="null")
+    res_null = await service.list_opportunities(
+        db_session, org.id, ai_system_id="null"
+    )
     assert res_null["total"] == 1
     assert res_null["items"][0].category == "department_pain"
 
     # filter by sys_id
-    res_sys = await service.list_opportunities(db_session, org.id, ai_system_id=str(sys_id1))
+    res_sys = await service.list_opportunities(
+        db_session, org.id, ai_system_id=str(sys_id1)
+    )
     assert res_sys["total"] == 1
     assert res_sys["items"][0].category == "manual_work"
