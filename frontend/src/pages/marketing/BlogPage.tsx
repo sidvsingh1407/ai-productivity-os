@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { SeoHead } from '../../components/geo/SeoHead';
+import { APP_CONFIG } from '../../config/app';
 
 export default function BlogPage() {
   const breadcrumbSchema = {
@@ -10,13 +11,13 @@ export default function BlogPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://tarkax.com/"
+        "item": `${APP_CONFIG.publicDomain}/`
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Blog",
-        "item": "https://tarkax.com/blog"
+        "item": `${APP_CONFIG.publicDomain}/blog`
       }
     ]
   };
@@ -27,14 +28,14 @@ export default function BlogPage() {
     "headline": "Research & Insights on Operational Execution",
     "author": {
       "@type": "Organization",
-      "name": "TarkaX"
+      "name": APP_CONFIG.brandName
     },
     "publisher": {
       "@type": "Organization",
-      "name": "TarkaX",
+      "name": APP_CONFIG.brandName,
       "logo": {
         "@type": "ImageObject",
-        "url": "https://tarkax.com/logo.png"
+        "url": `${APP_CONFIG.publicDomain}/logo.png`
       }
     }
   };
@@ -42,9 +43,9 @@ export default function BlogPage() {
   return (
     <div className="bg-bg-primary">
       <SeoHead
-        title="Research & Insights | TarkaX"
+        title={`Research & Insights | ${APP_CONFIG.brandName}`}
         description="Observations on operational execution, failure intelligence, and organizational diagnostics from TarkaX."
-        canonical="https://tarkax.com/blog"
+        canonical={`${APP_CONFIG.publicDomain}/blog`}
         schema={[breadcrumbSchema, articleSchema]}
       />
       {/* Header */}

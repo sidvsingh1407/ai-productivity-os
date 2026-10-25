@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { SeoHead } from '../../components/geo/SeoHead';
 import ConstellationMap from '../../components/ConstellationMap';
 import { DefinitionBlock } from '../../components/geo/DefinitionBlock';
+import { APP_CONFIG } from '../../config/app';
 
 export default function AboutPage() {
   const breadcrumbSchema = {
@@ -13,13 +14,13 @@ export default function AboutPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://tarkax.com/"
+        "item": `${APP_CONFIG.publicDomain}/`
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "About",
-        "item": "https://tarkax.com/about"
+        "item": `${APP_CONFIG.publicDomain}/about`
       }
     ]
   };
@@ -27,9 +28,9 @@ export default function AboutPage() {
   return (
     <div className="bg-bg-primary">
       <SeoHead
-        title="About TarkaX | AI Governance Platform"
+        title={`About ${APP_CONFIG.brandName} | AI Governance Platform`}
         description="Learn about TarkaX, an AI Governance platform built to diagnose structural weaknesses, AI readiness gaps, and operational friction."
-        canonical="https://tarkax.com/about"
+        canonical={`${APP_CONFIG.publicDomain}/about`}
         schema={[breadcrumbSchema]}
       />
       {/* Header */}

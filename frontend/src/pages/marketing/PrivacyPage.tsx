@@ -1,12 +1,13 @@
 import { SeoHead } from '../../components/geo/SeoHead';
+import { APP_CONFIG } from '../../config/app';
 
 export default function PrivacyPage() {
   return (
     <div className="bg-bg-primary min-h-screen animate-fade-up">
       <SeoHead
-        title="Privacy Policy | TarkaX"
+        title={`Privacy Policy | ${APP_CONFIG.brandName}`}
         description="Privacy policy and data handling practices for TarkaX."
-        canonical="https://tarkax.com/privacy"
+        canonical={`${APP_CONFIG.publicDomain}/privacy`}
       />
       <div className="max-w-3xl mx-auto py-24 px-6">
         <h1 className="text-h1 font-semibold mb-8 border-b border-border-light pb-4">Privacy Policy</h1>

@@ -1,12 +1,13 @@
 import { SeoHead } from '../../components/geo/SeoHead';
+import { APP_CONFIG } from '../../config/app';
 
 export default function SecurityPage() {
   return (
     <div className="bg-bg-primary min-h-screen animate-fade-up">
       <SeoHead
-        title="Security Overview | TarkaX"
+        title={`Security Overview | ${APP_CONFIG.brandName}`}
         description="Security practices and infrastructure at TarkaX."
-        canonical="https://tarkax.com/security"
+        canonical={`${APP_CONFIG.publicDomain}/security`}
       />
       <div className="max-w-3xl mx-auto py-24 px-6">
         <h1 className="text-h1 font-semibold mb-8 border-b border-border-light pb-4">Security Overview</h1>

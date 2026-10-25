@@ -5,6 +5,7 @@ import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
 import ConstellationMap from '../../components/ConstellationMap';
 import { TickerStrip } from '../../components/TickerStrip';
 import { KeyFindings } from '../../components/KeyFindings';
+import { APP_CONFIG } from '../../config/app';
 
 export default function Home() {
   const faqItems = [
@@ -29,21 +30,21 @@ export default function Home() {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "TarkaX",
-    "url": "https://tarkax.com",
-    "logo": "https://tarkax.com/logo.png",
+    "name": APP_CONFIG.brandName,
+    "url": APP_CONFIG.publicDomain,
+    "logo": `${APP_CONFIG.publicDomain}/logo.png`,
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "Customer Service",
-      "url": "https://tarkax.com/contact"
+      "url": `${APP_CONFIG.publicDomain}/contact`
     }
   };
 
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "TarkaX",
-    "url": "https://tarkax.com"
+    "name": APP_CONFIG.brandName,
+    "url": APP_CONFIG.publicDomain
   };
 
   const faqSchema = generateFAQSchema(faqItems);
@@ -51,9 +52,9 @@ export default function Home() {
   return (
     <div className="bg-bg-primary">
       <SeoHead
-        title="TarkaX | Business Clarity for the AI Era"
+        title={`${APP_CONFIG.brandName} | Business Clarity for the AI Era`}
         description="The fastest way to discover what's really holding your business back. TarkaX reveals hidden bottlenecks, manual work, and wasted AI investments."
-        canonical="https://tarkax.com/"
+        canonical={`${APP_CONFIG.publicDomain}/`}
         schema={[organizationSchema, websiteSchema, faqSchema]}
       />
 

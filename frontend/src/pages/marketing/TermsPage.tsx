@@ -1,12 +1,13 @@
 import { SeoHead } from '../../components/geo/SeoHead';
+import { APP_CONFIG } from '../../config/app';
 
 export default function TermsPage() {
   return (
     <div className="bg-bg-primary min-h-screen animate-fade-up">
       <SeoHead
-        title="Terms of Service | TarkaX"
+        title={`Terms of Service | ${APP_CONFIG.brandName}`}
         description="Terms of service and acceptable use for the TarkaX platform."
-        canonical="https://tarkax.com/terms"
+        canonical={`${APP_CONFIG.publicDomain}/terms`}
       />
       <div className="max-w-3xl mx-auto py-24 px-6">
         <h1 className="text-h1 font-semibold mb-8 border-b border-border-light pb-4">Terms of Service</h1>

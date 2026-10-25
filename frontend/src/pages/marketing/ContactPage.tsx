@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import apiClient from '@/api/client';
 import { SeoHead } from '../../components/geo/SeoHead';
+import { APP_CONFIG } from '../../config/app';
 
 export default function ContactPage() {
   const [searchParams] = useSearchParams();
@@ -26,13 +27,13 @@ export default function ContactPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://tarkax.com/"
+        "item": `${APP_CONFIG.publicDomain}/`
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Contact",
-        "item": "https://tarkax.com/contact"
+        "item": `${APP_CONFIG.publicDomain}/contact`
       }
     ]
   };
@@ -65,9 +66,9 @@ export default function ContactPage() {
   return (
     <div className="bg-bg-primary min-h-screen flex flex-col animate-fade-up">
       <SeoHead
-        title="Contact TarkaX | Request a Demo"
+        title={`Contact ${APP_CONFIG.brandName} | Request a Demo`}
         description="Get in touch with TarkaX to learn how our Organizational Failure Intelligence platform can protect your operations."
-        canonical="https://tarkax.com/contact"
+        canonical={`${APP_CONFIG.publicDomain}/contact`}
 
         schema={breadcrumbSchema}
       />

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { SeoHead } from '../../../components/geo/SeoHead';
 import { FAQSection } from '../../../components/geo/FAQSection';
+import { APP_CONFIG } from '../../../config/app';
 
 export default function FaqPage() {
   const faqItems = [
@@ -28,7 +29,7 @@ export default function FaqPage() {
 
   return (
     <div className="bg-bg-primary min-h-screen pt-24 pb-32">
-      <SeoHead title="FAQ | TarkaX" description="Frequently asked questions about TarkaX diagnostic tools and methodology." />
+      <SeoHead title={`FAQ | ${APP_CONFIG.brandName}`} description="Frequently asked questions about TarkaX diagnostic tools and methodology." />
       <FAQSection title="Frequently Asked Questions" faqItems={faqItems} />
 
       <div className="max-w-3xl mx-auto px-6 text-center mt-16">

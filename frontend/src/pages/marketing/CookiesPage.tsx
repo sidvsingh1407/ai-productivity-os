@@ -1,12 +1,13 @@
 import { SeoHead } from '../../components/geo/SeoHead';
+import { APP_CONFIG } from '../../config/app';
 
 export default function CookiesPage() {
   return (
     <div className="bg-bg-primary min-h-screen animate-fade-up">
       <SeoHead
-        title="Cookie Policy | TarkaX"
+        title={`Cookie Policy | ${APP_CONFIG.brandName}`}
         description="Information about how TarkaX uses cookies."
-        canonical="https://tarkax.com/cookies"
+        canonical={`${APP_CONFIG.publicDomain}/cookies`}
       />
       <div className="max-w-3xl mx-auto py-24 px-6">
         <h1 className="text-h1 font-semibold mb-8 border-b border-border-light pb-4">Cookie Policy</h1>
