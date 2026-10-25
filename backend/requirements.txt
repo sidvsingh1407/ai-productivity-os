@@ -46,3 +46,4 @@ google-generativeai
 pgvector==0.2.1
 pytest-mock==3.15.1
 sentry-sdk[fastapi]==2.7.0
+python-docx==1.1.2
