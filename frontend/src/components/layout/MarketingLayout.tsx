@@ -2,6 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { CookieBanner } from './CookieBanner';
+import { APP_CONFIG } from '../../config/app';
 
 export function MarketingLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -206,7 +207,7 @@ export function MarketingLayout() {
           </div>
 
           <div className="pt-8 border-t border-text-inverse/10 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-body text-text-inverse/50">© {new Date().getFullYear()} TarkaX. All rights reserved.</p>
+            <p className="text-body text-text-inverse/50">© {new Date().getFullYear()} {APP_CONFIG.brandName}. All rights reserved.</p>
           </div>
         </div>
       </footer>

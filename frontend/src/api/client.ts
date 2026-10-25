@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
+import { APP_CONFIG } from '../config/app';
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://ai-productivity-os.onrender.com' : 'http://localhost:8000'),
+  baseURL: APP_CONFIG.apiBaseUrl,
   headers: {
     'Content-Type': 'application/json',
   },

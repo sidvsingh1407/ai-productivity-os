@@ -1,12 +1,13 @@
 import { SeoHead } from '../../components/geo/SeoHead';
+import { APP_CONFIG } from '../../config/app';
 
 export default function AiDisclaimerPage() {
   return (
     <div className="bg-bg-primary min-h-screen animate-fade-up">
       <SeoHead
-        title="AI Transparency Disclaimer | TarkaX"
+        title={`AI Transparency Disclaimer | ${APP_CONFIG.brandName}`}
         description="Important information regarding the use of AI on the TarkaX platform."
-        canonical="https://tarkax.com/ai-disclaimer"
+        canonical={`${APP_CONFIG.publicDomain}/ai-disclaimer`}
       />
       <div className="max-w-3xl mx-auto py-24 px-6">
         <h1 className="text-h1 font-semibold mb-8 border-b border-border-light pb-4">AI Transparency Disclaimer</h1>

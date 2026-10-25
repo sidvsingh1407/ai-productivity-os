@@ -3,6 +3,7 @@ import { ArrowRight, AlertTriangle } from 'lucide-react';
 import { SeoHead } from '../../components/geo/SeoHead';
 import { DefinitionBlock } from '../../components/geo/DefinitionBlock';
 import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
+import { APP_CONFIG } from '../../config/app';
 
 export default function WorkflowDiagnosticPage() {
   const faqItems = [
@@ -28,13 +29,13 @@ export default function WorkflowDiagnosticPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://tarkax.com/"
+        "item": `${APP_CONFIG.publicDomain}/`
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Workflow Intelligence",
-        "item": "https://tarkax.com/workflow-diagnostic"
+        "item": `${APP_CONFIG.publicDomain}/workflow-diagnostic`
       }
     ]
   };
@@ -44,9 +45,9 @@ export default function WorkflowDiagnosticPage() {
   return (
     <div className="bg-bg-primary animate-fade-up">
       <SeoHead
-        title="Workflow Intelligence | TarkaX"
+        title={`Workflow Intelligence | ${APP_CONFIG.brandName}`}
         description="Evaluate workflow health and identify operational weaknesses systematically with TarkaX Workflow Intelligence."
-        canonical="https://tarkax.com/workflow-diagnostic"
+        canonical={`${APP_CONFIG.publicDomain}/workflow-diagnostic`}
         schema={[breadcrumbSchema, faqSchema]}
       />
       {/* Header */}

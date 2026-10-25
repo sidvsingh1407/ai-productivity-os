@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import { SeoHead } from '../../../components/geo/SeoHead';
 import { BookOpen } from 'lucide-react';
+import { APP_CONFIG } from '../../../config/app';
 
 export default function GuidesPage() {
   return (
     <div className="bg-bg-primary min-h-[70vh] flex flex-col items-center justify-center p-6 text-center">
-      <SeoHead title="Guides | TarkaX" description="Coming soon: Detailed guides on operational intelligence." />
+      <SeoHead title={`Guides | ${APP_CONFIG.brandName}`} description="Coming soon: Detailed guides on operational intelligence." />
       <div className="w-16 h-16 bg-bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
         <BookOpen className="w-8 h-8 text-accent-blue" />
       </div>

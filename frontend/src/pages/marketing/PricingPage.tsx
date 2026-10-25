@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom';
 import { SeoHead } from '../../components/geo/SeoHead';
 import { CheckCircle2 } from 'lucide-react';
+import { APP_CONFIG } from '../../config/app';
 
 export default function PricingPage() {
   return (
     <div className="bg-bg-primary min-h-screen">
       <SeoHead
-        title="Pricing | TarkaX"
+        title={`Pricing | ${APP_CONFIG.brandName}`}
         description="Transparent pricing based on operational outcomes, not features. Find the right plan to uncover your business bottlenecks."
-        canonical="https://tarkax.com/pricing"
+        canonical={`${APP_CONFIG.publicDomain}/pricing`}
       />
 
       {/* Header */}

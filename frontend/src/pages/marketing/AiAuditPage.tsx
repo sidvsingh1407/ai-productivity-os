@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { SeoHead } from '../../components/geo/SeoHead';
 import { DefinitionBlock } from '../../components/geo/DefinitionBlock';
 import { FAQSection, generateFAQSchema } from '../../components/geo/FAQSection';
+import { APP_CONFIG } from '../../config/app';
 
 export default function AiAuditPage() {
   const faqItems = [
@@ -28,13 +29,13 @@ export default function AiAuditPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://tarkax.com/"
+        "item": `${APP_CONFIG.publicDomain}/`
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Compliance Readiness",
-        "item": "https://tarkax.com/ai-audit"
+        "item": `${APP_CONFIG.publicDomain}/ai-audit`
       }
     ]
   };
@@ -44,9 +45,9 @@ export default function AiAuditPage() {
   return (
     <div className="bg-bg-primary">
       <SeoHead
-        title="Compliance Readiness | TarkaX"
+        title={`Compliance Readiness | ${APP_CONFIG.brandName}`}
         description="Establish a quantitative baseline for organizational AI readiness. Evaluate governance, integration, and operational maturity with TarkaX's Compliance Readiness."
-        canonical="https://tarkax.com/ai-audit"
+        canonical={`${APP_CONFIG.publicDomain}/ai-audit`}
         schema={[breadcrumbSchema, faqSchema]}
       />
       {/* Header */}

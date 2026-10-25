@@ -4,6 +4,7 @@ import apiClient from '@/api/client';
 import { SeoHead } from '../../../components/geo/SeoHead';
 import { ReportHeader, ExecutiveSummaryCard, ScoreBreakdown } from '@/components/report';
 import { ShieldAlert, Loader2 } from 'lucide-react';
+import { APP_CONFIG } from '../../../config/app';
 
 export default function ExampleFindingsPage() {
   const navigate = useNavigate();
@@ -56,9 +57,9 @@ export default function ExampleFindingsPage() {
   return (
     <div className="bg-bg-primary min-h-screen">
       <SeoHead
-        title="Example Findings | TarkaX"
+        title={`Example Findings | ${APP_CONFIG.brandName}`}
         description="View an example of the hidden insights TarkaX reveals about business operations."
-        canonical="https://tarkax.com/example-findings"
+        canonical={`${APP_CONFIG.publicDomain}/example-findings`}
       />
 
       <div className="bg-bg-secondary border-b border-border-light py-8 px-6 text-center mb-8">

@@ -1,12 +1,13 @@
 import { SeoHead } from '../../components/geo/SeoHead';
+import { APP_CONFIG } from '../../config/app';
 
 export default function DataRetentionPage() {
   return (
     <div className="bg-bg-primary min-h-screen animate-fade-up">
       <SeoHead
-        title="Data Retention Policy | TarkaX"
+        title={`Data Retention Policy | ${APP_CONFIG.brandName}`}
         description="Data retention periods and practices for the TarkaX platform."
-        canonical="https://tarkax.com/data-retention"
+        canonical={`${APP_CONFIG.publicDomain}/data-retention`}
       />
       <div className="max-w-3xl mx-auto py-24 px-6">
         <h1 className="text-h1 font-semibold mb-8 border-b border-border-light pb-4">Data Retention Policy</h1>

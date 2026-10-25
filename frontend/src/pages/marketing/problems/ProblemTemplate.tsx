@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { SeoHead } from '../../../components/geo/SeoHead';
 import { ArrowRight, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { APP_CONFIG } from '../../../config/app';
 
 interface ProblemTemplateProps {
   title: string;
@@ -30,9 +31,9 @@ export function ProblemTemplate({
   return (
     <div className="bg-bg-primary">
       <SeoHead
-        title={`${seoTitle} | TarkaX`}
+        title={`${seoTitle} | ${APP_CONFIG.brandName}`}
         description={description}
-        canonical={`https://tarkax.com/problems/${seoTitle.toLowerCase().replace(/ /g, '-')}`}
+        canonical={`${APP_CONFIG.publicDomain}/problems/${seoTitle.toLowerCase().replace(/ /g, '-')}`}
       />
 
       {/* Hero */}

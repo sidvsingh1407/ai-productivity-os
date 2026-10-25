@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { SeoHead } from '../../../components/geo/SeoHead';
 import { ArrowRight, CheckCircle2, LayoutDashboard } from 'lucide-react';
+import { APP_CONFIG } from '../../../config/app';
 
 interface SolutionTemplateProps {
   title: string;
@@ -27,9 +28,9 @@ export function SolutionTemplate({
   return (
     <div className="bg-bg-primary">
       <SeoHead
-        title={`${seoTitle} | TarkaX`}
+        title={`${seoTitle} | ${APP_CONFIG.brandName}`}
         description={description}
-        canonical={`https://tarkax.com/solutions/${seoTitle.toLowerCase().replace(/ /g, '-')}`}
+        canonical={`${APP_CONFIG.publicDomain}/solutions/${seoTitle.toLowerCase().replace(/ /g, '-')}`}
       />
 
       {/* Hero */}
