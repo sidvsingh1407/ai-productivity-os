@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     
     ENVIRONMENT: str = "development"
 
+    SENTRY_DSN: str = ""
+    SENTRY_ENVIRONMENT: str = ""
+    SENTRY_RELEASE: str = ""
+
     ALGORITHM: str = "HS256"
     CORS_ALLOW_ORIGINS: str = ""
     CORS_ALLOW_ORIGIN_REGEX: str = ""
