@@ -75,7 +75,7 @@ export default function DependencyMapList() {
     if (!node) return null;
 
     let title = 'Unknown Node';
-    let type = node.node_type;
+    const type = node.node_type;
     let description = '';
     let detailLink = '';
 

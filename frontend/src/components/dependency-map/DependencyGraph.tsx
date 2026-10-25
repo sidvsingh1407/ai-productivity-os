@@ -128,7 +128,7 @@ export default function DependencyGraph({ nodes: initialNodes, edges: initialEdg
       flowNodes = flowNodes.map((n) => {
         let highlightState: CustomNodeData['highlightState'] = 'dimmed';
         let impactScore = undefined;
-        let isOrigin = n.id === activeImpactId;
+        const isOrigin = n.id === activeImpactId;
 
         if (isOrigin) {
           highlightState = 'none';

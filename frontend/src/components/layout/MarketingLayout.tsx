@@ -135,6 +135,8 @@ export function MarketingLayout() {
                 <p className="px-3 text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2">Legal</p>
                 <Link to="/privacy" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Privacy Policy</Link>
                 <Link to="/terms" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Terms of Service</Link>
+                <Link to="/dpa" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Data Processing Agreement</Link>
+                <Link to="/subprocessors" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Subprocessors</Link>
                 <Link to="/cookies" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Cookie Policy</Link>
                 <Link to="/ai-disclaimer" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">AI Disclaimer</Link>
                 <Link to="/data-retention" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-sm text-text-secondary hover:text-accent-blue hover:bg-bg-secondary rounded-md">Data Retention</Link>
@@ -197,6 +199,8 @@ export function MarketingLayout() {
               <ul className="space-y-3">
                 <li><Link to="/privacy" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Privacy Policy</Link></li>
                 <li><Link to="/terms" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Terms of Service</Link></li>
+                <li><Link to="/dpa" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Data Processing Agreement</Link></li>
+                <li><Link to="/subprocessors" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Subprocessors</Link></li>
                 <li><Link to="/cookies" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Cookie Policy</Link></li>
                 <li><Link to="/ai-disclaimer" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">AI Disclaimer</Link></li>
                 <li><Link to="/data-retention" className="text-body text-text-inverse/70 hover:text-accent-blue transition-colors">Data Retention</Link></li>

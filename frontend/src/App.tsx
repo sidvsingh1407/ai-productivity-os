@@ -14,6 +14,8 @@ import PrivacyPage from './pages/marketing/PrivacyPage';
 import ExampleFindingsPage from './pages/marketing/resources/ExampleFindingsPage';
 import TermsPage from './pages/marketing/TermsPage';
 import CookiesPage from './pages/marketing/CookiesPage';
+import DpaPage from './pages/marketing/DpaPage';
+import SubprocessorsPage from './pages/marketing/SubprocessorsPage';
 
 import AiRoiPage from './pages/marketing/problems/AiRoiPage';
 import TeamProductivityPage from './pages/marketing/problems/TeamProductivityPage';
@@ -99,6 +101,8 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/dpa" element={<DpaPage />} />
+          <Route path="/subprocessors" element={<SubprocessorsPage />} />
           <Route path="/cookies" element={<CookiesPage />} />
           <Route path="/ai-disclaimer" element={<AiDisclaimerPage />} />
           <Route path="/data-retention" element={<DataRetentionPage />} />
