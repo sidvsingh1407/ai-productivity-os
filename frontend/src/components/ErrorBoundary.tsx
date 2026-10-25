@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import * as Sentry from '@sentry/react';
 
 interface Props {
   children: ReactNode;
@@ -21,7 +22,16 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
-    // Log to monitoring service here if needed
+
+    // Attempt to log to Sentry if available
+    try {
+      if (Sentry && Sentry.captureException) {
+        Sentry.captureException(error, { extra: { errorInfo } });
+      }
+    } catch (e) {
+      // Ignore Sentry errors, app shouldn't crash if telemetry fails
+      console.error('Failed to report error to Sentry:', e);
+    }
   }
 
   handleReset = () => {

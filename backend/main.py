@@ -63,6 +63,10 @@ from opportunities.router import router as opportunities_router # noqa: E402
 from agent_recommendations.router import router as agent_recommendations_router # noqa: E402
 from config import settings  # noqa: E402
 import re  # noqa: E402
+from monitoring.sentry import init_sentry # noqa: E402
+
+# Initialize optional telemetry early, but after settings
+init_sentry()
 
 app = FastAPI(title="AI Productivity OS", version="1.0.0", lifespan=lifespan)
 

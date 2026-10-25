@@ -6,6 +6,10 @@ import App from './App.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import './index.css';
 import './styles/tokens.css';
+import { initSentry } from './monitoring/sentry';
+
+// Initialize optional telemetry early
+initSentry();
 
 const queryClient = new QueryClient({
   defaultOptions: {
