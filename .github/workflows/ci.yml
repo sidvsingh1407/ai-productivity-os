@@ -5,19 +5,44 @@ on:
     branches:
       - main
   pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  backend-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Run flake8
+        run: flake8 backend/
+
   backend-test:
     runs-on: ubuntu-latest
     services:
       postgres:
         image: pgvector/pgvector:pg16
         env:
-          POSTGRES_USER: testuser
-          POSTGRES_PASSWORD: testpassword
-          POSTGRES_DB: testdb
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U postgres -d postgres"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -25,48 +50,50 @@ jobs:
           - 5432:5432
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
+
+      - name: Enable vector extension
+        env:
+          PGPASSWORD: postgres
+        run: >-
+          psql -h localhost -U postgres -d postgres
+          -c "CREATE EXTENSION IF NOT EXISTS vector;"
+
       - name: Install dependencies
-        run: |
-          cd backend
-          pip install -r requirements.txt
+        run: pip install -r backend/requirements.txt
+
       - name: Run pytest
         env:
-          DATABASE_URL: postgresql+asyncpg://testuser:testpassword@localhost:5432/testdb
-          SECRET_KEY: test_secret_key
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+          SECRET_KEY: dummy
           ENVIRONMENT: test
-        run: |
-          cd backend
-          python -m pytest tests/
-
-  backend-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      - name: Install flake8
-        run: pip install flake8
-      - name: Run flake8
-        run: flake8 backend/
+        run: cd backend && python -m pytest tests/
 
   frontend-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: frontend
+
+      - name: Lint frontend
+        # lint is advisory until existing errors are fixed
+        continue-on-error: true
+        run: npm run lint
+        working-directory: frontend
+
       - name: Build frontend
         run: npm run build
         working-directory: frontend
