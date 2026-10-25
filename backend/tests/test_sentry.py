@@ -6,21 +6,28 @@ from config import settings
 def test_sentry_disabled_when_no_dsn():
     """Test that Sentry does not initialize and does not crash when DSN is empty."""
     with patch("monitoring.sentry.settings.SENTRY_DSN", ""):
-        with patch("sentry_sdk.init") as mock_init:
+        with patch("monitoring.sentry.sentry_sdk") as mock_sdk:
             result = init_sentry()
             assert result is False
-            mock_init.assert_not_called()
+            mock_sdk.init.assert_not_called()
+
+def test_sentry_disabled_when_sdk_missing():
+    """Test that Sentry does not initialize and does not crash when sentry_sdk is unavailable."""
+    with patch("monitoring.sentry.settings.SENTRY_DSN", "https://public@sentry.example.com/1"):
+        with patch("monitoring.sentry.sentry_sdk", None):
+            result = init_sentry()
+            assert result is False
 
 def test_sentry_initializes_with_dsn():
     """Test that Sentry initializes when a DSN is provided."""
     with patch("monitoring.sentry.settings.SENTRY_DSN", "https://public@sentry.example.com/1"):
-        with patch("sentry_sdk.init") as mock_init:
+        with patch("monitoring.sentry.sentry_sdk") as mock_sdk:
             result = init_sentry()
             assert result is True
-            mock_init.assert_called_once()
+            mock_sdk.init.assert_called_once()
 
             # Verify basic configs passed
-            kwargs = mock_init.call_args[1]
+            kwargs = mock_sdk.init.call_args[1]
             assert kwargs["dsn"] == "https://public@sentry.example.com/1"
             assert kwargs["send_default_pii"] is False
             assert "before_send" in kwargs
