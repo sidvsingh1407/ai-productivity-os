@@ -244,13 +244,3 @@ async def ready():
 @app.get("/health")
 async def health():
     return {"status": "healthy"}
-
-
-@app.get("/ready")
-async def ready(db: AsyncSession = Depends(get_db)):
-    try:
-        await db.execute(text("SELECT 1"))
-        return {"status": "ready"}
-    except Exception as e:
-        logger.error("Readiness check failed: Database unavailable", exc_info=True)
-        return JSONResponse(status_code=503, content={"status": "unavailable"})
