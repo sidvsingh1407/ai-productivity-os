@@ -1,7 +1,7 @@
 """Add ai_systems table
 
 Revision ID: 4c2017c2d049
-Revises: manual_005_add_user_token_and_verification
+Revises: manual_005
 Create Date: 2026-07-18T17:46:22.263236
 
 """
@@ -14,7 +14,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision: str = '4c2017c2d049'
-down_revision: Union[str, None] = 'manual_005_add_user_token_and_verification'
+down_revision: Union[str, None] = 'manual_005'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

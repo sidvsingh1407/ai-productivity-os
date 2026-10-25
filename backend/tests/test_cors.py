@@ -1,40 +1,88 @@
 import pytest
-from httpx import AsyncClient, ASGITransport
-from main import app, ALLOWED_ORIGINS
+from httpx import ASGITransport, AsyncClient
+
+from main import ALLOWED_ORIGINS, app
 
 
 @pytest.mark.asyncio
 async def test_cors_allowed_origin():
-    # Verify the origin is actually allowed
-    test_origin = ALLOWED_ORIGINS[0]
+    origin = ALLOWED_ORIGINS[0]
 
     async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as ac:
-        response = await ac.get("/health", headers={"origin": test_origin})
+        transport=ASGITransport(app=app),
+        base_url="http://test",
+    ) as client:
+        # Normal response
+        response = await client.get(
+            "/health",
+            headers={"Origin": origin},
+        )
         assert response.status_code == 200
-        assert response.headers.get("access-control-allow-origin") == \
-            test_origin
+        assert response.headers.get("access-control-allow-origin") == origin
 
-        # Test error response
-        response = await ac.get("/not-found", headers={"origin": test_origin})
+        # Preflight response
+        response = await client.options(
+            "/health",
+            headers={
+                "Origin": origin,
+                "Access-Control-Request-Method": "GET",
+            },
+        )
+        assert response.status_code == 200
+        assert response.headers.get("access-control-allow-origin") == origin
+
+        # Error response must preserve CORS for an allowed origin
+        response = await client.get(
+            "/non-existent-endpoint",
+            headers={"Origin": origin},
+        )
         assert response.status_code == 404
-        assert response.headers.get("access-control-allow-origin") == \
-            test_origin
+        assert response.headers.get("access-control-allow-origin") == origin
 
 
 @pytest.mark.asyncio
 async def test_cors_disallowed_origin():
-    test_origin = "http://evil-cors-origin.com"
+    origin = "http://evil-cors-origin.com"
 
     async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as ac:
-        response = await ac.get("/health", headers={"origin": test_origin})
+        transport=ASGITransport(app=app),
+        base_url="http://test",
+    ) as client:
+        # Normal response
+        response = await client.get(
+            "/health",
+            headers={"Origin": origin},
+        )
         assert response.status_code == 200
         assert "access-control-allow-origin" not in response.headers
 
-        # Test error response
-        response = await ac.get("/not-found", headers={"origin": test_origin})
+        # Preflight response must not allow the origin
+        response = await client.options(
+            "/health",
+            headers={
+                "Origin": origin,
+                "Access-Control-Request-Method": "GET",
+            },
+        )
+        assert "access-control-allow-origin" not in response.headers
+
+        # Error response must not add a wildcard or unauthorized origin
+        response = await client.get(
+            "/non-existent-endpoint",
+            headers={"Origin": origin},
+        )
         assert response.status_code == 404
         assert "access-control-allow-origin" not in response.headers
+
+
+@pytest.mark.asyncio
+async def test_cors_missing_origin():
+    async with AsyncClient(
+        transport=ASGITransport(app=app),
+        base_url="http://test",
+    ) as client:
+        response = await client.get("/health")
+
+    assert response.status_code == 200
+    assert "access-control-allow-origin" not in response.headers
+

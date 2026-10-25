@@ -1,35 +1,66 @@
-# Deploy Settings
+# Deployment Settings
+
+This document describes the deployment configuration for the AI Productivity OS application.
+
+## Frontend
+
+- Build command: `npm run build`
+- Output directory: `dist` (Vite default)
+- Node.js CI version: 18 (upgrade in a separate PR)
+- Install command: `npm ci`
+
+### Frontend environment variables
+
+| Variable | Source |
+|---|---|
+| `VITE_API_URL` | `frontend/.env.example` |
+| `VITE_APP_NAME` | `frontend/.env.example` |
+| `VITE_APP_ENVIRONMENT` | `frontend/.env.example` |
+
+`VITE_API_URL` must point to the deployed backend API.
+
+## Backend
 
 - Python version: 3.11
-- Build command: `npm run build`
 - Start command: `uvicorn main:app --host 0.0.0.0 --port 8080`
-- Port: 8080
-- Health path: `/health`
-- Ready path: `/ready`
+- Port: `8080`
+- Docker health-check path: `/health`
+- Readiness path: `/ready`
 
-## Environment Variables
+### Backend environment variables
 
-| name | read in (file) | purpose in one line | required (yes/no) | default exists (yes/no) |
-| --- | --- | --- | --- | --- |
-| DATABASE_URL | `backend/config.py` | Connection string for Postgres database | yes | no |
-| SUPABASE_URL | `backend/config.py` | URL for Supabase integration | no | yes |
-| SUPABASE_KEY | `backend/config.py` | Key for Supabase integration | no | yes |
-| SECRET_KEY | `backend/config.py` | Secret key for JWT and cryptography | yes | no |
-| REDIS_URL | `backend/config.py` | Connection string for Redis | no | yes |
-| SENDGRID_API_KEY | `backend/config.py` | API key for SendGrid | no | yes |
-| FRONTEND_URL | `backend/config.py` | Primary allowed frontend origin | no | yes |
-| ENVIRONMENT | `backend/config.py` | Application environment (e.g. development) | no | yes |
-| ALGORITHM | `backend/config.py` | Algorithm for JWT | no | yes |
-| CORS_ALLOW_ORIGINS | `backend/config.py` | Comma-separated list of extra allowed origins | no | yes |
-| CORS_ALLOW_ORIGIN_REGEX | `backend/config.py` | Regex for dynamically allowing origins | no | yes |
-| GEMINI_API_KEY1 | `backend/config.py` | API key for Google Gemini (primary) | no | yes |
-| GEMINI_API_KEY2 | `backend/config.py` | API key for Google Gemini (secondary) | no | yes |
-| RESEND_API_KEY | `backend/utils/email.py` | API key for Resend emails | no | no |
-| MAIL_FROM | `backend/utils/email.py` | Default from address for emails | no | yes |
-| CELERY_TASK_ALWAYS_EAGER | `backend/tests/conftest.py` | Forces Celery tasks to run synchronously in tests | no | no |
-| VITE_API_URL | `frontend/.env.example` | Backend API URL for frontend | no | no |
-| VITE_APP_NAME | `frontend/.env.example` | Name of the frontend app | no | no |
-| VITE_APP_ENVIRONMENT | `frontend/.env.example` | Frontend environment context | no | no |
+| Variable | Source |
+|---|---|
+| `DATABASE_URL` | `backend/config.py` |
+| `SECRET_KEY` | `backend/config.py` |
+| `SUPABASE_URL` | `backend/config.py` |
+| `SUPABASE_KEY` | `backend/config.py` |
+| `REDIS_URL` | `backend/config.py` |
+| `SENDGRID_API_KEY` | `backend/config.py` |
+| `FRONTEND_URL` | `backend/config.py` |
+| `ENVIRONMENT` | `backend/config.py` |
+| `ALGORITHM` | `backend/config.py` |
+| `CORS_ALLOW_ORIGINS` | `backend/config.py` |
+| `CORS_ALLOW_ORIGIN_REGEX` | `backend/config.py` |
+| `GEMINI_API_KEY1` | `backend/config.py` |
+| `GEMINI_API_KEY2` | `backend/config.py` |
+| `RESEND_API_KEY` | `backend/utils/email.py` |
+| `MAIL_FROM` | `backend/utils/email.py` |
+| `CELERY_TASK_ALWAYS_EAGER` | `backend/tests/conftest.py` |
 
-The Render service settings live in the Render dashboard and not in this repo.
-Render uses its own health check path setting. Set it to /health or /ready in the dashboard.
+## Health and readiness
+
+- `GET /health` is the liveness check. It should return HTTP 200 without requiring a database query.
+- `GET /ready` is the readiness check. It should execute a database query and return HTTP 503 if the database is unavailable or the check times out.
+- The Docker health check targets `http://127.0.0.1:8080/health`.
+- Render service health-check settings are configured in the Render dashboard.
+
+## Continuous integration
+
+- Backend tests use a disposable PostgreSQL service with the `pgvector` extension enabled.
+- Backend lint runs `flake8 backend/`.
+- Frontend CI uses `npm ci`, `npm run lint`, and `npm run build`.
+- Frontend lint is advisory until existing lint errors are resolved. Frontend build remains a required check.
+- Never use production database credentials or production secrets in CI.
+- Keep deployment secrets in the relevant hosting provider's environment settings, not in source control.
+
