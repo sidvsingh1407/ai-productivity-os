@@ -14,6 +14,7 @@ from models.system_finding import SystemFinding
 from models.user import User
 
 from audits.service import run_audit
+from unittest.mock import patch, AsyncMock
 
 @pytest_asyncio.fixture(autouse=True, scope="function")
 async def setup_db():
@@ -288,3 +289,70 @@ async def test_api_audit_no_system_findings(auth_client: AsyncClient, db_session
     assert "system_findings" in get_data
     assert isinstance(get_data["system_findings"], list)
     assert len(get_data["system_findings"]) == 0
+
+@pytest.mark.asyncio
+async def test_run_audit_rogue_ai_narrative(db_session: AsyncSession, organization: Organization, user: User):
+    form_response = {
+        "q2_1": "a", "q2_2": "a", "q2_3": "a",
+        "q3_1": "a", "q3_2": "a", "q3_3": "a",
+        "q4_1": "a", "q4_2": "a", "q4_3": "a",
+        "q5_1": "a", "q5_2": "a", "q5_3": "a",
+        "companyName": "Test Co",
+        "industry": "finance",
+        "companySize": "100-500",
+        "region": "NA",
+        "primaryAiUsage": "internal",
+        "governanceMaturity": "low"
+    }
+
+    rogue_narrative = {
+        "executive_summary": {
+            "overall_assessment": "Rogue assessment.",
+            "critical_risk": "Rogue risk.",
+            "primary_opportunity": "Rogue opportunity.",
+            "recommended_first_action": "Rogue action."
+        },
+        "dimension_narratives": {
+            "awareness": "Rogue awareness.",
+            "adoption": "Rogue adoption.",
+            "integration": "Rogue integration.",
+            "governance": "Rogue governance.",
+            "roi": "Rogue roi."
+        },
+        "roadmap": {
+            "day_30": [{"action": "Rogue", "reason": "Rogue", "priority": "Low"}],
+            "day_60": [{"action": "Rogue", "reason": "Rogue", "priority": "Low"}],
+            "day_90": [{"action": "Rogue", "reason": "Rogue", "priority": "Low"}]
+        },
+        "recommendations": [
+            {
+                "recommendation": "Rogue rec",
+                "priority": "Low",
+                "expected_impact": "None",
+                "implementation_effort": "High"
+            }
+        ]
+    }
+
+    # Run without patch to get deterministic baseline
+    with patch('audits.service.generate_audit_narrative', new_callable=AsyncMock) as mock_generate_narrative:
+        mock_generate_narrative.return_value = None
+        baseline_result = await run_audit(db_session, organization.id, user.id, form_response)
+
+        baseline_roadmap = baseline_result.intelligence.roadmap
+        baseline_recommendations = baseline_result.intelligence.recommendations
+
+    # Do not attempt to delete baseline_result since it's a Pydantic model.
+    # The second run will just create a new audit record, which is fine for the test.
+
+    with patch('audits.service.generate_audit_narrative', new_callable=AsyncMock) as mock_generate_narrative:
+        mock_generate_narrative.return_value = rogue_narrative
+
+        result = await run_audit(db_session, organization.id, user.id, form_response)
+
+        # Assert executive summary updated
+        assert result.intelligence.executive_summary.overall_assessment == "Rogue assessment."
+
+        # Assert roadmap & recommendations are not the rogue ones
+        assert result.intelligence.roadmap.model_dump() == baseline_roadmap.model_dump()
+        assert result.intelligence.recommendations == baseline_recommendations
