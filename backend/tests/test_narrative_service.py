@@ -106,3 +106,107 @@ def test_parse_gemini_json():
     result = _parse_gemini_json(raw)
     assert result is not None
     assert result["executive_summary"]["overall_assessment"] == "This is a valid assessment."
+
+VALID_WORKFLOW_JSON = """{
+  "executive_summary": {
+    "most_critical_bottleneck": "Manual handoffs.",
+    "primary_root_cause": "No Jira integration.",
+    "highest_priority_intervention": "Automate handoffs.",
+    "workflow_risk_level": "High",
+    "workflow_maturity": "Low"
+  },
+  "bottlenecks": [
+    {
+      "title": "A bottleneck",
+      "severity": "Critical",
+      "impacted_area": "Approval",
+      "rationale": "It's slow."
+    }
+  ]
+}"""
+
+INVALID_WORKFLOW_JSON = """{
+  "executive_summary": {
+"""
+
+MISSING_FIELDS_WORKFLOW_JSON = """{
+  "executive_summary": {
+    "most_critical_bottleneck": "Manual handoffs."
+  }
+}"""
+
+from services.narrative_service import generate_workflow_narrative
+
+@pytest.mark.asyncio
+async def test_generate_workflow_narrative_valid():
+    with patch('services.gemini_client.gemini_manager.generate', new_callable=AsyncMock) as mock_generate:
+        mock_generate.return_value = VALID_WORKFLOW_JSON
+        scores = {}
+        context = {}
+        result = await generate_workflow_narrative(scores, context)
+
+        assert result is not None
+        assert "executive_summary" in result
+        assert result["executive_summary"]["most_critical_bottleneck"] == "Manual handoffs."
+        # Ensure bottlenecks are stripped
+        assert "bottlenecks" not in result
+
+@pytest.mark.asyncio
+async def test_generate_workflow_narrative_invalid_json():
+    with patch('services.gemini_client.gemini_manager.generate', new_callable=AsyncMock) as mock_generate:
+        mock_generate.return_value = INVALID_WORKFLOW_JSON
+        scores = {}
+        context = {}
+        result = await generate_workflow_narrative(scores, context)
+
+        assert result is None
+
+@pytest.mark.asyncio
+async def test_generate_workflow_narrative_missing_fields():
+    with patch('services.gemini_client.gemini_manager.generate', new_callable=AsyncMock) as mock_generate:
+        mock_generate.return_value = MISSING_FIELDS_WORKFLOW_JSON
+        scores = {}
+        context = {}
+        result = await generate_workflow_narrative(scores, context)
+
+        assert result is None
+
+@pytest.mark.asyncio
+async def test_generate_workflow_narrative_gemini_fails():
+    with patch('services.gemini_client.gemini_manager.generate', new_callable=AsyncMock) as mock_generate:
+        mock_generate.return_value = None
+        scores = {}
+        context = {}
+        result = await generate_workflow_narrative(scores, context)
+
+        assert result is None
+
+@pytest.mark.asyncio
+async def test_generate_audit_narrative_strips_extraneous_fields():
+    with patch('services.gemini_client.gemini_manager.generate', new_callable=AsyncMock) as mock_generate:
+        mock_generate.return_value = """{
+          "executive_summary": {
+            "overall_assessment": "Valid assessment.",
+            "critical_risk": "Data exposure.",
+            "primary_opportunity": "Automation.",
+            "recommended_first_action": "Audit access."
+          },
+          "dimension_narratives": {
+            "awareness": "Good awareness.",
+            "adoption": "High adoption.",
+            "integration": "Poor integration.",
+            "governance": "Lacking governance.",
+            "roi": "Low ROI."
+          },
+          "roadmap": { "day_30": "Bad." },
+          "recommendations": [ { "recommendation": "Do things." } ]
+        }"""
+        scores = {}
+        context = {}
+        result = await generate_audit_narrative(scores, context)
+
+        assert result is not None
+        assert "executive_summary" in result
+        assert "dimension_narratives" in result
+        assert "roadmap" not in result
+        assert "recommendations" not in result

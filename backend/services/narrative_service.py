@@ -26,6 +26,18 @@ class AuditNarrativePayload(BaseModel):
     dimension_narratives: DimensionNarratives
 
 
+class WorkflowExecutiveSummaryNarrative(BaseModel):
+    most_critical_bottleneck: str = Field(..., max_length=1000)
+    primary_root_cause: str = Field(..., max_length=1000)
+    highest_priority_intervention: str = Field(..., max_length=1000)
+    workflow_risk_level: str = Field(..., max_length=100)
+    workflow_maturity: str = Field(..., max_length=100)
+
+
+class WorkflowNarrativePayload(BaseModel):
+    executive_summary: WorkflowExecutiveSummaryNarrative
+
+
 def _parse_gemini_json(raw: str) -> dict | None:
     """Strip markdown fences and parse JSON defensively."""
     try:
@@ -169,4 +181,14 @@ Respond ONLY with a valid JSON object. No preamble, no markdown, no explanation:
     raw = await gemini_manager.generate(prompt)
     if not raw:
         return None
-    return _parse_gemini_json(raw)
+
+    parsed = _parse_gemini_json(raw)
+    if not parsed:
+        return None
+
+    try:
+        validated = WorkflowNarrativePayload.model_validate(parsed)
+        return validated.model_dump()
+    except ValidationError as e:
+        logger.error(f"Workflow narrative validation failed: {e}")
+        return None

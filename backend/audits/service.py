@@ -88,17 +88,8 @@ async def run_audit(
         if narrative and "executive_summary" in narrative:
             narrative_source = "dynamic"
 
-            # Update executive summary fields if present
-            for key in [
-                "overall_assessment",
-                "critical_risk",
-                "primary_opportunity",
-                "recommended_first_action",
-            ]:
-                if key in narrative["executive_summary"]:
-                    intelligence["executive_summary"][key] = narrative[
-                        "executive_summary"
-                    ][key]
+            # Atomically replace executive summary to prevent partial mutations
+            intelligence["executive_summary"] = narrative["executive_summary"]
 
         # 4.8 Generate and save per-system intelligence
         ai_systems = await repository.get_ai_systems_by_org(db, org_id)
