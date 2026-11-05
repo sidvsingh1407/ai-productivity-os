@@ -4,16 +4,18 @@ import { ComingSoonLayout } from '../components/ComingSoonLayout';
 const Privacy: React.FC = () => {
   return (
     <ComingSoonLayout isShell={true}>
-      <div className="py-8 text-cs-text-secondary">
+      <div className="py-8 text-cs-text-secondary font-sans prose prose-invert max-w-none">
         <h1 className="text-3xl md:text-4xl font-semibold mb-8 text-cs-text-primary">Privacy Policy</h1>
-        <p className="mb-4">Last updated: [Date]</p>
+        <p className="mb-4 font-medium">Last updated: [TO BE SET BY FOUNDER]</p>
         <p className="mb-4 text-base md:text-lg leading-relaxed">
-          This privacy policy describes how Tarkaya collects, uses, and shares your personal information.
+          This is a placeholder. The real privacy policy is under legal review and will be published before launch.
         </p>
-        {/* Placeholder for actual privacy policy content */}
-        <div className="h-64 bg-[rgba(255,255,255,0.02)] rounded-lg border border-glass-border flex items-center justify-center">
-          <p className="text-cs-text-muted italic">Legal content requires formal review.</p>
-        </div>
+        <p className="mb-4 text-base md:text-lg leading-relaxed">
+          Tarkaya is pursuing ISO 27001 certification. We are not yet certified. For questions about our security posture, contact <a href="mailto:security@tarkaya.com" className="text-cs-accent hover:underline">security@tarkaya.com</a>.
+        </p>
+        <p className="mt-8 text-base md:text-lg leading-relaxed">
+          Contact: <a href="mailto:privacy@tarkaya.com" className="text-cs-accent hover:underline">privacy@tarkaya.com</a>
+        </p>
       </div>
     </ComingSoonLayout>
   );

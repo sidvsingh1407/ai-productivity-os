@@ -2,6 +2,7 @@ import React from 'react';
 import { BackdropGradients } from './BackdropGradients';
 import { GlassPanel } from './GlassPanel';
 import { Link } from 'react-router-dom';
+import { BrandHeader } from './BrandHeader';
 
 interface ComingSoonLayoutProps {
   children: React.ReactNode;
@@ -12,9 +13,10 @@ export const ComingSoonLayout: React.FC<ComingSoonLayoutProps> = ({ children, is
   return (
     <div className="min-h-screen bg-cs-bg-base text-cs-text-primary font-sans selection:bg-cs-accent selection:text-cs-bg-base flex flex-col relative overflow-hidden">
       <BackdropGradients />
+      <BrandHeader />
 
       <div className="relative z-10 flex-grow max-w-[720px] w-full mx-auto px-6 pt-24 md:pt-32 pb-20 flex flex-col justify-between h-full min-h-screen">
-        <main className="w-full flex-grow flex flex-col">
+        <main className="w-full flex-grow flex flex-col relative z-10">
           {isShell ? (
             <GlassPanel className="p-8 w-full shadow-subtle my-auto">
               {children}

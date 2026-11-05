@@ -4,16 +4,18 @@ import { ComingSoonLayout } from '../components/ComingSoonLayout';
 const Terms: React.FC = () => {
   return (
     <ComingSoonLayout isShell={true}>
-      <div className="py-8 text-cs-text-secondary">
+      <div className="py-8 text-cs-text-secondary font-sans prose prose-invert max-w-none">
         <h1 className="text-3xl md:text-4xl font-semibold mb-8 text-cs-text-primary">Terms of Service</h1>
-        <p className="mb-4">Last updated: [Date]</p>
+        <p className="mb-4 font-medium">Last updated: [TO BE SET BY FOUNDER]</p>
         <p className="mb-4 text-base md:text-lg leading-relaxed">
-          These Terms of Service govern your access to and use of Tarkaya's website and services.
+          This is a placeholder. The real terms of service are under legal review and will be published before launch.
         </p>
-        {/* Placeholder for actual terms content */}
-        <div className="h-64 bg-[rgba(255,255,255,0.02)] rounded-lg border border-glass-border flex items-center justify-center">
-          <p className="text-cs-text-muted italic">Legal content requires formal review.</p>
-        </div>
+        <p className="mb-4 text-base md:text-lg leading-relaxed">
+          Tarkaya is not yet certified under ISO 27001. Certification is in progress. We will publish our certificate on this site once issued.
+        </p>
+        <p className="mt-8 text-base md:text-lg leading-relaxed">
+          Contact: <a href="mailto:privacy@tarkaya.com" className="text-cs-accent hover:underline">privacy@tarkaya.com</a>
+        </p>
       </div>
     </ComingSoonLayout>
   );
