@@ -1,19 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { ComingSoonLayout } from '../components/ComingSoonLayout';
 
 const Contact: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6 text-center">
-      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-sm border border-gray-200">
-        <h1 className="text-2xl font-bold mb-4 text-black">Contact Us</h1>
-        <p className="text-gray-700 mb-8">
-          You can reach us at <a href="mailto:privacy@tarkaya.com" className="text-black font-medium hover:underline">privacy@tarkaya.com</a>.
+    <ComingSoonLayout isShell={true}>
+      <div className="py-8 text-cs-text-secondary text-center">
+        <h1 className="text-3xl md:text-4xl font-semibold mb-6 text-cs-text-primary">Contact Us</h1>
+        <p className="mb-8 text-base md:text-lg leading-relaxed">
+          Have questions? We'd love to hear from you.
         </p>
-        <Link to="/" className="text-sm font-medium text-gray-500 hover:text-black">
-          &larr; Back home
-        </Link>
+        <a
+          href="mailto:contact@tarkaya.com"
+          className="inline-block px-6 py-3 bg-[rgba(255,255,255,0.04)] border border-glass-border rounded-lg text-cs-text-primary hover:bg-glass-hover focus:outline-none focus:ring-2 focus:ring-cs-accent focus:ring-offset-2 focus:ring-offset-cs-bg-base transition-colors"
+        >
+          contact@tarkaya.com
+        </a>
       </div>
-    </div>
+    </ComingSoonLayout>
   );
 };
 
