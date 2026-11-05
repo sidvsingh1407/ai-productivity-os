@@ -44,18 +44,16 @@ const config = {
         "border-light": "var(--border-light)",
         "border-strong": "var(--border-strong)",
 
-        // Coming Soon Glassmorphism tokens
-        "cs-bg-base": "var(--cs-bg-base)",
-        "cs-bg-gradient-1": "var(--cs-bg-gradient-1)",
-        "cs-bg-gradient-2": "var(--cs-bg-gradient-2)",
-        "glass-bg": "var(--glass-bg)",
-        "glass-border": "var(--glass-border)",
-        "glass-hover": "var(--glass-hover)",
-        "cs-accent": "var(--cs-accent)",
-        "cs-accent-glow": "var(--cs-accent-glow)",
-        "cs-text-primary": "var(--cs-text-primary)",
-        "cs-text-secondary": "var(--cs-text-secondary)",
-        "cs-text-muted": "var(--cs-text-muted)",
+        // Editorial tokens
+        "tk-obsidian": "var(--tk-obsidian)",
+        "tk-paper": "var(--tk-paper)",
+        "tk-inkstone": "var(--tk-inkstone)",
+        "tk-felt-gray": "var(--tk-felt-gray)",
+        "tk-pewter": "var(--tk-pewter)",
+        "tk-ash-mist": "var(--tk-ash-mist)",
+        "tk-iridescent-green": "var(--tk-iridescent-green)",
+        "tk-iridescent-amber": "var(--tk-iridescent-amber)",
+        "tk-iridescent-oxblood": "var(--tk-iridescent-oxblood)",
 
         // Map shadcn variables to our tokens
         border: "var(--border-light)",
@@ -91,9 +89,6 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-      },
-      backdropBlur: {
-        'glass': '20px',
       },
       borderRadius: {
         lg: "var(--radius-card)",
