@@ -21,7 +21,7 @@ def render_email_template(template_name: str, context: dict) -> str:
         logger.error(f"Failed to render email template {template_name}: {e}")
         return ""
 
-async def send_email(to: str, subject: str, html: str):
+async def send_email(to: str, subject: str, html: str, text: str = None):
     """Sends an email using the Resend API."""
     api_key = os.environ.get("RESEND_API_KEY")
     mail_from = os.environ.get("MAIL_FROM", "onboarding@resend.dev")
@@ -31,6 +31,15 @@ async def send_email(to: str, subject: str, html: str):
         return None
 
     try:
+        payload = {
+            "from": mail_from,
+            "to": [to],
+            "subject": subject,
+            "html": html
+        }
+        if text:
+            payload["text"] = text
+
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 "https://api.resend.com/emails",
@@ -38,12 +47,7 @@ async def send_email(to: str, subject: str, html: str):
                     "Authorization": f"Bearer {api_key}",
                     "Content-Type": "application/json"
                 },
-                json={
-                    "from": mail_from,
-                    "to": [to],
-                    "subject": subject,
-                    "html": html
-                }
+                json=payload
             )
             response.raise_for_status()
             logger.info(f"Successfully sent email to {to}")
@@ -59,11 +63,20 @@ async def send_templated_email(to: str, email_type: str, context: dict):
         logger.error(f"Cannot send email to {to}: Template {email_type} rendering failed.")
         return None
 
+    # Check if a text template exists
+    text_content = None
+    try:
+        text_template = env.get_template(f"{email_type}.txt")
+        text_content = text_template.render(**context)
+    except Exception:
+        pass # Text template is optional
+
     subject_map = {
         "welcome": "Welcome to AI Productivity OS",
         "verify_email": "Verify your email",
-        "password_reset": "Reset your password"
+        "password_reset": "Reset your password",
+        "waitlist_confirm": "Confirm your Tarkaya waitlist signup"
     }
     subject = subject_map.get(email_type, "Notification from AI Productivity OS")
 
-    return await send_email(to, subject, html_content)
+    return await send_email(to, subject, html_content, text_content)

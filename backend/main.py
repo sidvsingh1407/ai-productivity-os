@@ -21,8 +21,13 @@ except ImportError:
 
 import os
 
+from config import settings
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    if settings.ENVIRONMENT == "production" and settings.WAITLIST_IP_SALT == "change-me-in-production":
+        raise ValueError("WAITLIST_IP_SALT must be configured securely in production.")
+
     if os.environ.get("ENVIRONMENT") != "production":
         print(
             "SYSTEM LOG: Scanning models and verifying tables...",
@@ -66,6 +71,7 @@ from monitoring.router import router as monitoring_router  # noqa: E402
 from dependency_map.router import router as dependency_map_router # noqa: E402
 from opportunities.router import router as opportunities_router # noqa: E402
 from agent_recommendations.router import router as agent_recommendations_router # noqa: E402
+from waitlist.router import router as waitlist_router # noqa: E402
 from config import settings  # noqa: E402
 import re  # noqa: E402
 from monitoring.sentry import init_sentry # noqa: E402
@@ -222,6 +228,7 @@ app.include_router(monitoring_router, prefix="/api/monitoring")
 app.include_router(dependency_map_router, prefix="/api/dependency-map")
 app.include_router(opportunities_router, prefix="/api")
 app.include_router(agent_recommendations_router, prefix="/api")
+app.include_router(waitlist_router, prefix="/api/waitlist")
 
 
 from fastapi import Depends
