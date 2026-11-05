@@ -17,6 +17,9 @@ router = APIRouter()
 class WaitlistCreate(BaseModel):
     email: EmailStr
     product_preference: Optional[str] = None
+    company_size: Optional[str] = None
+    problem_statement: Optional[str] = None
+    signup_type: str = "quick"
     source: str
 
 def hash_ip(ip: str) -> str:
@@ -61,6 +64,9 @@ async def create_waitlist_signup(
         new_signup = WaitlistSignup(
             email=email,
             product_preference=signup.product_preference,
+            company_size=signup.company_size,
+            problem_statement=signup.problem_statement,
+            signup_type=signup.signup_type,
             source=signup.source,
             ip_hash=hashed_ip,
             confirmation_token=confirmation_token

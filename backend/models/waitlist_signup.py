@@ -9,7 +9,10 @@ class WaitlistSignup(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, server_default=sa.text("gen_random_uuid()"))
     email = Column(String, nullable=False, unique=True)
-    product_preference = Column(String, nullable=True)
+    product_preference = Column(String, nullable=True, index=True)
+    company_size = Column(String, nullable=True)
+    problem_statement = Column(String, nullable=True)
+    signup_type = Column(String, nullable=False, server_default='quick')
     source = Column(String, nullable=False)
     ip_hash = Column(String, nullable=False)
     confirmed_at = Column(DateTime(timezone=True), nullable=True)
