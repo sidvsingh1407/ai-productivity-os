@@ -1,12 +1,13 @@
 export const APP_CONFIG = {
-  brandName: 'TarkaX',
+  brandName: 'Tarkaya',
   publicDomain: 'https://tarkaya.com',
   get apiBaseUrl() {
-    return (
-      import.meta.env.VITE_API_URL ||
-      (import.meta.env.PROD
-        ? 'https://ai-productivity-os.onrender.com'
-        : 'http://localhost:8000')
-    );
+    if (!import.meta.env.VITE_API_URL) {
+      if (import.meta.env.PROD) {
+        throw new Error('VITE_API_URL is not set');
+      }
+      return 'http://localhost:8000';
+    }
+    return import.meta.env.VITE_API_URL;
   },
 };

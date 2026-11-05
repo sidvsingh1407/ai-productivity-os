@@ -1,0 +1,14 @@
+Confirm your Tarkaya waitlist signup
+
+Thank you for joining the waitlist for Tarkaya.
+
+Please confirm your email address so we know it is really you.
+
+Open the following link in your browser to confirm:
+{{ confirm_url }}
+
+This link will expire in 7 days.
+
+--
+Tarkaya · tarkaya.com · privacy@tarkaya.com
+Unsubscribe: {{ unsubscribe_url }}

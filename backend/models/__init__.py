@@ -22,5 +22,6 @@ from models.agent_recommendation import AgentRecommendation
 from models.workflow_recommendation import WorkflowRecommendation
 from models.roadmap_item import RoadmapItem
 from models.ai_system_cost_snapshot import AISystemCostSnapshot
+from models.waitlist_signup import WaitlistSignup
 
-__all__ = ["AISystem", "Base", "User", "UserToken", "Organization", "OrgMember", "Invitation", "Project", "SavedPrompt", "PromptHistory", "PromptEngineerSubscription", "PromptEngineerUsage", "RegulationChunk", "Audit", "SystemFinding", "RiskClassification", "MonitoringPlan", "MonitoringCheckResult", "AdoptionRecord", "EngineeringRecord", "Workflow", "DependencyNode", "DependencyEdge", "Opportunity", "AgentRecommendation", "WorkflowRecommendation", "RoadmapItem", "AISystemCostSnapshot"]
+__all__ = ["AISystem", "Base", "User", "UserToken", "Organization", "OrgMember", "Invitation", "Project", "SavedPrompt", "PromptHistory", "PromptEngineerSubscription", "PromptEngineerUsage", "RegulationChunk", "Audit", "SystemFinding", "RiskClassification", "MonitoringPlan", "MonitoringCheckResult", "AdoptionRecord", "EngineeringRecord", "Workflow", "DependencyNode", "DependencyEdge", "Opportunity", "AgentRecommendation", "WorkflowRecommendation", "RoadmapItem", "AISystemCostSnapshot", "WaitlistSignup"]

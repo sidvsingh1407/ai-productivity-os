@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     GEMINI_API_KEY1: str = ""
     GEMINI_API_KEY2: str = ""
 
+    WAITLIST_IP_SALT: str = "change-me-in-production"
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
 settings = Settings()
