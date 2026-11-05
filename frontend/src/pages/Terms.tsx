@@ -1,21 +1,18 @@
 import React from 'react';
-import { ComingSoonLayout } from '../components/ComingSoonLayout';
+import ReactMarkdown from 'react-markdown';
+import termsContent from '../content/terms.md?raw';
+import { Link } from 'react-router-dom';
 
 const Terms: React.FC = () => {
   return (
-    <ComingSoonLayout isShell={true}>
-      <div className="py-8 text-cs-text-secondary">
-        <h1 className="text-3xl md:text-4xl font-semibold mb-8 text-cs-text-primary">Terms of Service</h1>
-        <p className="mb-4">Last updated: [Date]</p>
-        <p className="mb-4 text-base md:text-lg leading-relaxed">
-          These Terms of Service govern your access to and use of Tarkaya's website and services.
-        </p>
-        {/* Placeholder for actual terms content */}
-        <div className="h-64 bg-[rgba(255,255,255,0.02)] rounded-lg border border-glass-border flex items-center justify-center">
-          <p className="text-cs-text-muted italic">Legal content requires formal review.</p>
+    <div className="min-h-screen bg-white text-gray-900 font-sans py-12 px-6">
+      <div className="max-w-[720px] mx-auto prose prose-gray">
+        <div className="mb-8">
+            <Link to="/" className="text-sm font-medium text-gray-500 hover:text-black">&larr; Back home</Link>
         </div>
+        <ReactMarkdown>{termsContent}</ReactMarkdown>
       </div>
-    </ComingSoonLayout>
+    </div>
   );
 };
 
