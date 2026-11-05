@@ -5,6 +5,8 @@ import Expired from './pages/Expired';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Contact from './pages/Contact';
+import DPA from './pages/DPA';
+import Subprocessors from './pages/Subprocessors';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/dpa" element={<DPA />} />
+        <Route path="/subprocessors" element={<Subprocessors />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
