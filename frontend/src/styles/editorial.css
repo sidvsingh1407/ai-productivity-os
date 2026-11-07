@@ -33,31 +33,32 @@
   position: relative;
   z-index: 2;
   text-align: center;
-  max-width: min(1200px, 94vw);
+  max-width: min(1280px, 92vw);
   width: 100%;
+  margin: 0 auto;
 }
 
 .hero-display {
   font-family: var(--tk-font-primary);
-  font-size: clamp(56px, 13vw, 210px);
+  font-size: clamp(56px, 12vw, 185px);
   font-weight: 400;
-  line-height: 0.82;
-  letter-spacing: -0.03em;
+  line-height: 0.88;
+  letter-spacing: -0.035em;
   color: #ffffff;
-  margin: 0 0 36px 0;
-  padding-bottom: 20px;
+  margin: 0 0 32px 0;
+  padding-bottom: 8px;
   word-break: normal;
   overflow-wrap: normal;
 }
 
 .hero-subline {
   font-family: var(--tk-font-primary);
-  font-size: 18px;
+  font-size: clamp(18px, 2vw, 24px);
   font-weight: 400;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0 auto 40px auto;
-  max-width: 480px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 auto 48px auto;
+  max-width: 620px;
 }
 
 .hero-cta {
